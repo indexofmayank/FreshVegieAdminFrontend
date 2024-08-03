@@ -4,12 +4,14 @@ import {
   FaProductHunt,
   FaShoppingCart,
   FaUserTie,
-  FaUser
+  FaUser,
+  FaTh
 } from 'react-icons/fa';
 
 export const LinkItems = [
   { name: 'Home', url: '/', icon: <FaHome /> },
   { name: 'Products', url: '/products', icon: <FaProductHunt /> },
+  { name: 'Category', url: '/category', icon: <FaTh />},
   { name: 'Orders', url: '/orders', icon: <FaShoppingCart /> },
   { name: 'Admins', url: '/admins', icon: <FaUserTie /> },
   { name: 'Users', url: '/users', icon: <FaUser />}
@@ -38,3 +40,4 @@ export const create_new_product = `${domain}/api/admin/product/new`;
 export const delete_review = `${domain}/api/admin/product/review/`;
 export const customers_url = `${domain}/api/user/`;
 export const delete_customer_url = `${domain}/api/admin/user/`;
+export const category_url = `${domain}/api/category/`;

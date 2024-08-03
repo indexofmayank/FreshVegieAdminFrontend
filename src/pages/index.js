@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoute';
 import SingleOrderPage from './SingleOrderPage';
 import SingleProductPage from './SingleProductPage';
 import UsersPage from './UsersPage';
+import CategoryPage from './CategoryPage';
 
 export {
   Dashboard,
@@ -17,5 +18,6 @@ export {
   AdminsPage,
   SingleOrderPage,
   SingleProductPage,
-  UsersPage
+  UsersPage,
+  CategoryPage
 };

@@ -3,7 +3,8 @@ import {
     SidebarWithHeader
 } from '../components';
 import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
-import { MdOutlineRefresh } from 'react-icons/md';import {useCustomerContext} from '../context/customer_context';
+import { MdOutlineRefresh } from 'react-icons/md';
+import {useCustomerContext} from '../context/customer_context';
 import { UserTable } from '../components/UserTable';
 
 function UsersPage () {

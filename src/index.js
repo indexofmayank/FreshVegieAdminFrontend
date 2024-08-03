@@ -8,6 +8,7 @@ import { OrderProvider } from './context/order_context';
 import { ProductProvider } from './context/product_context';
 import { AdminProvider } from './context/admin_context';
 import { CustomerProvider } from './context/customer_context';
+import { CategoryProvider } from '../src/context/category_context';
 
 ReactDOM.render(
   <UserProvider>
@@ -15,9 +16,11 @@ ReactDOM.render(
       <OrderProvider>
         <ProductProvider>
           <CustomerProvider>
-          <ChakraProvider theme={theme}>
-            <App />
-          </ChakraProvider>
+            <CategoryProvider>
+              <ChakraProvider theme={theme}>
+                <App />
+              </ChakraProvider>
+            </CategoryProvider>
           </CustomerProvider>
         </ProductProvider>
       </OrderProvider>

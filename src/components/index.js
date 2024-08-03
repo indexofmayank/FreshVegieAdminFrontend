@@ -17,6 +17,7 @@ import SingleProductInfo from './SingleProductInfo';
 import Stars from './Stars';
 import SingleProductReviews from './SingleProductReviews';
 import PreLoader from './PreLoader';
+import UpdateCategoryModal from './UpdateCategoryModal';
 
 export {
   SidebarWithHeader,
@@ -38,4 +39,6 @@ export {
   Stars,
   SingleProductReviews,
   PreLoader,
+  UpdateCategoryModal,
+
 };

@@ -120,7 +120,7 @@ function ProductsTable({ products }) {
                       </MenuList>
                     </Menu>
                   </Td>
-                </Tr>
+                </Tr> 
               );
             })}
           </Tbody>
