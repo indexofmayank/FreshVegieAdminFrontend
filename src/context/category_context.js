@@ -42,11 +42,16 @@ export const CategoryProvider = ({children}) => {
         try {
             const response = await axios.get(`${category_url}${id}`);
             const {data} = response.data;
+            console.log(data);
             dispatch({type: GET_SINGLE_CATEGORY_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_SINGLE_CATEGORY_ERROR});
         }
     };
+
+    // const updateExistingCategoryDetails = (e) => {
+    //     const name = e.target.name
+    // };
 
     useEffect(() => {
         fetchCategory();

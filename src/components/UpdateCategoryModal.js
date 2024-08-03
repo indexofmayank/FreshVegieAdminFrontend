@@ -27,17 +27,25 @@ import { useCategoryContext } from '../context/category_context';
 
 const UpdateCategoryModal = ({ id }) => {
 
+  const {
+    single_category: {
+      name = '',
+      image = ''
+    },
+    fetchCategory,
+    fetchSingleCategory
+  } = useCategoryContext();
  
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef();
   const toast = useToast();
-  const name = '';
   return (
     <>
       <Text
         colorScheme='brown'
         minW='100%'
         onClick={() => {
+          fetchSingleCategory(id);
           onOpen();
         }}
       >
