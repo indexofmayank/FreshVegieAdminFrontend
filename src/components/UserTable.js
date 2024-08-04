@@ -30,7 +30,7 @@ export const UserTable = ({ customers }) => {
     const handleDelete = async (id) => {
         console.log('did');
     }
-
+    console.log(customers);
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
             {loading ? (
@@ -44,7 +44,6 @@ export const UserTable = ({ customers }) => {
                             <Th>Name</Th>
                             <Th>Email</Th>
                             <Th>Phone</Th>
-                            <Th>Adress</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -53,9 +52,8 @@ export const UserTable = ({ customers }) => {
                             return (
                                 <Tr key={index}>
                                     <Td>{name}</Td>
-                                    <Td>{phone}</Td>
                                     <Td>{email}</Td>
-                                    <Td>{address}</Td>
+                                    <Td>{phone}</Td>
                                     <Td>
                                         <Menu>
                                             <MenuButton as={Button} rightIcon={<BiChevronDown />}>
