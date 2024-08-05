@@ -41,3 +41,5 @@ export const delete_review = `${domain}/api/admin/product/review/`;
 export const customers_url = `${domain}/api/user/`;
 export const delete_customer_url = `${domain}/api/admin/user/`;
 export const category_url = `${domain}/api/category/`;
+export const delete_category_url = `${domain}/api/admin/category/delete/`;
+export const create_category_url = `${domain}/api/category/`;

@@ -16,7 +16,7 @@ function PreLoader() {
       <Progress size='xs' w='40%' colorScheme='brown' isIndeterminate />
       <HStack>
         <Text fontWeight='300' color='gray.400'>
-          search less, wear more
+          search less, eat more
         </Text>
       </HStack>
     </VStack>

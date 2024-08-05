@@ -3,7 +3,9 @@ import axios from 'axios';
 import reducer from '../reducers/category_reducer';
 
 import {
-    category_url
+    category_url,
+    delete_category_url,
+    create_category_url
 } from '../utils/constants';
 
 import {
@@ -12,14 +14,19 @@ import {
     GET_CATEGORY_SUCCESS,
     GET_SINGLE_CATEGORY_BEGIN,
     GET_SINGLE_CATEGORY_ERROR,
-    GET_SINGLE_CATEGORY_SUCCESS
+    GET_SINGLE_CATEGORY_SUCCESS,
+    CREATE_NEW_CATEGORY
 } from '../actions';
 
 const initialState = {
     category_loading: false,
     category_error: false,
     categories: [],
-    single_category: {}
+    single_category: {},
+    new_category: {
+        name: '',
+        image: '',
+    },
 };
 
 const CategoryContext = React.createContext();
@@ -52,6 +59,36 @@ export const CategoryProvider = ({children}) => {
     // const updateExistingCategoryDetails = (e) => {
     //     const name = e.target.name
     // };
+    const updateNewCategoryDetails = (e) => {
+        const name = e.target.name;
+        let value = e.target.value;
+        dispatch({type: CREATE_NEW_CATEGORY, payload: {name, value}});
+    };
+
+
+    const createNewCategory = async (category) => {
+        try {
+            console.log(category);
+            const response = await axios.post(create_category_url, category);
+            const {success, data} = response.data;
+            fetchCategory();
+            return {success, data};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
+
+    const deleteCategory = async (id) => {
+        try {
+            const response = await axios.delete(`${delete_category_url}${id}`);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
 
     useEffect(() => {
         fetchCategory();
@@ -62,7 +99,10 @@ export const CategoryProvider = ({children}) => {
             value={{
                 ...state,
                 fetchCategory,
-                fetchSingleCategory
+                fetchSingleCategory,
+                deleteCategory,
+                createNewCategory,
+                updateNewCategoryDetails
             }}
         >
             {children}

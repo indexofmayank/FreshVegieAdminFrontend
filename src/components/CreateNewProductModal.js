@@ -106,6 +106,7 @@ function CreateNewProductModal() {
     console.log(tax);
     console.log(product_detail_max);
     console.log(product_detail_min);
+    console.log(imageList);
     if (
       !name ||
       !price ||
@@ -153,6 +154,7 @@ function CreateNewProductModal() {
       add_ons,
       selling_method,
       sku,
+      
       barcode,
       search_tags,
       stock_notify,

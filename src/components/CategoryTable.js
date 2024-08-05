@@ -30,7 +30,8 @@ export const CategoryTable = ({ categories }) => {
     const [loading, setLoading] = useState(false);
 
     const handleDelete = async (id) => {
-        console.log('did');
+        // setLoading(true);
+        // const response = await delete
     }
     
 

@@ -16,6 +16,7 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_ERROR,
   GET_SINGLE_PRODUCT_SUCCESS,
+  CREATE_NEW_CATEGORY
 } from '../actions';
 
 const initialState = {
@@ -92,6 +93,8 @@ export const ProductProvider = ({ children }) => {
       } else {
         value = value.split();
       }
+  
+  
     }
     if (name === 'shipping' || name === 'featured') {
       value = e.target.checked;
