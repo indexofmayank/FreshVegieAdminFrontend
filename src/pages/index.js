@@ -8,6 +8,7 @@ import SingleOrderPage from './SingleOrderPage';
 import SingleProductPage from './SingleProductPage';
 import UsersPage from './UsersPage';
 import CategoryPage from './CategoryPage';
+import BannerPage from './BannerPage';
 
 export {
   Dashboard,
@@ -19,5 +20,6 @@ export {
   SingleOrderPage,
   SingleProductPage,
   UsersPage,
-  CategoryPage
+  CategoryPage,
+  BannerPage
 };

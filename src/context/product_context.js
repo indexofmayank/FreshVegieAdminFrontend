@@ -16,7 +16,6 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_ERROR,
   GET_SINGLE_PRODUCT_SUCCESS,
-  CREATE_NEW_CATEGORY
 } from '../actions';
 
 const initialState = {
@@ -25,7 +24,7 @@ const initialState = {
   products: [],
   new_product: {
     name: '',
-    price: 50000,
+    price: '',
     stock: 10,
     description: '',
     images: [],

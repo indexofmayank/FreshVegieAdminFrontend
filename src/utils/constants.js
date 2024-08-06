@@ -5,7 +5,8 @@ import {
   FaShoppingCart,
   FaUserTie,
   FaUser,
-  FaTh
+  FaTh,
+  FaAdversal
 } from 'react-icons/fa';
 
 export const LinkItems = [
@@ -14,7 +15,8 @@ export const LinkItems = [
   { name: 'Category', url: '/category', icon: <FaTh />},
   { name: 'Orders', url: '/orders', icon: <FaShoppingCart /> },
   { name: 'Admins', url: '/admins', icon: <FaUserTie /> },
-  { name: 'Users', url: '/users', icon: <FaUser />}
+  { name: 'Users', url: '/users', icon: <FaUser />},
+  {name: 'Banners', url: '/banners', icon: <FaAdversal />}
 ];
 
 export const orderStatusList = [

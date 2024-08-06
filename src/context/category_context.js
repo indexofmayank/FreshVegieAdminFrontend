@@ -26,6 +26,7 @@ const initialState = {
     new_category: {
         name: '',
         image: '',
+        status: ''
     },
 };
 
@@ -49,7 +50,6 @@ export const CategoryProvider = ({children}) => {
         try {
             const response = await axios.get(`${category_url}${id}`);
             const {data} = response.data;
-            console.log(data);
             dispatch({type: GET_SINGLE_CATEGORY_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_SINGLE_CATEGORY_ERROR});
@@ -68,8 +68,8 @@ export const CategoryProvider = ({children}) => {
 
     const createNewCategory = async (category) => {
         try {
-            console.log(category);
             const response = await axios.post(create_category_url, category);
+            console.log(response);
             const {success, data} = response.data;
             fetchCategory();
             return {success, data};

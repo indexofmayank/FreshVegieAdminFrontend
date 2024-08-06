@@ -68,9 +68,6 @@ function CreateNewCategoryModal() {
     const toast = useToast();
 
     const handleSubmit = async () => {
-        console.log(name);
-        console.log(status);
-        console.log(imageList);
         if(
             !name ||
             !imageList ||
@@ -125,13 +122,13 @@ function CreateNewCategoryModal() {
     return (
         <>
             <Button colorScheme='brown' onClick={onOpen}>
-                Create New Product
+                Create New Category
             </Button>
 
             <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>create new category</ModalHeader>
+                    <ModalHeader>Create new category</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         <FormControl>
@@ -155,8 +152,8 @@ function CreateNewCategoryModal() {
                                 value={status}
                             >
                                 <Stack spacing={4} direction='row'>
-                                    <Radio value='active'>Acitve</Radio>
-                                    <Radio value='inactive'>Inactive</Radio>
+                                    <Radio value='true'>Acitve</Radio>
+                                    <Radio value='false'>Inactive</Radio>
                                 </Stack>
                             </RadioGroup>
                         </FormControl>

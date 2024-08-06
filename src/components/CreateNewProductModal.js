@@ -154,7 +154,7 @@ function CreateNewProductModal() {
       add_ons,
       selling_method,
       sku,
-      
+
       barcode,
       search_tags,
       stock_notify,
@@ -257,20 +257,6 @@ function CreateNewProductModal() {
               />
             </FormControl>
 
-            {/* <FormControl mt={4}>
-              <FormLabel>Category</FormLabel>
-              <Select
-                placeholder='Select category'
-                name='category'
-                focusBorderColor='brown.500'
-                value={category}
-                onChange={updateNewProductDetails}
-              >
-                <option value='vegetable'>Vegetable</option>
-                <option value='fruit'>Fruit</option>
-              </Select>
-            </FormControl> */}
-
             <FormControl mt={4}>
               <FormLabel>Category</FormLabel>
               <Select
@@ -281,7 +267,7 @@ function CreateNewProductModal() {
                 onChange={updateNewProductDetails}
               >
                 {categories.map((cat) => (
-                  <option key={cat._id} value={cat.name}>
+                  <option key={cat._id} value={cat.id}>
                     {cat.name}
                   </option>
                 ))}

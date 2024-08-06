@@ -10,7 +10,8 @@ import {
   SingleOrderPage,
   SingleProductPage,
   UsersPage,
-  CategoryPage
+  CategoryPage,
+  BannerPage
 } from './pages';
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/category'>
           <CategoryPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/banners'>
+          <BannerPage />
         </PrivateRoute>
       </Switch>
     </Router>

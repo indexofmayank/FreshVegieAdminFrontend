@@ -93,14 +93,14 @@ function ProductsTable({ products }) {
                       </Text>
                     </VStack>
                   </Td>
-                  <Td>
+                  {/* <Td>
                     <VStack alignItems='flex-start' spacing={1}>
                       <Text as='b'>{category.toUpperCase()}</Text>
                       <Text fontSize='sm' color='brown.500'>
                         {company}
                       </Text>
                     </VStack>
-                  </Td>
+                  </Td> */}
                   <Td>{stock}</Td>
                   <Td>
                     <Menu>
