@@ -19,6 +19,7 @@ import SingleProductReviews from './SingleProductReviews';
 import PreLoader from './PreLoader';
 import UpdateCategoryModal from './UpdateCategoryModal';
 import CreateNewBannerModal from './CreateNewBannerModal';
+import UpdateBannerModal from './UpdateBannerModal';
 
 export {
   SidebarWithHeader,
@@ -41,5 +42,6 @@ export {
   SingleProductReviews,
   PreLoader,
   UpdateCategoryModal,
-  CreateNewBannerModal
+  CreateNewBannerModal,
+  UpdateBannerModal
 };

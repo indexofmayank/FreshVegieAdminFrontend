@@ -105,7 +105,7 @@ function CreateNewCategoryModal() {
                 position: 'top',
                 description: 'Category created',
                 status: 'success',
-                duration: 50000,
+                duration: 5000,
                 isClosable: true,
             });
         } else {

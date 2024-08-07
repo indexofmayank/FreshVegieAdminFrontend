@@ -69,7 +69,6 @@ export const CategoryProvider = ({children}) => {
     const createNewCategory = async (category) => {
         try {
             const response = await axios.post(create_category_url, category);
-            console.log(response);
             const {success, data} = response.data;
             fetchCategory();
             return {success, data};

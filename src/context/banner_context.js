@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import reducer from '../reducers/banner_reducer';
+import { create_banner_url, get_banner_url } from '../utils/constants';
 
-import {
-    //will import banner api url
-} from '../utils/constants';
 
 import {
     GET_BANNER_BEGIN,
@@ -28,7 +26,53 @@ const initailState = {
 const BannerContext = React.createContext();
 export const BannerProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initailState);
-    //will do that letter;
+
+    const fetchBanner = async () => {
+        dispatch({type: GET_BANNER_BEGIN});
+        try {
+            const response = await axios.get(get_banner_url);
+            const {data} = response.data;
+            dispatch({type: GET_BANNER_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_BANNER_ERROR});
+        }
+    };
+
+    const updateNewBannerDetails = (e) => {
+        const name = e.target.name;
+        let value = e.target.value;
+        dispatch({type: CREATE_NEW_BANNER, payload: {name, value}});
+    };
+
+    const createNewBanner = async (banner) => {
+        try {
+            const response = await axios.post(create_banner_url, banner);
+            const {success, data} = response.data;
+            fetchBanner();
+            return {success, data};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
+
+    useEffect(() => {
+        fetchBanner();
+    }, []);
+
+    return (
+        <BannerContext.Provider
+            value={{
+                ...state,
+                createNewBanner,
+                fetchBanner,
+                updateNewBannerDetails
+            }}
+        >
+            {children}
+        </BannerContext.Provider>
+    )
+
 
 };
 
