@@ -19,25 +19,37 @@ import {
     Switch
 } from '@chakra-ui/react';
 import { BiChevronDown } from 'react-icons/bi';
-import { Link } from 'react-router-dom';
 import { useBannerContext } from '../context/banner_context';
 import { UpdateBannerModal } from '../components';
 
-export const BannerTable = ({ banners }) => {
+function BannerTable({ banners }) {
     const toast = useToast();
-    const { fetchBanner } = useBannerContext();
+    const { fetchBanner, deleteBanner } = useBannerContext();
     const [loading, setLoading] = useState(false);
 
     const handleDelete = async (id) => {
-        console.log(id);
-    }
-
-    const handleSwitchChange = (id, event) => {
-        const newStatus = event.target.checked;
-        console.log(`Category ID: ${id}, New Status: ${newStatus}`);
-        // You can add more logic here to update the status in the backend or state
+        setLoading(true);
+        const response = await deleteBanner(id);
+        setLoading(false);
+        if (response.success) {
+            toast({
+                position: 'top',
+                description: response.message,
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+            return await fetchBanner();
+        } else {
+            return toast({
+                position: 'top',
+                description: response.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
     };
-
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
             {loading ? (
@@ -51,8 +63,6 @@ export const BannerTable = ({ banners }) => {
                             <Th>Image</Th>
                             <Th>Name</Th>
                             <Th>Status</Th>
-
-
                             <Th></Th>
                         </Tr>
                     </Thead>
@@ -71,11 +81,11 @@ export const BannerTable = ({ banners }) => {
                                     </Td>
                                     <Td>{name}</Td>
                                     <Td>
-                                        <Switch
-                                            colorScheme='green'
+                                       <Switch
                                             isChecked={status}
-                                            onChange={(e) => handleSwitchChange(id, e)}
-                                        />
+                                            isReadOnly={true}
+                                            colorScheme='brown'
+                                       />
                                     </Td>
                                     <Td>
                                         <Menu>
@@ -90,19 +100,16 @@ export const BannerTable = ({ banners }) => {
                                                     Delete
                                                 </MenuItem>
                                             </MenuList>
-
                                         </Menu>
                                     </Td>
                                 </Tr>
-                            )
+                            );
                         })}
                     </Tbody>
                 </Table>
-
-            )
-
-            }
+            )}
         </SimpleGrid>
-    )
-};
+    );
+}
 
+export default BannerTable;

@@ -1,12 +1,12 @@
 import React from "react";
 import {
   SidebarWithHeader,
-  CreateNewBannerModal
+  CreateNewBannerModal,
+  BannerTable
 } from '../components';
 import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useBannerContext } from "../context/banner_context";
-import {BannerTable} from '../components/BannerTable';
 
 function BannerPage() {
   const {
@@ -14,8 +14,6 @@ function BannerPage() {
     banner_loading: loading,
     banner_error: error,
     fetchBanner,
-    createNewBanner,
-    updateNewBannerDetails
   } = useBannerContext();
 
   const handleRefresh = async () => {

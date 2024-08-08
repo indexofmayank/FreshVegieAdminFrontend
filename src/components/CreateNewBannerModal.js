@@ -194,6 +194,8 @@ function CreateNewBannerModal() {
                             Cancel
                         </Button>
                         <Button
+                            isLoading={loading}
+                            loadingText='Creating Banner'
                             colorScheme='brown'
                             onClick={handleSubmit}
                         >

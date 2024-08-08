@@ -25,7 +25,8 @@ const UpdateCategoryModal = ({ id }) => {
   const {
     single_category: {
       name = '',
-      image = ''
+      image = '',
+      status = ''
     },
     fetchCategory,
     fetchSingleCategory

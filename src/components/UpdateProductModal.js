@@ -46,7 +46,7 @@ function UpdateProductModal({ id }) {
     updateExistingProductDetails,
     updateProduct,
   } = useProductContext();
-
+  console.log(name);
   const [imageList, setImageList] = useState(images);
   const [loading, setLoading] = useState(false);
 
@@ -163,7 +163,7 @@ function UpdateProductModal({ id }) {
       <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create new product</ModalHeader>
+          <ModalHeader>Update Product</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>

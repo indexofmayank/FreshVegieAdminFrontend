@@ -20,6 +20,7 @@ import PreLoader from './PreLoader';
 import UpdateCategoryModal from './UpdateCategoryModal';
 import CreateNewBannerModal from './CreateNewBannerModal';
 import UpdateBannerModal from './UpdateBannerModal';
+import BannerTable from './BannerTable';
 
 export {
   SidebarWithHeader,
@@ -43,5 +44,6 @@ export {
   PreLoader,
   UpdateCategoryModal,
   CreateNewBannerModal,
-  UpdateBannerModal
+  UpdateBannerModal,
+  BannerTable 
 };
