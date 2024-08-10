@@ -17,13 +17,14 @@ const options = {
     fillColor: '#FF0000',
     fillOpacity: 0.35,
     strokeWeight: 2,
-    clickable: false,
+    clickable: true,
+    draggable: true,  // Allow the circle to be draggable
     editable: true,
     zIndex: 1,
   },
 };
 
-const GeoFancingPolygon = () => {
+const GeoFencingPolygon = () => {
   const [selectedCircle, setSelectedCircle] = useState(null);
 
   const { isLoaded, loadError } = useLoadScript({
@@ -32,6 +33,11 @@ const GeoFancingPolygon = () => {
   });
 
   const onCircleComplete = useCallback((circle) => {
+    if (selectedCircle) {
+      // Remove the previous circle if one already exists
+      selectedCircle.setMap(null);
+    }
+
     setSelectedCircle(circle);
 
     // Extract circle data
@@ -50,7 +56,13 @@ const GeoFancingPolygon = () => {
     // e.g., make an API call to save the circle data
     // fetch('/api/save-circle', { method: 'POST', body: JSON.stringify(circleData) });
 
-  }, []);
+    // Disable further drawing after the first circle is drawn
+    circle.setOptions({
+      draggable: true, // Enable dragging for the circle
+      editable: true,
+    });
+
+  }, [selectedCircle]);
 
   useEffect(() => {
     if (selectedCircle && window.google?.maps) {
@@ -76,17 +88,14 @@ const GeoFancingPolygon = () => {
       id="map"
       mapContainerStyle={mapContainerStyle}
       zoom={8}
-      center={{  lat: 19.455666328809723,
-        lng: 72.81736910574212,
-      }}
+      center={{ lat: 19.455666328809723, lng: 72.81736910574212 }}
     >
       <DrawingManager
         options={options}
         onCircleComplete={onCircleComplete}
       />
-      <Circle/>
     </GoogleMap>
   );
 };
 
-export default GeoFancingPolygon;
+export default GeoFencingPolygon;

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import html2canvas from 'html2canvas';
 import {
     Button,
     Input,
@@ -30,6 +31,7 @@ import { useGeoFancingContext } from '../context/geoFancing_context';
 import GeoFancingPolygon from './GeoFancingPolygon';
 
 function CreateNewGeoFancingModal() {
+    const divRef = useRef(null)
 
     const {
         new_geoFancing: {
@@ -94,7 +96,10 @@ function CreateNewGeoFancingModal() {
                         </FormControl>
 
                         <FormControl mt={4}>
+                            <FormLabel>Make Circle</FormLabel>
+                            <div ref={divRef}>
                             <GeoFancingPolygon />
+                            </div>
                         </FormControl>
 
                     </ModalBody>

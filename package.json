@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "framer-motion": "^4.1.17",
+    "html2canvas": "^1.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.5.1",
