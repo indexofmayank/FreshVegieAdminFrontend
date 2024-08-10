@@ -21,6 +21,9 @@ import UpdateCategoryModal from './UpdateCategoryModal';
 import CreateNewBannerModal from './CreateNewBannerModal';
 import UpdateBannerModal from './UpdateBannerModal';
 import BannerTable from './BannerTable';
+import GeoFancingPolygon from './GeoFancingPolygon';
+import CreateNewGeoFancingModal from './CreateNewGeoFancingModal';
+import GeoFancingTable from './GeoFancingTable';
 
 export {
   SidebarWithHeader,
@@ -45,5 +48,8 @@ export {
   UpdateCategoryModal,
   CreateNewBannerModal,
   UpdateBannerModal,
-  BannerTable 
+  BannerTable ,
+  GeoFancingPolygon,
+  CreateNewGeoFancingModal,
+  GeoFancingTable
 };

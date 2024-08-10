@@ -9,6 +9,7 @@ import SingleProductPage from './SingleProductPage';
 import UsersPage from './UsersPage';
 import CategoryPage from './CategoryPage';
 import BannerPage from './BannerPage';
+import GeoFancing from './GeoFancing';
 
 export {
   Dashboard,
@@ -21,5 +22,6 @@ export {
   SingleProductPage,
   UsersPage,
   CategoryPage,
-  BannerPage
+  BannerPage,
+  GeoFancing
 };

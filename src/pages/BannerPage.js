@@ -58,8 +58,8 @@ function BannerPage() {
         </Button>
       </HStack>
       <VStack alignItems='center' justifyContent='center'>
-        <Spinner size='lg' color='brown.500' />
-      </VStack>
+          <Heading color='red.500'>There was an error</Heading>
+        </VStack>
 
     </SidebarWithHeader>
 

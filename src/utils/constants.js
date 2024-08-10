@@ -6,7 +6,8 @@ import {
   FaUserTie,
   FaUser,
   FaTh,
-  FaAdversal
+  FaAdversal,
+  FaGlobe
 } from 'react-icons/fa';
 
 export const LinkItems = [
@@ -16,7 +17,8 @@ export const LinkItems = [
   { name: 'Orders', url: '/orders', icon: <FaShoppingCart /> },
   { name: 'Admins', url: '/admins', icon: <FaUserTie /> },
   { name: 'Users', url: '/users', icon: <FaUser />},
-  {name: 'Banners', url: '/banners', icon: <FaAdversal />}
+  {name: 'Banners', url: '/banners', icon: <FaAdversal />},
+  {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />}
 ];
 
 export const orderStatusList = [
@@ -50,3 +52,4 @@ export const get_banner_url = `${domain}/api/banner/`;
 export const udpate_banner_url = `${domain}/api/banner/`;
 export const get_banner_by_id_url = `${domain}/api/banner/`;
 export const delete_banner_by_id_url = `${domain}/api/banner/`;
+export const geoFancing_url = `${domain}/api/circle/`;

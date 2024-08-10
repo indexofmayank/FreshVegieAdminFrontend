@@ -1,4 +1,3 @@
-import { act } from 'react';
 import {
     GET_BANNER_ERROR,
     GET_BANNER_BEGIN,
