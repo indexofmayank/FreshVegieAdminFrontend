@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SidebarWithHeader,
     GeoFancingPolygon,
@@ -12,7 +12,7 @@ import { useGeoFancingContext } from '../context/geoFancing_context';
 function GeoFancing() {
 
     const {
-        geoFancings: [],
+        geoFancings,
         geoFancing_loading: loading,
         geoFancing_error: error,
         fetchGeoFancing
@@ -71,7 +71,7 @@ function GeoFancing() {
     return (
         <SidebarWithHeader>
             <HStack mb={5}>
-                <CreateNewGeoFancingModal />
+                <CreateNewGeoFancingModal/>
                 <Button
                     colorScheme="brown"
                     variant="outline"
@@ -81,7 +81,7 @@ function GeoFancing() {
                     Refresh
                 </Button>
             </HStack>
-            <GeoFancingTable />
+            <GeoFancingTable  geoFancings={geoFancings}/>
         </SidebarWithHeader>
     )
 }

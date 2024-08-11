@@ -10,10 +10,13 @@ import {
     GET_GEOFANCING_BEGIN,
     GET_GEOFANCING_SUCCESS,
     CREATE_NEW_GEOFANCING,
+    GET_SINGLE_GEOFANCING_BEGIN,
+    GET_SINGLE_GEOFANCING_SUCCESS,
+    GET_SINGLE_GEOFANCING_ERROR,
     UPDATE_EXISTING_GEOFANCING
 } from '../actions';
 
-const initailState = {
+const initialState = {
     geoFancing_loading: false,
     geoFancing_error: false,
     geoFancings: [],
@@ -21,7 +24,7 @@ const initailState = {
         name: '',
         image: '',
         status: '',
-        circleInfo: '',
+        polygon: '',
     },
     single_geoFancing_loading: false,
     single_geoFancing_error: false,
@@ -30,7 +33,7 @@ const initailState = {
 
 const GeoFancingContext = React.createContext();
 export const GeoFancingProvider = ({children}) => {
-    const [state, dispatch] = useReducer(reducer, initailState);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const fetchGeoFancing = async () => {
         dispatch({type: GET_GEOFANCING_BEGIN});
@@ -43,9 +46,23 @@ export const GeoFancingProvider = ({children}) => {
         }
     };
 
-    const createNewGeoFancing = async (geoFancing) => {
+    const fetchSingleGeoFancing = async (id) => {
+        dispatch({type: GET_SINGLE_GEOFANCING_BEGIN});
         try {
-            const response = await axios.post(geoFancing_url, geoFancing);
+            const response = await axios.get(`${geoFancing_url}${id}`);
+            const {data} = response.data;
+            dispatch({type: GET_SINGLE_GEOFANCING_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_SINGLE_GEOFANCING_ERROR});
+        }
+    };
+
+    const createNewGeoFancing = async ({name, status, polygon, image}) => {
+        try {
+            const response = await axios.post(geoFancing_url, {name, status, polygon, image});
+            const {success, data} = response.data;
+            fetchGeoFancing();
+            return {success, data};
         } catch (error) {
             const {success, message} = error.response.data;
             return {success, message};
@@ -55,7 +72,35 @@ export const GeoFancingProvider = ({children}) => {
     const updateNewGeoFancingDetails = (e) => {
         const name = e.target.name;
         let value = e.target.value;
+        dispatch({type: CREATE_NEW_GEOFANCING, payload: {name, value}});
+    };
+
+    const updateExistingGeoFancingDetails = (e) => {
+        const name = e.target.name;
+        let value = e.target.value;
         dispatch({type: UPDATE_EXISTING_GEOFANCING, payload: {name, value}});
+    };
+
+    const updateGeoFancing = async (id, geoFancing) => {
+        try {
+            const response = await axios.put(`${geoFancing_url}${id}`, geoFancing);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
+
+    const deleteGeoFancing = async (id, geoFancing) => {
+        try {
+            const respone = await axios.delete(`${geoFancing_url}${id}`);
+            const {success, message} = respone.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.respone.data;
+            return {success, message};
+        }
     };
 
     useEffect(() => {
@@ -68,8 +113,10 @@ export const GeoFancingProvider = ({children}) => {
                 ...state,
                 createNewGeoFancing,
                 fetchGeoFancing,
-                updateNewGeoFancingDetails
-                
+                updateNewGeoFancingDetails,
+                fetchSingleGeoFancing,
+                updateExistingGeoFancingDetails,
+                updateGeoFancing
             }}
         >
             {children}

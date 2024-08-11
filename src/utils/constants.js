@@ -52,4 +52,4 @@ export const get_banner_url = `${domain}/api/banner/`;
 export const udpate_banner_url = `${domain}/api/banner/`;
 export const get_banner_by_id_url = `${domain}/api/banner/`;
 export const delete_banner_by_id_url = `${domain}/api/banner/`;
-export const geoFancing_url = `${domain}/api/circle/`;
+export const geoFancing_url = `${domain}/api/polygon/`;

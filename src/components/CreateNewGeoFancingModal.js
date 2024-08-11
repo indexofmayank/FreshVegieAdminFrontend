@@ -5,7 +5,6 @@ import {
     Input,
     FormControl,
     FormLabel,
-    FormHelperText,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -15,47 +14,85 @@ import {
     ModalCloseButton,
     useDisclosure,
     useToast,
-    Textarea,
-    Center,
-    HStack,
-    Image,
-    VStack,
-    Checkbox,
-    Select,
-    Radio,
-    RadioGroup,
-    Stack
+    Select
 } from '@chakra-ui/react';
-import { useDropzone } from 'react-dropzone';
-import { useGeoFancingContext } from '../context/geoFancing_context';
+// import { useGeoFancingContext } from '../context/geoFancing_context';
 import GeoFancingPolygon from './GeoFancingPolygon';
+import { useGeoFancingContext } from '../context/geoFancing_context';
 
 function CreateNewGeoFancingModal() {
-    const divRef = useRef(null)
+    const divRef = useRef(null);
 
     const {
         new_geoFancing: {
             name,
             image,
             status,
-            circleInfo,
+            polygon,
         },
-        createNewGeoFancing,
-        updateNewGeoFancingDetails
+        updateNewGeoFancingDetails,
+        createNewGeoFancing
     } = useGeoFancingContext();
 
-    const [imageList, setImageList] = useState(image);
+    const [imageList, setImageList] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const [polygonCoordinates, setPolygonCoordinates] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
     const toast = useToast();
 
+    const handlePolygonComplete = (coordinates) => {
+        console.log('Geofence Coordinates:', coordinates);
+        setPolygonCoordinates(coordinates);
+    };
+
     const handleSubmit = async () => {
-        console.log(name);
-        console.log(image);
-        console.log(status);
-        console.log(circleInfo);
+        if(
+            !name ||
+            !status ||
+            !polygonCoordinates
+        ) {
+            return toast({
+                position: 'top',
+                description: 'Provide all the details',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+
+        setLoading(true);
+
+
+        if (divRef.current) {
+            try {
+                const canvas = await html2canvas(divRef.current, {
+                    useCORS: true,
+                    allowTaint: false,
+                });
+                const dataUrl = canvas.toDataURL('image/png');
+                createNewGeoFancing({ name, status, polygon: polygonCoordinates, image: dataUrl });
+                toast({
+                    title: 'Geofencing created.',
+                    description: "A new geofencing has been created successfully.",
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                });
+                onClose();
+            } catch (error) {
+                console.error('Failed to capture screenshot:', error);
+                toast({
+                    title: 'Error.',
+                    description: "Failed to create geofencing. Please try again.",
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -69,12 +106,13 @@ function CreateNewGeoFancingModal() {
                 <ModalContent>
                     <ModalHeader>Create new geo fancing</ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody pb={6}>
+                    <ModalBody pb={6} overflowX="auto">
                         <FormControl mt={4}>
                             <FormLabel>Name</FormLabel>
                             <Input
                                 ref={initialRef}
                                 placeholder='name'
+                                name='name'
                                 focusBorderColor='brown.500'
                                 value={name}
                                 onChange={updateNewGeoFancingDetails}
@@ -96,9 +134,9 @@ function CreateNewGeoFancingModal() {
                         </FormControl>
 
                         <FormControl mt={4}>
-                            <FormLabel>Make Circle</FormLabel>
+                            <FormLabel>Draw Polygon</FormLabel>
                             <div ref={divRef}>
-                            <GeoFancingPolygon />
+                                <GeoFancingPolygon onPolygonComplete={handlePolygonComplete} />
                             </div>
                         </FormControl>
 
@@ -120,7 +158,6 @@ function CreateNewGeoFancingModal() {
             </Modal>
         </>
     );
-
-};
+}
 
 export default CreateNewGeoFancingModal;
