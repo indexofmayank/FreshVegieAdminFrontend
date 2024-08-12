@@ -25,6 +25,8 @@ import GeoFancingPolygon from './GeoFancingPolygon';
 import CreateNewGeoFancingModal from './CreateNewGeoFancingModal';
 import GeoFancingTable from './GeoFancingTable';
 import UpdateGeoFancingModal from './UpdateGeoFancingModal';
+import InventoryTable from './InventoryTable';
+import SearchBox from './SearchBox';
 
 export {
   SidebarWithHeader,
@@ -53,5 +55,7 @@ export {
   GeoFancingPolygon,
   CreateNewGeoFancingModal,
   GeoFancingTable,
-  UpdateGeoFancingModal
+  UpdateGeoFancingModal,
+  InventoryTable,
+  SearchBox
 };

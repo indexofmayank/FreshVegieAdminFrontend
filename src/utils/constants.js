@@ -7,7 +7,8 @@ import {
   FaUser,
   FaTh,
   FaAdversal,
-  FaGlobe
+  FaGlobe,
+  FaAlignJustify
 } from 'react-icons/fa';
 
 export const LinkItems = [
@@ -18,7 +19,8 @@ export const LinkItems = [
   { name: 'Admins', url: '/admins', icon: <FaUserTie /> },
   { name: 'Users', url: '/users', icon: <FaUser />},
   {name: 'Banners', url: '/banners', icon: <FaAdversal />},
-  {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />}
+  {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />},
+  {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />}
 ];
 
 export const orderStatusList = [

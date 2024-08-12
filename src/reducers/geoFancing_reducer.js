@@ -5,7 +5,8 @@ import {
     CREATE_NEW_GEOFANCING,
     UPDATE_EXISTING_GEOFANCING,
     GET_SINGLE_GEOFANCING_BEGIN,
-    GET_SINGLE_GEOFANCING_ERROR
+    GET_SINGLE_GEOFANCING_ERROR,
+    GET_SINGLE_GEOFANCING_SUCCESS
 } from '../actions';
 
 const geoFancing_reducer = (state, action) => {
@@ -46,6 +47,14 @@ const geoFancing_reducer = (state, action) => {
             single_geoFancing_loading: false,
             single_geoFancing_error: true
         }
+    }
+
+    if(action.type === GET_SINGLE_GEOFANCING_SUCCESS) {
+        return {
+            ...state,
+            single_geoFancing_loading: false,
+            single_geoFancing: action.payload
+        };
     }
 
     throw new Error(`No matching "${action.type}" - action type `);

@@ -10,6 +10,7 @@ import UsersPage from './UsersPage';
 import CategoryPage from './CategoryPage';
 import BannerPage from './BannerPage';
 import GeoFancing from './GeoFancing';
+import InventoryPage from './InventoryPage';
 
 export {
   Dashboard,
@@ -23,5 +24,6 @@ export {
   UsersPage,
   CategoryPage,
   BannerPage,
-  GeoFancing
+  GeoFancing,
+  InventoryPage
 };
