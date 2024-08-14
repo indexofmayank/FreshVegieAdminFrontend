@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from './SearchBox';
 import {
   Button, Select, Stack, Table, Thead, Tr, Th, Td, Tbody,
-  SimpleGrid, Spinner, HStack, Image
+  SimpleGrid, Spinner, HStack, Image, Input, InputGroup, InputLeftAddon
 } from '@chakra-ui/react';
 import { useInventoryContext } from '../context/inventory_context';
 
@@ -41,6 +41,8 @@ const InventoryTable = ({ products, categories }) => {
 
   const loading = false;
 
+  console.log(filteredProducts);
+
   return (
     <>
       <Stack spacing={4} direction='row'>
@@ -52,8 +54,8 @@ const InventoryTable = ({ products, categories }) => {
             </option>
           ))}
         </Select>
-        <Button colorScheme='blue' size='xl'>Update</Button>
-        <Button colorScheme='blue' size='xl'>Bulk Update</Button>
+        <Button  colorScheme="brown"  px={5} size='xl'>Update</Button>
+        <Button  colorScheme="brown"  px={5} size='xl'>Bulk Update</Button>
       </Stack>
 
       <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto' mt={4}>
@@ -62,7 +64,7 @@ const InventoryTable = ({ products, categories }) => {
             <Spinner size='lg' color='brown.500' />
           </HStack>
         ) : (
-          <Table variant='simple'>
+          <Table variant='simple' size='sm'>
             <Thead>
               <Tr>
                 <Th>Product</Th>
@@ -90,11 +92,17 @@ const InventoryTable = ({ products, categories }) => {
                         /><span>{name}</span>
                       </div>
                     </Td>
-                    <Td>{stock}</Td>
-                    <Td>{stock_notify}</Td>
+                    <Td> <Input  value={stock} size='md' width='auto' /></Td>
+                    <Td> <Input  value={stock_notify} size='md' width='auto' /></Td>
                     <Td><strong>-</strong></Td>
-                    <Td>{price}</Td>
-                    <Td >{offer_price}</Td>
+                    <Td>  <InputGroup>
+                            <InputLeftAddon>₹</InputLeftAddon>
+                            <Input  value={price} size='md' width='auto' />
+                          </InputGroup> </Td>
+                    <Td >  <InputGroup>
+                            <InputLeftAddon>₹</InputLeftAddon>
+                            <Input  value={offer_price} size='md' width='auto' />
+                          </InputGroup> </Td>
                     <Td>
                       {
                         !isNaN(purchase_price) && !isNaN(stock) ?
