@@ -4,8 +4,11 @@ import {
   Button, Select, Stack, Table, Thead, Tr, Th, Td, Tbody,
   SimpleGrid, Spinner, HStack, Image
 } from '@chakra-ui/react';
+import { useInventoryContext } from '../context/inventory_context';
 
 const InventoryTable = ({ products, categories }) => {
+
+  const {fetchInventory} = useInventoryContext();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -73,7 +76,7 @@ const InventoryTable = ({ products, categories }) => {
             </Thead>
             <Tbody>
               {filteredProducts.map((product, index) => {
-                const { image, name, stock, stock_notify, purchase_price, price } = product;
+                const { image, name, stock, stock_notify, price, offer_price, purchase_price } = product;
                 return (
                   <Tr key={index}>
                     <Td>
@@ -90,8 +93,8 @@ const InventoryTable = ({ products, categories }) => {
                     <Td>{stock}</Td>
                     <Td>{stock_notify}</Td>
                     <Td><strong>-</strong></Td>
-                    <Td>{purchase_price}</Td>
-                    <Td >{price}</Td>
+                    <Td>{price}</Td>
+                    <Td >{offer_price}</Td>
                     <Td>
                       {
                         !isNaN(purchase_price) && !isNaN(stock) ?

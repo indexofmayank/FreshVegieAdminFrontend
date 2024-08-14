@@ -49,6 +49,7 @@ function CreateNewProductModal() {
       product_detail_min,
       shipping,
       featured,
+      purchase_price
     },
     updateNewProductDetails,
     createNewProduct,
@@ -107,10 +108,12 @@ function CreateNewProductModal() {
     console.log(product_detail_max);
     console.log(product_detail_min);
     console.log(imageList);
+    console.log(purchase_price);
     if (
       !name ||
       !price ||
       !offer_price ||
+      !purchase_price ||
       !stock ||
       !description ||
       !category ||
@@ -154,7 +157,7 @@ function CreateNewProductModal() {
       add_ons,
       selling_method,
       sku,
-
+      purchase_price,
       barcode,
       search_tags,
       stock_notify,
@@ -230,6 +233,18 @@ function CreateNewProductModal() {
                 name='offer_price'
                 focusBorderColor='brown.500'
                 value={offer_price}
+                onChange={updateNewProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+            <FormLabel>Purchase Price</FormLabel>
+            <Input
+                type='number'
+                placeholder='Purchase Price'
+                name='purchase_price'
+                focusBorderColor='brown.500'
+                value={purchase_price}
                 onChange={updateNewProductDetails}
               />
             </FormControl>

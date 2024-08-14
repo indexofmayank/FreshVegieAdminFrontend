@@ -11,6 +11,7 @@ import { CustomerProvider } from './context/customer_context';
 import { CategoryProvider } from '../src/context/category_context';
 import { BannerProvider } from './context/banner_context';
 import { GeoFancingProvider } from './context/geoFancing_context';
+import { InventoryProvider } from './context/inventory_context';
 
 ReactDOM.render(
   <UserProvider>
@@ -21,9 +22,11 @@ ReactDOM.render(
             <CategoryProvider>
               <BannerProvider>
                 <GeoFancingProvider>
-                  <ChakraProvider theme={theme}>
-                    <App />
-                  </ChakraProvider>
+                  <InventoryProvider>
+                    <ChakraProvider theme={theme}>
+                      <App />
+                    </ChakraProvider>
+                  </InventoryProvider>
                 </GeoFancingProvider>
               </BannerProvider>
             </CategoryProvider>

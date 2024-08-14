@@ -4,6 +4,7 @@ import { HStack, VStack, Spinner, Heading, Button } from "@chakra-ui/react";
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useProductContext } from '../context/product_context';
 import {useCategoryContext} from '../context/category_context';
+import { useInventoryContext } from "../context/inventory_context";
 
 
 function InventoryPage() {
@@ -14,15 +15,15 @@ function InventoryPage() {
   } = useCategoryContext();
 
   const {
-    products,
-    products_loading: loading,
-    products_error: error,
-    fetchProducts
-  } = useProductContext();
+    inventory_loading: loading,
+    inventory_error: error,
+    inventory,
+    fetchInventory
+  } = useInventoryContext();
 
   const handleRefresh = async () => {
-    await fetchProducts();
     await fetchCategory();
+    await fetchInventory();
   };
   if (loading) {
     return (
@@ -64,7 +65,6 @@ function InventoryPage() {
 
     );
   }
-
   return (
     <SidebarWithHeader>
       <HStack mb={3}>
@@ -77,7 +77,7 @@ function InventoryPage() {
           Refresh
         </Button>
       </HStack>
-      <InventoryTable products={products} categories={categories} />
+      <InventoryTable products={inventory} categories={categories} />
     </SidebarWithHeader>
   )
 }
