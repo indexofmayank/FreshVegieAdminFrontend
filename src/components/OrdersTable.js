@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { formatPrice, getOrderStatusColor } from '../utils/helpers';
+import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helpers';
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../context/user_context';
@@ -56,6 +56,7 @@ function OrdersTable({ orders }) {
     }
   };
 
+
   return (
     <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
       {loading ? (
@@ -66,24 +67,37 @@ function OrdersTable({ orders }) {
         <Table variant='simple'>
           <Thead>
             <Tr>
+              <Th>Order No</Th>
+              <Th>Date</Th>
               <Th>Customer</Th>
               <Th>Items</Th>
+              <Th>Weight</Th>
+              <Th>Locations</Th>
               <Th>Payment</Th>
               <Th>Status</Th>
+              <Th>Amount</Th>
               <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
             {orders.map((order, index) => {
               const {
-                user: { name },
+                orderId,
+                createdAt,
+                user: {name},
                 orderItems,
+                // weight
+                //location
                 paymentInfo: { status },
                 orderStatus,
+                totalPrice,
                 _id: id,
               } = order;
+              console.log(order.createdAt);
               return (
                 <Tr key={index}>
+                  <Td>{orderId}</Td>
+                  <Td>{FormattedDate(createdAt)}</Td>
                   <Td>{name}</Td>
                   <Td>
                     <VStack alignItems='flex-start' spacing={5}>
@@ -108,6 +122,9 @@ function OrdersTable({ orders }) {
                       })}
                     </VStack>
                   </Td>
+
+                  <Td><strong>-</strong></Td>
+                  <Td><strong>-</strong></Td>
                   <Td color='green.500'>
                     <Badge colorScheme='green'>{status}</Badge>
                   </Td>
@@ -116,6 +133,7 @@ function OrdersTable({ orders }) {
                       {orderStatus}
                     </Badge>
                   </Td>
+                  <Td>{totalPrice}</Td>
                   <Td>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
