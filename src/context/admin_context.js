@@ -17,7 +17,10 @@ const initialState = {
   new_admin: {
     name: '',
     email: '',
+    mobile:'',
+    address:'',
     password: '',
+    cnfpassword:'',
     privilege: 'super',
   },
 };

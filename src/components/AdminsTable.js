@@ -110,7 +110,7 @@ function AdminsTable({ admins }) {
                       >
                         <option value='super'>Super</option>
                         <option value='moderate'>Moderate</option>
-                        <option value='low'>Low</option>
+                        <option value='delivery_partner'>Delivery partner</option>
                       </Select>
                       <Button
                         variant='outline'

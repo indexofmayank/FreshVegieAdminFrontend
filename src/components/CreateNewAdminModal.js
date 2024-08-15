@@ -20,7 +20,7 @@ import { useAdminContext } from '../context/admin_context';
 
 function CreateNewAdminModal() {
   const {
-    new_admin: { name, email, password, privilege },
+    new_admin: { name, email, mobile, address, password, cnfpassword, privilege },
     updateNewAdminDetails,
     createNewAdmin,
     fetchAdmins,
@@ -98,12 +98,42 @@ function CreateNewAdminModal() {
               />
             </FormControl>
             <FormControl mt={4}>
+              <FormLabel>Mobile</FormLabel>
+              <Input
+                placeholder='Mobile'
+                name='mobile'
+                focusBorderColor='brown.500'
+                value={mobile}
+                onChange={updateNewAdminDetails}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Address</FormLabel>
+              <Input
+                placeholder='Address'
+                name='address'
+                focusBorderColor='brown.500'
+                value={address}
+                onChange={updateNewAdminDetails}
+              />
+            </FormControl>
+            <FormControl mt={4}>
               <FormLabel>Password</FormLabel>
               <Input
                 placeholder='Password'
                 name='password'
                 focusBorderColor='brown.500'
                 value={password}
+                onChange={updateNewAdminDetails}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Confirm Password</FormLabel>
+              <Input
+                placeholder='Confirm Password'
+                name='cnfpassword'
+                focusBorderColor='brown.500'
+                value={cnfpassword}
                 onChange={updateNewAdminDetails}
               />
             </FormControl>
@@ -117,7 +147,7 @@ function CreateNewAdminModal() {
               >
                 <option value='super'>Super</option>
                 <option value='moderate'>Moderate</option>
-                <option value='low'>Low</option>
+                <option value='delivery_partner'>Delivery partner</option>
               </Select>
             </FormControl>
           </ModalBody>
