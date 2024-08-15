@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const formatPrice = (number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -31,3 +33,27 @@ export const getAdminPrivilegeColor = (privilege) => {
     return 'brown';
   }
 };
+
+export const FormattedDate = (dateString ) => {
+  console.log(dateString);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    
+    // Convert 24-hour time to 12-hour time
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHour = hours % 12 || 12; // convert 0 to 12 for midnight
+    
+    return `${day} ${month} ${year} ${formattedHour}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  };
+
+  return (
+    <span>{formatDate(dateString)}</span>
+  );
+};
+

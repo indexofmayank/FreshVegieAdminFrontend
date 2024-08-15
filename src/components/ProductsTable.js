@@ -29,7 +29,7 @@ function ProductsTable({ products }) {
   const toast = useToast();
   const { fetchProducts, deleteProduct } = useProductContext();
   const [loading, setLoading] = useState(false);
-
+  console.log(products);
   const handleDelete = async (id) => {
     setLoading(true);
     const response = await deleteProduct(id);
@@ -73,15 +73,13 @@ function ProductsTable({ products }) {
           </Thead>
           <Tbody>
             {products.map((product, index) => {
-              console.log(product);
-              const { images, name, price, stock, category, company, id } =
+              const { image, name, category, stock, price, id } =
                 product;
-                console.log(images);
               return (
                 <Tr key={index}>
                   <Td>
                     <Image
-                      src={images}
+                      src={image}
                       boxSize='100px'
                       objectFit='cover'
                       borderRadius='lg'
@@ -103,6 +101,9 @@ function ProductsTable({ products }) {
                       </Text>
                     </VStack>
                   </Td> */}
+                  <Td>
+                    {category}
+                  </Td>
                   <Td>{stock}</Td>
                   <Td>
                     <Menu>
