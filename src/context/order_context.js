@@ -18,7 +18,7 @@ import {
   UPDATE_ORDER_STATUS,
   GET_ORDERWITHITEM_BEGIN,
   GET_ORDERWITHITEM_SUCCESS,
-  GET_ORDERWITHITEM_ERROR
+  GET_ORDERWITHITEM_ERROR,
 } from '../actions';
 
 const initialState = {
@@ -92,6 +92,7 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
+
   const deleteOrder = async (id) => {
     try {
       const response = await axios.delete(`${update_order_status}${id}`);
@@ -102,6 +103,7 @@ export const OrderProvider = ({ children }) => {
       return { success, message };
     }
   };
+
 
   useEffect(() => {
     fetchOrders();

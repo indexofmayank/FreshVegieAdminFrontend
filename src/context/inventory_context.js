@@ -4,9 +4,10 @@ import reducer from '../reducers/inventory_reducer';
 import {
     GET_INVENTORY_BEGIN,
     GET_INVENTORY_SUCCESS,
-    GET_INVENTORY_ERROR
+    GET_INVENTORY_ERROR,
+    UPDATE_INVENTORY
 } from '../actions';
-import { inventory_url } from "../utils/constants";
+import { inventory_url, update_product_url } from "../utils/constants";
 
 const initialState = {
     invetory_loading: false,
@@ -24,12 +25,22 @@ export const InventoryProvider = ({children}) => {
         try {
             const response = await axios.get(inventory_url);
             const {data} = response.data;
-            console.log(data);
             dispatch({type: GET_INVENTORY_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_INVENTORY_ERROR});
         }
     };
+
+    const updateInventory = async (updateProducts) => {
+        try {
+            const response = await axios.put(`${inventory_url}`, updateProducts);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
 
     useEffect(() => {
         fetchInventory();
@@ -40,6 +51,7 @@ export const InventoryProvider = ({children}) => {
             value={{
                 ...state,
                 fetchInventory,
+                updateInventory
             }}
         >
             {children}
