@@ -51,6 +51,7 @@ export const GeoFancingProvider = ({children}) => {
         try {
             const response = await axios.get(`${geoFancing_url}${id}`);
             const {data} = response.data;
+            console.log(data);
             dispatch({type: GET_SINGLE_GEOFANCING_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_SINGLE_GEOFANCING_ERROR});
@@ -78,10 +79,12 @@ export const GeoFancingProvider = ({children}) => {
     const updateExistingGeoFancingDetails = (e) => {
         const name = e.target.name;
         let value = e.target.value;
+        console.log(value);
         dispatch({type: UPDATE_EXISTING_GEOFANCING, payload: {name, value}});
     };
 
-    const updateGeoFancing = async (id, geoFancing) => {
+    const updateGeoFancing = async (geoFancing, id) => {
+        console.log('we hit at context');
         try {
             const response = await axios.put(`${geoFancing_url}${id}`, geoFancing);
             const {success, message} = response.data;
@@ -92,7 +95,7 @@ export const GeoFancingProvider = ({children}) => {
         }
     }
 
-    const deleteGeoFancing = async (id, geoFancing) => {
+    const deleteGeoFancing = async (id) => {
         try {
             const respone = await axios.delete(`${geoFancing_url}${id}`);
             const {success, message} = respone.data;
@@ -116,7 +119,8 @@ export const GeoFancingProvider = ({children}) => {
                 updateNewGeoFancingDetails,
                 fetchSingleGeoFancing,
                 updateExistingGeoFancingDetails,
-                updateGeoFancing
+                updateGeoFancing,
+                deleteGeoFancing
             }}
         >
             {children}

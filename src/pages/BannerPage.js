@@ -8,13 +8,16 @@ import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useBannerContext } from "../context/banner_context";
 
+
 function BannerPage() {
+
   const {
     banners,
     banner_loading: loading,
     banner_error: error,
     fetchBanner,
   } = useBannerContext();
+
 
   const handleRefresh = async () => {
     await fetchBanner();

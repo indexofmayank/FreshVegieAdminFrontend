@@ -30,7 +30,10 @@ const geoFancing_reducer = (state, action) => {
 
     if(action.type === UPDATE_EXISTING_GEOFANCING) {
         const {name, value} = action.payload;
-        return {...state.single_geoFancing, [name]: value}
+        return {
+            ...state,
+            single_geoFancing: {...state.single_geoFancing, [name]: value},
+        };
     };
 
     if(action.type === GET_SINGLE_GEOFANCING_BEGIN) {
@@ -56,6 +59,7 @@ const geoFancing_reducer = (state, action) => {
             single_geoFancing: action.payload
         };
     }
+
 
     throw new Error(`No matching "${action.type}" - action type `);
 };

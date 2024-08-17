@@ -27,11 +27,9 @@ export const CategoryTable = ({ categories }) => {
     const toast = useToast();
     const { fetchCategory, deleteCategory } = useCategoryContext();
     const [loading, setLoading] = useState(false);
-
     const handleDelete = async (id) => {
         setLoading(true);
         const response = await deleteCategory(id);
-        console.log(response);
         if (response.success) {
             toast({
                 position: 'top',
@@ -51,12 +49,6 @@ export const CategoryTable = ({ categories }) => {
             });
         }
         setLoading(false);
-    };
-
-    const handleSwitchChange = (id, event) => {
-        const newStatus = event.target.checked;
-        console.log(`Category ID: ${id}, New Status: ${newStatus}`);
-        // You can add more logic here to update the status in the backend or state
     };
 
     return (
@@ -93,7 +85,6 @@ export const CategoryTable = ({ categories }) => {
                                         <Switch
                                             colorScheme='green'
                                             isChecked={status}
-                                            onChange={(e) => handleSwitchChange(id, e)}
                                         />
                                     </Td>
                                     <Td>

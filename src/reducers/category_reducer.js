@@ -2,7 +2,11 @@ import {
     GET_CATEGORY_BEGIN,
     GET_CATEGORY_ERROR,
     GET_CATEGORY_SUCCESS,
-    CREATE_NEW_CATEGORY
+    CREATE_NEW_CATEGORY,
+    GET_SINGLE_CATEGORY_BEGIN,
+    GET_SINGLE_CATEGORY_ERROR,
+    GET_SINGLE_CATEGORY_SUCCESS,
+    UPDATE_EXISTING_CATEGORY
 } from '../actions';
 
 const category_reducer = (state, action) => {
@@ -23,7 +27,39 @@ const category_reducer = (state, action) => {
         return {...state, new_category: {...state.new_category, [name]: value}};
     }
 
+    if(action.type === UPDATE_EXISTING_CATEGORY){
+        const {name, value} = action.payload;
+        return {
+            ...state,
+            single_category: {...state.single_category, [name]: value},
+        };
+    }
 
+    if(action.type === GET_SINGLE_CATEGORY_BEGIN) {
+        return {
+            ...state,
+            single_category_error: false,
+            single_category_loading: true
+        }
+    }
+
+    if(action.type === GET_SINGLE_CATEGORY_ERROR) {
+        return {
+            ...state,
+            single_category_error: true,
+            single_category_loading: false,
+        }
+    }
+
+    if(action.type === GET_SINGLE_CATEGORY_SUCCESS) {
+        return {
+            ...state,
+            single_category_loading: false,
+            single_category: action.payload,
+        }
+    }
+
+    throw new Error(`No matching ${action.type} - action type`);
 };
 
 export default category_reducer;

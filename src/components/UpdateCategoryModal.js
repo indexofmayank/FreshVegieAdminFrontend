@@ -15,7 +15,11 @@ import {
   useToast,
   Center,
   Text,
-  Image
+  Image,
+  Select,
+  Option,
+  HStack,
+  VStack
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useCategoryContext } from '../context/category_context';
@@ -28,8 +32,11 @@ const UpdateCategoryModal = ({ id }) => {
       image = '',
       status = ''
     },
+    fetchSingleCategory,
+    single_category_loading,
+    updateExistingCategoryDetails,
     fetchCategory,
-    fetchSingleCategory
+    updateCategory
   } = useCategoryContext();
 
   const [imageList, setImageList] = useState(image);
@@ -45,7 +52,6 @@ const UpdateCategoryModal = ({ id }) => {
       reader.readAsDataURL(file);
     }
   }, []);
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: 'image/jpeg, image/png',
@@ -55,12 +61,73 @@ const UpdateCategoryModal = ({ id }) => {
   const initialRef = useRef();
   const toast = useToast();
 
+  const handleRemoveImage = async () => {
+    setImageList(null);
+  };
+
+  const handleSubmit = async () => {
+    console.log(name);
+    console.log(status);
+    if (
+      !name ||
+      !status
+    ) {
+      return toast({
+        position: 'top',
+        descirption: 'Provide all the details',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    if (imageList.length < 1) {
+      return toast({
+        position: 'top',
+        description: 'Add alteast one image',
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setLoading(true);
+    const category = {
+      name,
+      status,
+      image: imageList
+    };
+    const responseCreate = await updateCategory(id, category);
+    setLoading(false);
+    if(responseCreate.success) {
+      onClose();
+      toast({
+        position: 'top',
+        description: 'Category updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      await fetchCategory();
+    } else {
+      return toast({
+        position: 'top',
+        description: responseCreate.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  }
+
+  useEffect(() => {
+    setImageList(image);
+  }, [single_category_loading]);
   return (
     <>
       <Text
         colorScheme='brown'
         minW='100%'
         onClick={() => {
+          fetchSingleCategory(id);
           onOpen();
         }}
       >
@@ -82,8 +149,21 @@ const UpdateCategoryModal = ({ id }) => {
                 name='name'
                 focusBorderColor='brown.500'
                 value={name}
-                onChange={() => { }}
+                onChange={updateExistingCategoryDetails}
               />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Status</FormLabel>
+              <Select
+                placeholder='Select status'
+                name='status'
+                focusBorderColor='brown.500'
+                value={status}
+                onChange={updateExistingCategoryDetails}
+              >
+                <option value='true'>active</option>
+                <option value='false'>nactive</option>
+              </Select>
             </FormControl>
             <FormControl mt={4}>
               <FormLabel>Images</FormLabel>
@@ -97,7 +177,6 @@ const UpdateCategoryModal = ({ id }) => {
                 borderRadius='lg'
                 {...getRootProps()}
               >
-                <input {...getInputProps()} />
                 {isDragActive ? (
                   <p>Drag your files here</p>
                 ) : (
@@ -108,12 +187,31 @@ const UpdateCategoryModal = ({ id }) => {
                   </p>
                 )}
               </Center>
-              {imageList && (
-                <Center>
-                  <Image src={imageList} alt="Category" maxH="200px" my={3} />
-                </Center>
-              )}
+              <Input {...getInputProps()} />
             </FormControl>
+            <FormControl mt={4}>
+              <HStack>
+                {imageList && (
+                  <VStack>
+                    <Image
+                      src={imageList}
+                      boxSize='70px'
+                      objectFit='cover'
+                      borderRadius='lg'
+                    />
+                    <Button
+                      size='xs'
+                      variant='outline'
+                      colorScheme='red'
+                      onClick={handleRemoveImage}
+                    >
+                      Remove
+                    </Button>
+                  </VStack>
+                )}
+              </HStack>
+            </FormControl>
+
 
           </ModalBody>
 
@@ -122,8 +220,10 @@ const UpdateCategoryModal = ({ id }) => {
               Cancel
             </Button>
             <Button
+              isLoading={loading}
+              loadingText='Updating Category'
               colorScheme='brown'
-              onClick={() => { }}
+              onClick={handleSubmit}
             >
               Save
             </Button>

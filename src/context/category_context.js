@@ -15,7 +15,8 @@ import {
     GET_SINGLE_CATEGORY_BEGIN,
     GET_SINGLE_CATEGORY_ERROR,
     GET_SINGLE_CATEGORY_SUCCESS,
-    CREATE_NEW_CATEGORY
+    CREATE_NEW_CATEGORY,
+    UPDATE_EXISTING_CATEGORY
 } from '../actions';
 
 const initialState = {
@@ -28,6 +29,9 @@ const initialState = {
         image: '',
         status: ''
     },
+    single_category_loading: false,
+    single_category_error: false,
+    single_category: {}    
 };
 
 const CategoryContext = React.createContext();
@@ -45,6 +49,17 @@ export const CategoryProvider = ({children}) => {
         }
     };
 
+    const updateCategory = async (id, category) => {
+        try {
+            const response = await axios.put(`${category_url}${id}`, category);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    };
+
     const fetchSingleCategory = async (id) => {
         dispatch({type: GET_SINGLE_CATEGORY_BEGIN});
         try {
@@ -56,9 +71,12 @@ export const CategoryProvider = ({children}) => {
         }
     };
 
-    // const updateExistingCategoryDetails = (e) => {
-    //     const name = e.target.name
-    // };
+    const updateExistingCategoryDetails = (e) => {
+        const name = e.target.name
+        let value = e.target.value;
+        dispatch({type: UPDATE_EXISTING_CATEGORY, payload: {name, value}});
+    };
+
     const updateNewCategoryDetails = (e) => {
         const name = e.target.name;
         let value = e.target.value;
@@ -101,7 +119,9 @@ export const CategoryProvider = ({children}) => {
                 fetchSingleCategory,
                 deleteCategory,
                 createNewCategory,
-                updateNewCategoryDetails
+                updateNewCategoryDetails,
+                updateExistingCategoryDetails,
+                updateCategory
             }}
         >
             {children}

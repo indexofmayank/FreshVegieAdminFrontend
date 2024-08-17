@@ -24,11 +24,31 @@ import {UpdateGeoFancingModal} from '../components';
 
 function GeoFancingTable({ geoFancings }) {
   const toast = useToast();
-  const { fetchBanner, deleteGeoFancing } = useGeoFancingContext();
+  const {fetchGeoFancing, deleteGeoFancing } = useGeoFancingContext();
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async (id) => {
-    console.log('clicked');
+    setLoading(true);
+    const response = await deleteGeoFancing(id);
+    if(response.success) {
+      toast({
+        position: 'top',
+        description: response.message,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      await fetchGeoFancing();
+    } else {
+      toast({
+        position: 'top',
+        description: response.message,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setLoading(false);
   };
 
 
@@ -65,7 +85,6 @@ function GeoFancingTable({ geoFancings }) {
                   <Td>
                     <Switch
                       isChecked={status}
-                      isReadOnly={true}
                       colorScheme='brown'
                     />
                   </Td>

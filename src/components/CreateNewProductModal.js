@@ -33,6 +33,7 @@ function CreateNewProductModal() {
   const {
     new_product: {
       name,
+      product_status,
       price,
       offer_price,
       stock,
@@ -109,8 +110,10 @@ function CreateNewProductModal() {
     console.log(product_detail_min);
     console.log(imageList);
     console.log(purchase_price);
+    console.log(product_status);
     if (
       !name ||
+      !product_status ||
       !price ||
       !offer_price ||
       !purchase_price ||
@@ -149,6 +152,7 @@ function CreateNewProductModal() {
     console.log('uploading');
     const product = {
       name,
+      product_status,
       price,
       offer_price,
       stock,
@@ -273,6 +277,20 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
+              <FormLabel>Status</FormLabel>
+              <Select
+                placeholder='Select status'
+                name='product_status'
+                focusBorderColor='brown.500'
+                value={product_status}
+                onChange={updateNewProductDetails}
+              >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+              </Select>
+            </FormControl>
+
+            <FormControl mt={4}>
               <FormLabel>Category</FormLabel>
               <Select
                 placeholder='Select category'
@@ -347,6 +365,7 @@ function CreateNewProductModal() {
             <FormControl mt={4}>
               <FormLabel>Stock Notify</FormLabel>
               <Input
+                type='number'
                 placeholder='stock notify'
                 name='stock_notify'
                 value={stock_notify}
@@ -357,6 +376,7 @@ function CreateNewProductModal() {
             <FormControl mt={4}>
               <FormLabel>Tax</FormLabel>
               <Input
+                type='number'
                 placeholder='tax'
                 name='tax'
                 value={tax}
@@ -367,6 +387,7 @@ function CreateNewProductModal() {
             <FormControl mt={4}>
               <FormLabel>Product Detail Min</FormLabel>
               <Input
+                type='number'
                 placeholder='product detail min'
                 name='product_detail_min'
                 value={product_detail_min}
@@ -377,6 +398,7 @@ function CreateNewProductModal() {
             <FormControl mt={4}>
               <FormLabel>Product Detail Max</FormLabel>
               <Input
+                type='number'
                 placeholder='product detail max'
                 name='product_detail_max'
                 value={product_detail_max}

@@ -33,6 +33,7 @@ function OrderDetails({
     },
   ],
 }) {
+  console.log('mayank bhai')
   return (
     <Box>
       <VStack alignItems='flex-start' spacing='8'>

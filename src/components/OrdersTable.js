@@ -64,7 +64,7 @@ function OrdersTable({ orders }) {
           <Spinner size='lg' color='brown.500' />
         </HStack>
       ) : (
-        <Table variant='simple'>
+        <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
           <Thead>
             <Tr>
               <Th>Order No</Th>
@@ -85,7 +85,7 @@ function OrdersTable({ orders }) {
                 orderId,
                 createdAt,
                 user: {name},
-                orderItems,
+                orderItemsCount,
                 // weight
                 //location
                 paymentInfo: { status },
@@ -100,27 +100,7 @@ function OrdersTable({ orders }) {
                   <Td>{FormattedDate(createdAt)}</Td>
                   <Td>{name}</Td>
                   <Td>
-                    <VStack alignItems='flex-start' spacing={5}>
-                      {orderItems.map((item, index) => {
-                        const { image, name, price } = item;
-                        return (
-                          <HStack key={index}>
-                            <Image
-                              src={image}
-                              boxSize='50px'
-                              objectFit='cover'
-                              borderRadius='lg'
-                            />
-                            <VStack alignItems='flex-start' spacing={1}>
-                              <Text as='b'>{name.substring(0, 21)}...</Text>
-                              <Text fontSize='sm' color='green.500'>
-                                {formatPrice(price)}
-                              </Text>
-                            </VStack>
-                          </HStack>
-                        );
-                      })}
-                    </VStack>
+                    {orderItemsCount}
                   </Td>
 
                   <Td><strong>-</strong></Td>

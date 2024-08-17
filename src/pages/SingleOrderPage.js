@@ -7,29 +7,33 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
+import {
+  SidebarWithHeader,
+  OrderTableWithItem
+} from '../components';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { SidebarWithHeader, OrderDetails } from '../components';
 import { useOrderContext } from '../context/order_context';
 import { orderStatusList } from '../utils/constants';
 
 function SingleOrderPage() {
+
   const { id } = useParams();
   const [statusList, setStatusList] = useState([...orderStatusList]);
   const toast = useToast();
   const {
-    single_order_loading: loading,
-    single_order_error: error,
-    single_order: order,
+    order_withItem_loading: loading,
+    order_withItem_error: error,
+    order_withItems,
     single_order_status,
-    fetchSingleOrder,
     updateOrderStatus,
+    fetchOrderWithItems
   } = useOrderContext();
 
   const handleChange = async (e) => {
     const status = e.target.value;
     const response = await updateOrderStatus(status, id);
-    if (response.success) {
+    if(response.success) {
       return toast({
         position: 'top',
         description: `Order ${response.status}`,
@@ -48,40 +52,19 @@ function SingleOrderPage() {
     }
   };
 
-  useEffect(() => {
-    fetchSingleOrder(id);
-    // eslint-disable-next-line
-  }, [id]);
 
   useEffect(() => {
-    let tempList = [...orderStatusList];
-    if (
-      single_order_status === 'processing' ||
-      single_order_status === 'rejected'
-    ) {
-      tempList.splice(3, 2);
-      setStatusList([...tempList]);
-    }
-    if (single_order_status === 'confirmed') {
-      tempList.splice(0, 2);
-      setStatusList([...tempList]);
-    }
-    if (single_order_status === 'shipped') {
-      tempList.splice(0, 3);
-      setStatusList([...tempList]);
-    }
-    if (single_order_status === 'delivered') {
-      tempList.splice(0, 4);
-      setStatusList([...tempList]);
-    }
-  }, [id, single_order_status]);
+    fetchOrderWithItems(id);
+  }, [id]);
 
   if (loading) {
     return (
       <SidebarWithHeader>
-        <VStack alignItems='center' justifyContent='center'>
-          <Spinner size='lg' color='brown.500' />
-        </VStack>
+        <HStack mb={5}>
+          <VStack alignItems='center' justifyContent='center' >
+            <Spinner size='lg' color='brown.500' />
+          </VStack>
+        </HStack>
       </SidebarWithHeader>
     );
   }
@@ -89,13 +72,14 @@ function SingleOrderPage() {
   if (error) {
     return (
       <SidebarWithHeader>
-        <VStack alignItems='center' justifyContent='center'>
-          <Heading color='red.500'>There was an error</Heading>
-        </VStack>
+        <HStack mb={5}>
+          <VStack alignItems='center' justifyContent='center' >
+            <Heading color='red.500'>There was an error</Heading>
+          </VStack>
+        </HStack>
       </SidebarWithHeader>
     );
   }
-
   return (
     <SidebarWithHeader>
       <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
@@ -114,17 +98,12 @@ function SingleOrderPage() {
               </option>
             );
           })}
+
         </Select>
       </HStack>
-      <VStack
-        spacing='5'
-        p={5}
-        bg='white'
-        alignItems='flex-start'
-        shadow='sm'
-        borderRadius='lg'
-      >
-        <OrderDetails {...order} order_status={single_order_status} />
+      <VStack>
+        <OrderTableWithItem orderWithItems={order_withItems[0]} />
+
       </VStack>
     </SidebarWithHeader>
   );

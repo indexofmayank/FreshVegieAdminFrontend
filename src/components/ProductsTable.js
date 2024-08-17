@@ -22,6 +22,7 @@ import {
   Spinner,
   Text,
   useToast,
+  Switch
 } from '@chakra-ui/react';
 import UpdateProductModal from './UpdateProductModal';
 
@@ -68,11 +69,13 @@ function ProductsTable({ products }) {
               <Th>Name</Th>
               <Th>Category</Th>
               <Th>Stock</Th>
+              <Th>Status</Th>
               <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
             {products.map((product, index) => {
+              console.log(product);
               const { image, name, category, stock, price, id } =
                 product;
               return (
@@ -106,6 +109,11 @@ function ProductsTable({ products }) {
                   </Td>
                   <Td>{stock}</Td>
                   <Td>
+                    <Switch
+                      colorScheme='brown'
+                    />
+                  </Td>
+                  <Td>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                         Actions
@@ -123,7 +131,7 @@ function ProductsTable({ products }) {
                       </MenuList>
                     </Menu>
                   </Td>
-                </Tr> 
+                </Tr>
               );
             })}
           </Tbody>

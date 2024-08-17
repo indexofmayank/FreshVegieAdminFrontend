@@ -6,6 +6,7 @@ import {
   orders_url,
   single_order_url,
   update_order_status,
+  get_orderWithItem_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -15,12 +16,18 @@ import {
   GET_SINGLE_ORDER_ERROR,
   GET_SINGLE_ORDER_SUCCESS,
   UPDATE_ORDER_STATUS,
+  GET_ORDERWITHITEM_BEGIN,
+  GET_ORDERWITHITEM_SUCCESS,
+  GET_ORDERWITHITEM_ERROR
 } from '../actions';
 
 const initialState = {
   orders_loading: false,
   orders_error: false,
+  order_withItems_loading: false,
+  order_withItems_error: false,
   orders: [],
+  order_withItems: {},
   single_order_loading: false,
   single_order_error: false,
   single_order: {},
@@ -56,6 +63,17 @@ export const OrderProvider = ({ children }) => {
       dispatch({ type: GET_SINGLE_ORDER_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_SINGLE_ORDER_ERROR });
+    }
+  };
+
+  const fetchOrderWithItems = async(id) => {
+    dispatch({type: GET_ORDERWITHITEM_BEGIN});
+    try { 
+      const response = await axios.get(`${get_orderWithItem_url}${id}`);
+      const {data} = response.data;
+      dispatch({type: GET_ORDERWITHITEM_SUCCESS, payload: data});
+    } catch(error) {
+      dispatch({type: GET_ORDERWITHITEM_ERROR});
     }
   };
 
@@ -97,6 +115,7 @@ export const OrderProvider = ({ children }) => {
         fetchSingleOrder,
         updateOrderStatus,
         deleteOrder,
+        fetchOrderWithItems
       }}
     >
       {children}

@@ -6,6 +6,9 @@ import {
   GET_SINGLE_ORDER_ERROR,
   GET_SINGLE_ORDER_SUCCESS,
   UPDATE_ORDER_STATUS,
+  GET_ORDERWITHITEM_BEGIN,
+  GET_ORDERWITHITEM_ERROR,
+  GET_ORDERWITHITEM_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -59,6 +62,16 @@ const order_reducer = (state, action) => {
   }
   if (action.type === UPDATE_ORDER_STATUS) {
     return { ...state, single_order_status: action.payload };
+  }
+
+  if(action.type === GET_ORDERWITHITEM_BEGIN) {
+    return {...state, order_withItem_loading: true, order_withItem_error: false};
+  }
+  if(action.type === GET_ORDERWITHITEM_ERROR) {
+    return {...state, order_withItem_loading: false, order_withItem_error: true};
+  }
+  if(action.type === GET_ORDERWITHITEM_SUCCESS) {
+    return {...state, order_withItem_loading: false, order_withItem_error: false, order_withItems: action.payload}
   }
   throw new Error(`No Matching "${action.type}" - action type`);
 };

@@ -16,7 +16,8 @@ import {
     Menu,
     MenuItem,
     MenuList,
-    MenuButton
+    MenuButton,
+    Switch
 } from '@chakra-ui/react';
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
@@ -44,16 +45,24 @@ export const UserTable = ({ customers }) => {
                             <Th>Name</Th>
                             <Th>Email</Th>
                             <Th>Phone</Th>
+                            <Th>Status</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {customers.map((customer, index) => {
-                            const { name, phone, email, address, id } = customer;
+                            const { name, phone, email, address, status, id } = customer;
                             return (
                                 <Tr key={index}>
                                     <Td>{name}</Td>
                                     <Td>{email}</Td>
                                     <Td>{phone}</Td>
+                                    <Td>
+                                        <Switch
+                                            colorScheme='brown'
+                                            isChecked={status}
+                                        />
+
+                                    </Td>
                                     <Td>
                                         <Menu>
                                             <MenuButton as={Button} rightIcon={<BiChevronDown />}>

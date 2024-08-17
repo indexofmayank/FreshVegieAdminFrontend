@@ -24,11 +24,11 @@ export const LinkItems = [
 ];
 
 export const orderStatusList = [
-  { name: 'Reject', value: 'rejected' },
-  { name: 'Processing', value: 'processing' },
-  { name: 'Confirmed', value: 'confirmed' },
-  { name: 'Shipped', value: 'shipped' },
-  { name: 'Delivered', value: 'delivered' },
+  {name: 'Accepted', value: 'accepeted'},
+  {name: 'Received', value: 'received'},
+  { name: 'Rejected', value: 'rejected' },
+  {name: 'Packed', value: 'packed'},
+  {name: 'Assign Delivery', valuel: 'assign_delivery'}
 ];
 
 export const domain = process.env.REACT_APP_BACKEND_HOST;
@@ -56,3 +56,4 @@ export const get_banner_by_id_url = `${domain}/api/banner/`;
 export const delete_banner_by_id_url = `${domain}/api/banner/`;
 export const geoFancing_url = `${domain}/api/polygon/`;
 export const inventory_url = `${domain}/api/inventory/`;
+export const get_orderWithItem_url = `${domain}/api/orders/orderId/`

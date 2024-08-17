@@ -45,7 +45,6 @@ function UpdateBannerModal({ id }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
     const toast = useToast();
-
     const handleRemoveImage = async () => {
         setImageList(null);
     };
@@ -117,7 +116,6 @@ function UpdateBannerModal({ id }) {
         onDrop,
         accept: 'image/jpeg, image/png',
     });
-
     useEffect(() => {
         setImageList(image);
     }, [single_banner_loading]);
