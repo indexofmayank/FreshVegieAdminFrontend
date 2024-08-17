@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box, HStack, VStack, Text, Badge,
     SimpleGrid, Table, Thead, Tr, Th, Tbody, Td, Image, Spinner
@@ -30,19 +30,32 @@ function OrderTableWithItem({ orderWithItems }) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {orderWithItems.orderItems.map((item, index) => (
-                        <Tr key={index}>
-                            <Td>{index + 1}</Td>
-                            <Td>{item.name}</Td>
-                            <Td>{item.price}</Td>
-                            <Td>{item.discountPrice}</Td>
-                            <Td>{item.quantity}</Td>
-                            <Td>{item.tax}</Td>
-                            <Td>{item.total}</Td>
-                        </Tr>
-                    ))}
+                    {orderWithItems.orderItems.map((item, index) => {
+                        const { name, image, price, quantity } = item;
+                        return (
+                            <Tr key={index}>
+                                <Td>
+                                    <Image
+                                        src={image}
+                                        boxSize='100px'
+                                        objectFit='cover'
+                                        borderRadius='lg'
+                                    />
+
+                                </Td>
+                                <Td>{name}</Td>
+                                <Td>{price}</Td>
+                                <Td>-</Td>
+                                <Td>{quantity}</Td>
+                                <Td>-</Td>
+                                <Td>-</Td>
+                            </Tr>
+                        )
+                    })}
                 </Tbody>
             </Table>
         </SimpleGrid>
     );
 }
+
+export default OrderTableWithItem;
