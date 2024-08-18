@@ -2,16 +2,23 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from './SearchBox';
 import {
   Button, Select, Stack, Table, Thead, Tr, Th, Td, Tbody,
-  SimpleGrid, Spinner, HStack, Image, Input, InputGroup, InputLeftAddon
+  SimpleGrid, Spinner, HStack, Image, Input, InputGroup, InputLeftAddon,
+  useToast,
+  toast,
+  position
 } from '@chakra-ui/react';
 import { useInventoryContext } from '../context/inventory_context';
 
 const InventoryTable = ({ products, categories }) => {
 
-  const {fetchInventory} = useInventoryContext();
+  const { fetchInventory, updateInventory } = useInventoryContext();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [updatedProducts, setUpdatedProducts] = useState({});
+  const [bulkUpdateLoading, setBulkUpdateLoading] = useState(null);
+
+  const toast = useToast();
 
   useEffect(() => {
     let filtered = products;
@@ -31,6 +38,21 @@ const InventoryTable = ({ products, categories }) => {
     setFilteredProducts(filtered);
   }, [searchQuery, selectedCategory, products]);
 
+  const handleInputChange = (e, index, field) => {
+    const { value } = e.target;
+    const updatedList = [...filteredProducts];
+    updatedList[index] = { ...updatedList[index], [field]: value };
+
+    setFilteredProducts(updatedList); // Update filtered products list
+    setUpdatedProducts((prevState) => {
+      const updatedProduct = updatedList[index];
+      return {
+        ...prevState,
+        [updatedProduct._id]: updatedProduct,
+      };
+    });
+  };
+
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
@@ -39,10 +61,45 @@ const InventoryTable = ({ products, categories }) => {
     setSelectedCategory(event.target.value);
   };
 
+  const handleBulkUpdate = async () => {
+    const productsToUpdate = Object.values(updatedProducts);
+    console.log('Products to be updated:', productsToUpdate);
+
+    if(productsToUpdate.length < 1) {
+      return toast({
+        position: 'top',
+        description: 'Nothing to update',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    setBulkUpdateLoading(true);
+    const responseCreate = await updateInventory(productsToUpdate);
+    setBulkUpdateLoading(false);
+    console.log(responseCreate);
+    if(responseCreate.success) {
+      toast({
+        position: 'top',
+        description: 'inventory updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      await fetchInventory();
+    } else {
+      return toast({
+        position: 'top',
+        describe: responseCreate.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    
+  };
+
   const loading = false;
-
-  console.log(filteredProducts);
-
   return (
     <>
       <Stack spacing={4} direction='row'>
@@ -54,8 +111,9 @@ const InventoryTable = ({ products, categories }) => {
             </option>
           ))}
         </Select>
-        <Button  colorScheme="brown"  px={5} size='xl'>Update</Button>
-        <Button  colorScheme="brown"  px={5} size='xl'>Bulk Update</Button>
+        <Button colorScheme="brown" px={5} size='xl' onClick={handleBulkUpdate} isLoading={bulkUpdateLoading} loadingText='Bluk Updating'>
+          Bulk Update
+        </Button>
       </Stack>
 
       <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto' mt={4}>
@@ -92,17 +150,45 @@ const InventoryTable = ({ products, categories }) => {
                         /><span>{name}</span>
                       </div>
                     </Td>
-                    <Td> <Input  value={stock} size='md' width='auto' /></Td>
-                    <Td> <Input  value={stock_notify} size='md' width='auto' /></Td>
+                    <Td>
+                      <Input
+                        value={stock}
+                        size='md'
+                        width='auto'
+                        onChange={(e) => handleInputChange(e, index, 'stock')}
+                      />
+                    </Td>
+                    <Td>
+                      <Input
+                        value={stock_notify}
+                        size='md'
+                        width='auto'
+                        onChange={(e) => handleInputChange(e, index, 'stock_notify')}
+                      />
+                    </Td>
                     <Td><strong>-</strong></Td>
-                    <Td>  <InputGroup>
-                            <InputLeftAddon>₹</InputLeftAddon>
-                            <Input  value={price} size='md' width='auto' />
-                          </InputGroup> </Td>
-                    <Td >  <InputGroup>
-                            <InputLeftAddon>₹</InputLeftAddon>
-                            <Input  value={offer_price} size='md' width='auto' />
-                          </InputGroup> </Td>
+                    <Td>
+                      <InputGroup>
+                        <InputLeftAddon>₹</InputLeftAddon>
+                        <Input
+                          value={price}
+                          size='md'
+                          width='auto'
+                          onChange={(e) => handleInputChange(e, index, 'price')}
+                        />
+                      </InputGroup>
+                    </Td>
+                    <Td>
+                      <InputGroup>
+                        <InputLeftAddon>₹</InputLeftAddon>
+                        <Input
+                          value={offer_price}
+                          size='md'
+                          width='auto'
+                          onChange={(e) => handleInputChange(e, index, 'offer_price')}
+                        />
+                      </InputGroup>
+                    </Td>
                     <Td>
                       {
                         !isNaN(purchase_price) && !isNaN(stock) ?
