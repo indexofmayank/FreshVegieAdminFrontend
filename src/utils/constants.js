@@ -56,4 +56,5 @@ export const get_banner_by_id_url = `${domain}/api/banner/`;
 export const delete_banner_by_id_url = `${domain}/api/banner/`;
 export const geoFancing_url = `${domain}/api/polygon/`;
 export const inventory_url = `${domain}/api/inventory/`;
-export const get_orderWithItem_url = `${domain}/api/orders/orderId/`
+export const get_orderWithItem_url = `${domain}/api/orders/orderId/`;
+export const get_orderLogs_url = `${domain}/api/orderLoggers/`;

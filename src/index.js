@@ -13,6 +13,8 @@ import { CategoryProvider } from '../src/context/category_context';
 import { BannerProvider } from './context/banner_context';
 import { GeoFancingProvider } from './context/geoFancing_context';
 import { InventoryProvider } from './context/inventory_context';
+import { UserDetailProvider } from './context/user_detail_context';
+
 
 ReactDOM.render(
   <UserProvider>
@@ -23,11 +25,13 @@ ReactDOM.render(
             <CategoryProvider>
               <BannerProvider>
                 <GeoFancingProvider>
-                  <InventoryProvider>
-                    <ChakraProvider theme={theme}>
-                      <App />
-                    </ChakraProvider>
-                  </InventoryProvider>
+                  <UserDetailProvider>
+                    <InventoryProvider>
+                      <ChakraProvider theme={theme}>
+                        <App />
+                      </ChakraProvider>
+                    </InventoryProvider>
+                  </UserDetailProvider>
                 </GeoFancingProvider>
               </BannerProvider>
             </CategoryProvider>
@@ -35,6 +39,6 @@ ReactDOM.render(
         </ProductProvider>
       </OrderProvider>
     </AdminProvider>
-  </UserProvider>,
+  </UserProvider >,
   document.getElementById('root')
 );

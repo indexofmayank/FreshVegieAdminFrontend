@@ -13,7 +13,8 @@ import {
   CategoryPage,
   BannerPage,
   GeoFancing,
-  InventoryPage
+  InventoryPage,
+  SingleUserPage
 } from './pages';
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/users'>
           <UsersPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/users/:id'>
+          <SingleUserPage />
         </PrivateRoute>
         <PrivateRoute exact path='/category'>
           <CategoryPage />

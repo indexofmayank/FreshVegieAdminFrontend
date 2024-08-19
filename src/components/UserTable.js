@@ -29,7 +29,6 @@ export const UserTable = ({ customers }) => {
     const [loading, setLoading] = useState(false);
 
     const handleDelete = async (id) => {
-        console.log('did');
     }
     console.log(customers);
     return (
@@ -50,7 +49,7 @@ export const UserTable = ({ customers }) => {
                     </Thead>
                     <Tbody>
                         {customers.map((customer, index) => {
-                            const { name, phone, email, address, status, id } = customer;
+                            const { name, phone, email, address, status, _id } = customer;
                             return (
                                 <Tr key={index}>
                                     <Td>{name}</Td>
@@ -69,10 +68,10 @@ export const UserTable = ({ customers }) => {
                                                 Actions
                                             </MenuButton>
                                              <MenuList>
-                                                <Link to={`/customer/${id}`}>
+                                                <Link to={`/users/${_id}`}>
                                                     <MenuItem>View</MenuItem>
                                                 </Link>
-                                                <MenuItem onClick={() => handleDelete(id)}>
+                                                <MenuItem onClick={() => handleDelete(_id)}>
                                                     Delete
                                                 </MenuItem>
                                             </MenuList> 

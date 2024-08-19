@@ -28,6 +28,7 @@ import UpdateGeoFancingModal from './UpdateGeoFancingModal';
 import InventoryTable from './InventoryTable';
 import SearchBox from './SearchBox';
 import OrderTableWithItem from './OrderTableWithItem';
+import UserDetailTab from './UserDetailTab';
 
 export {
   SidebarWithHeader,
@@ -59,5 +60,6 @@ export {
   UpdateGeoFancingModal,
   InventoryTable,
   SearchBox,
-  OrderTableWithItem
+  OrderTableWithItem,
+  UserDetailTab
 };
