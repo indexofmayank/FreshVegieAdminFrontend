@@ -18,7 +18,9 @@ import { useOrderContext } from '../context/order_context';
     console.log('Order Data:', orderWithItems);
     const [date, setDate] = useState(""); // Input date as string
     const [newDate, setNewDate] = useState(""); // New date after adding 1 day
-    
+    let total = 0;
+    let itemcount = 0;
+    let itemcounttotal = 0;
     // let givenDate = new Date(orderWithItems.createdAt);
     // console.log(orderWithItems.createdAt);
     // console.log(givenDate.getDate() + 1);
@@ -111,6 +113,9 @@ import { useOrderContext } from '../context/order_context';
                 <Tbody>
                     {orderWithItems.orderItems.map((item, index) => {
                         const { name, image, price, quantity } = item;
+                        itemcounttotal = quantity * price;
+                        total = total+itemcounttotal;
+                        itemcount = itemcount + quantity;
                         return (
                             <Tr key={index}>
                                 <Td>
@@ -131,11 +136,17 @@ import { useOrderContext } from '../context/order_context';
                             </Tr>
                         )
                     })}
+                     <tr>
+                        <td colSpan={4}></td>
+                        <td>{itemcount}</td>
+                        <td></td>
+                        <td>{total}</td>
+                    </tr>
                     <tr>
                         <td colSpan={4}></td>
                         
                         <td colSpan={2}>Delivery Fee</td>
-                        <td>Free</td>
+                        <td>free</td>
                     </tr>
                     <tr>
                         <td colSpan={4}></td>
