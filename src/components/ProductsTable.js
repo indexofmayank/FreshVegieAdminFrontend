@@ -25,12 +25,12 @@ import {
   Switch
 } from '@chakra-ui/react';
 import UpdateProductModal from './UpdateProductModal';
+import Pagination from './Pagination';
 
-function ProductsTable({ products }) {
+function ProductsTable({ products, pagination, setPagination }) {
   const toast = useToast();
   const { fetchProducts, deleteProduct } = useProductContext();
   const [loading, setLoading] = useState(false);
-  console.log(products);
   const handleDelete = async (id) => {
     setLoading(true);
     const response = await deleteProduct(id);
@@ -55,6 +55,8 @@ function ProductsTable({ products }) {
     }
   };
 
+  console.log(pagination);
+
   return (
     <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
       {loading ? (
@@ -75,9 +77,9 @@ function ProductsTable({ products }) {
           </Thead>
           <Tbody>
             {products.map((product, index) => {
-              console.log(product);
-              const { image, name, category, stock, price, id } =
-                product;
+              const { image, name, category, stock, price, _id } =
+              product;
+              console.log(_id);
               return (
                 <Tr key={index}>
                   <Td>
@@ -119,13 +121,13 @@ function ProductsTable({ products }) {
                         Actions
                       </MenuButton>
                       <MenuList>
-                        <Link to={`/products/${id}`}>
+                        <Link to={`/products/${_id}`}>
                           <MenuItem>View</MenuItem>
                         </Link>
                         <MenuItem>
-                          <UpdateProductModal id={id} />
+                          <UpdateProductModal id={_id} />
                         </MenuItem>
-                        <MenuItem onClick={() => handleDelete(id)}>
+                        <MenuItem onClick={() => handleDelete(_id)}>
                           Delete
                         </MenuItem>
                       </MenuList>
@@ -137,6 +139,7 @@ function ProductsTable({ products }) {
           </Tbody>
         </Table>
       )}
+      <Pagination pagination={pagination}/>
     </SimpleGrid>
   );
 }

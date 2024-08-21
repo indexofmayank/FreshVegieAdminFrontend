@@ -6,6 +6,7 @@ import {
   update_product_url,
   create_new_product,
   delete_review,
+  productsTable_url
 } from '../utils/constants';
 import {
   CREATE_NEW_PRODUCT,
@@ -44,11 +45,11 @@ const ProductContext = React.createContext();
 export const ProductProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (newPage, limit) => {
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
-      const response = await axios.get(products_url);
-      const { data } = response.data;
+      const response = await axios.get(`${productsTable_url}?page=${newPage}?limit=${limit}`);
+      const {data} = response;
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_PRODUCTS_ERROR });
@@ -60,6 +61,8 @@ export const ProductProvider = ({ children }) => {
     try {
       const response = await axios.get(`${products_url}${id}`);
       const { data } = response.data;
+      console.log(data);
+      console.log(data);
       dispatch({ type: GET_SINGLE_PRODUCT_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR });

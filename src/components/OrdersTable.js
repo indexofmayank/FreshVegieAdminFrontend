@@ -25,7 +25,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useOrderContext } from '../context/order_context';
-
 function OrdersTable({ orders }) {
   const toast = useToast();
   const { currentUser } = useUserContext();

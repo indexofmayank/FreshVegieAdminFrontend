@@ -17,7 +17,6 @@ import { useOrderContext } from '../context/order_context';
 import { orderStatusList } from '../utils/constants';
 
 function SingleOrderPage() {
-
   const { id } = useParams();
   const [statusList, setStatusList] = useState([...orderStatusList]);
   const toast = useToast();

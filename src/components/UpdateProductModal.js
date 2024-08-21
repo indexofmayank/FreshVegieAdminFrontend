@@ -21,24 +21,41 @@ import {
   VStack,
   Checkbox,
   Text,
+  Stack,
+  Radio,
+  RadioGroup,
+  Select,
+  onOpen,
+  toast
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useProductContext } from '../context/product_context';
+import { useCategoryContext } from '../context/category_context';
 
 function UpdateProductModal({ id }) {
   const {
     single_product: {
       name = '',
       price = '',
-      stock = 0,
+      offer_price = '',
+      purchase_price = '',
+      stock = '',
       description = '',
-      colors = [],
-      sizes = [],
+      status = '',
       category = '',
-      company = '',
+      add_ons = '',
+      search_tags = '',
+      selling_method = '',
+      sku = '',
+      barcode = '',
+      stock_notify = '',
+      tax = '',
+      product_detail_max = '',
+      product_detail_min = '',
+      shipping = '',
+      featured = '',
+      product_status = '',
       images = [],
-      shipping = false,
-      featured = false,
     },
     single_product_loading,
     fetchProducts,
@@ -46,47 +63,84 @@ function UpdateProductModal({ id }) {
     updateExistingProductDetails,
     updateProduct,
   } = useProductContext();
-  console.log(name);
-  const [imageList, setImageList] = useState(images);
-  const [loading, setLoading] = useState(false);
 
+  const {
+    categories,
+    fetchCategory
+  } = useCategoryContext();
+
+  const [loading, setLoading] = useState(false);
+  const [imageList, setImageList] = useState([]);
+  const initialRef = useRef();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
       const reader = new FileReader();
       reader.onload = () => {
-        setImageList((prev) => {
-          return [...prev, reader.result];
-        });
+        // Append the new image to the existing array
+        setImageList((prev) => [...prev, reader.result]);
       };
       reader.readAsDataURL(file);
-    });
-  }, []);
-
+    }
+  }, []);  
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: 'image/jpeg, image/png',
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = useRef();
-  const toast = useToast();
+
+  useEffect(() => {
+    setImageList(images);
+  }, [single_product_loading]);
 
   const removeImage = (index) => {
     setImageList((prev) => {
       prev.splice(index, 1);
+      console.log(prev);
       return [...prev];
     });
   };
 
   const handleSubmit = async () => {
-    if (
+    console.log(category);
+    console.log(selling_method);
+    console.log(name);
+    console.log(price);
+    console.log(offer_price);
+    console.log(stock);
+    console.log(description);
+    console.log(category);
+    console.log(add_ons);
+    console.log(search_tags);
+    console.log(sku);
+    console.log(barcode);
+    console.log(stock_notify);
+    console.log(tax);
+    console.log(product_detail_max);
+    console.log(product_detail_min);
+    console.log(imageList);
+    console.log(purchase_price);
+    console.log(product_status);
+    if(
       !name ||
+      !product_status ||
       !price ||
+      !offer_price ||
+      !purchase_price ||
       !stock ||
       !description ||
-      colors.length < 1 ||
-      sizes.length < 1 ||
       !category ||
-      !company
+      !add_ons ||
+      !search_tags ||
+      !selling_method ||
+      !sku ||
+      !barcode ||
+      !stock_notify ||
+      !tax ||
+      !product_detail_min ||
+      !product_detail_max ||
+      !imageList
     ) {
       return toast({
         position: 'top',
@@ -108,44 +162,48 @@ function UpdateProductModal({ id }) {
     setLoading(true);
     const product = {
       name,
+      product_status,
       price,
+      offer_price,
       stock,
       description,
-      colors,
-      sizes,
       category,
-      company,
-      shipping,
+      add_ons,
+      selling_method,
+      sku,
+      purchase_price,
+      barcode,
+      search_tags,
+      stock_notify,
+      tax,
+      product_detail_max,
+      product_detail_min,
       featured,
       images: imageList,
     };
-    const responseCreate = await updateProduct(id, product);
+    const responseCreate = await updateProduct(id, product) 
     setLoading(false);
-    if (responseCreate.success) {
-      onClose();
-      toast({
-        position: 'top',
-        description: 'Product updated',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      await fetchProducts();
+    if(responseCreate.success) {
+        onClose();
+        toast({
+            position: 'top',
+            description: 'Banner updated',
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+        });
+        await fetchProducts();
     } else {
-      return toast({
-        position: 'top',
-        description: responseCreate.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+        return toast({
+            position: 'top',
+            description: responseCreate.message,
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+        });
     }
-  };
 
-  useEffect(() => {
-    setImageList(images);
-    // eslint-disable-next-line
-  }, [single_product_loading]);
+  }
 
   return (
     <>
@@ -153,7 +211,7 @@ function UpdateProductModal({ id }) {
         colorScheme='brown'
         minW='100%'
         onClick={() => {
-          fetchSingleProduct(id);
+          fetchSingleProduct(id)
           onOpen();
         }}
       >
@@ -191,6 +249,31 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
+              <FormLabel>Offer Price</FormLabel>
+              <Input
+                type='number'
+                placeholder='Offer Price'
+                name='offer_price'
+                focusBorderColor='brown.500'
+                value={offer_price}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+            <FormLabel>Purchase Price</FormLabel>
+            <Input
+                type='number'
+                placeholder='Purchase Price'
+                name='purchase_price'
+                focusBorderColor='brown.500'
+                value={purchase_price}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+
+            <FormControl mt={4}>
               <FormLabel>Stock</FormLabel>
               <Input
                 type='number'
@@ -214,6 +297,20 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
+              <FormLabel>Status</FormLabel>
+              <Select
+                placeholder='Select status'
+                name='product_status'
+                focusBorderColor='brown.500'
+                value={product_status}
+                onChange={updateExistingProductDetails}
+              >
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
+              </Select>
+            </FormControl>
+
+            <FormControl mt={4}>
               <FormLabel>Category</FormLabel>
               <Input
                 placeholder='Product Category'
@@ -225,39 +322,102 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Company</FormLabel>
+              <FormLabel>Add ons</FormLabel>
               <Input
-                placeholder='Product Company'
-                name='company'
+                placeholder='add ons'
+                name='add_ons'
                 focusBorderColor='brown.500'
-                value={company}
+                value={add_ons}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+            
+            <FormControl mt={4}>
+              <FormLabel>Search Tags</FormLabel>
+              <Input
+                placeholder='search tags'
+                name='search_tags'
+                value={search_tags}
                 onChange={updateExistingProductDetails}
               />
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Sizes</FormLabel>
-              <Input
-                placeholder='Product Sizes (comma separated)'
-                name='sizes'
-                focusBorderColor='brown.500'
-                value={sizes}
-                onChange={updateExistingProductDetails}
-              />
-              <FormHelperText>Eg: m, l, xl, xxl, xxxl</FormHelperText>
+              <FormLabel>Selling Method</FormLabel>
+              <RadioGroup
+                name='selling_method'
+                onChange={(value) => updateExistingProductDetails({ target: { name: 'selling_method', value } })}
+                value={selling_method}
+              >
+                <Stack spacing={4} direction='row'>
+                  <Radio value='unit'>Unit</Radio>
+                  <Radio value='weight'>Weight</Radio>
+                </Stack>
+              </RadioGroup>
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Colors</FormLabel>
+              <FormLabel>Sku</FormLabel>
               <Input
-                placeholder='Product Colors (comma separated)'
-                name='colors'
-                focusBorderColor='brown.500'
-                value={colors}
+                placeholder='sku'
+                name='sku'
+                value={sku}
                 onChange={updateExistingProductDetails}
               />
-              <FormHelperText>Eg: red,green,blue</FormHelperText>
-              <FormHelperText>Eg: #FF000,#00FF00,#0000FF</FormHelperText>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Barcode</FormLabel>
+              <Input
+                placeholder='barcode'
+                name='barcode'
+                value={barcode}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Stock Notify</FormLabel>
+              <Input
+                type='number'
+                placeholder='stock notify'
+                name='stock_notify'
+                value={stock_notify}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Tax</FormLabel>
+              <Input
+                type='number'
+                placeholder='tax'
+                name='tax'
+                value={tax}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Product Detail Min</FormLabel>
+              <Input
+                type='number'
+                placeholder='product detail min'
+                name='product_detail_min'
+                value={product_detail_min}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Product Detail Max</FormLabel>
+              <Input
+                type='number'
+                placeholder='product detail max'
+                name='product_detail_max'
+                value={product_detail_max}
+                onChange={updateExistingProductDetails}
+              />
             </FormControl>
 
             <FormControl mt={4}>
@@ -309,6 +469,7 @@ function UpdateProductModal({ id }) {
                 })}
               </HStack>
             </FormControl>
+
 
             <FormControl mt={4}>
               <Checkbox

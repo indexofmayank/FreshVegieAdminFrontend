@@ -20,18 +20,28 @@ function SingleUserPage () {
     const {userDetail_loading,
         userDetail_error,
         userDetails,
-        fetchUserDetail
+        fetchUserDetail,
+        userOrderHistory_loading,
+        userOrderHistory_error,
+        userOrderHistory,
+        fetchUserOrderHistroy,
+        userTransaction_loading,
+        userTransaction_error,
+        userTransactions,
+        getUserTransaction
     } = useUserDetailProviderContext();
 
     useEffect(() => {
         fetchUserDetail(id);
+        fetchUserOrderHistroy(id);
+        getUserTransaction(id);
     }, [id]);
-    console.log(userDetails);
+    console.log(userTransactions);
     return (
         <SidebarWithHeader>
             <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
                 <VStack>
-                <UserDetailTab userLogs={userDetails}/>
+                <UserDetailTab userLogs={userDetails} userOrderHistory={userOrderHistory} userTransaction={userTransactions}/>
                 </VStack>
             </HStack>
         </SidebarWithHeader>

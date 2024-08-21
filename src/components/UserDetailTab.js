@@ -7,10 +7,11 @@ import {
 import { useUserDetailProviderContext } from '../context/user_detail_context';
 import { useParams } from 'react-router-dom';
 import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helpers';
+import {Pagination, OrderHistoryCard, OrderLogCard, TransactionCard} from '../components/';
 
 
-function UserDetailTab({userLogs}) {
-    console.log(userLogs);
+function UserDetailTab({userLogs, userOrderHistory, userTransaction}) {
+    console.log(userOrderHistory);
     return (
         <HStack align="start" spacing={8} p={4}>
             <Tabs variant="soft-rounded" colorScheme="teal">
@@ -22,28 +23,35 @@ function UserDetailTab({userLogs}) {
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        <Text>Order history details will be displayed here.</Text>
+                        <OrderHistoryCard />
+                        <OrderHistoryCard />
+                        <OrderHistoryCard />
+                        <OrderHistoryCard />
+                        <OrderHistoryCard />
+                        <Pagination />
                     </TabPanel>
                     <TabPanel>
                     <Tab>
                         <VStack>
                         {userLogs.map((logs, index) => {
-                                const {timestamp, level, message} = logs;
+                                const {timestampFormatted, message} = logs;
                                 return (
-                                         <Box key={index}>
-                                            <Text >{message}</Text>
-                                            <Text><strong>{FormattedDate(timestamp)}</strong></Text>
-                                            <Divider orientation='horizontal'/>
-                                         </Box>
+                                    <OrderLogCard message={message} date={timestampFormatted}/>
                                 );
                             })}
 
                         </VStack>
                     </Tab>
-
                     </TabPanel>
                     <TabPanel>
-                        <Text>Transaction details will be available here.</Text>
+                            <VStack>
+                                {userTransaction.map((transaction, index) => {
+                                    const {orderId, totalPrice, paymentType, paymentStatus, createdAtFormatted} = transaction;
+                                    return (
+                                        <TransactionCard orderId={orderId} totalPrice={totalPrice} paymentStatus={paymentStatus} createdAtFormatted={createdAtFormatted} paymentType={paymentType} />
+                                    )
+                                })}
+                            </VStack>
                     </TabPanel>
                 </TabPanels>
             </Tabs>

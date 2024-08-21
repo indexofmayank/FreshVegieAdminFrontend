@@ -39,9 +39,9 @@ const UpdateCategoryModal = ({ id }) => {
     updateCategory
   } = useCategoryContext();
 
+  console.log(image);
   const [imageList, setImageList] = useState(image);
   const [loading, setLoading] = useState(false);
-
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];

@@ -29,6 +29,10 @@ import InventoryTable from './InventoryTable';
 import SearchBox from './SearchBox';
 import OrderTableWithItem from './OrderTableWithItem';
 import UserDetailTab from './UserDetailTab';
+import Pagination from './Pagination';
+import OrderHistoryCard from './OrderHistoryCard';
+import OrderLogCard from './OrderLogCard';
+import TransactionCard from './TransactionCard';
 
 export {
   SidebarWithHeader,
@@ -61,5 +65,9 @@ export {
   InventoryTable,
   SearchBox,
   OrderTableWithItem,
-  UserDetailTab
+  UserDetailTab,
+  Pagination,
+  OrderHistoryCard,
+  OrderLogCard,
+  TransactionCard
 };

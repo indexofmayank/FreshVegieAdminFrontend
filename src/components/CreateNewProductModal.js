@@ -365,7 +365,7 @@ function CreateNewProductModal() {
             <FormControl mt={4}>
               <FormLabel>Stock Notify</FormLabel>
               <Input
-                type='number'
+                type='number' 
                 placeholder='stock notify'
                 name='stock_notify'
                 value={stock_notify}

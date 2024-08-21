@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ProductsTable,
   SidebarWithHeader,
@@ -15,6 +15,22 @@ function ProductsPage() {
     products_error: error,
     fetchProducts,
   } = useProductContext();
+
+  const [pagination, setPagination] = useState({
+    page: '',
+    limit: '',
+    totalPage: '',
+    totalProducts: '',
+  })
+
+  useEffect(() => {
+    setPagination({
+      limit: products.limit,
+      page: products.page,
+      totalPage: products.totalPage,
+      totalProducts: products.totalProducts
+    });
+  }, [setPagination, products]);
 
   const handleRefresh = async () => {
     await fetchProducts();
@@ -75,7 +91,11 @@ function ProductsPage() {
           Refresh
         </Button>
       </HStack>
-      <ProductsTable products={products} />
+      <ProductsTable 
+        products={products.data} 
+        pagination={pagination} 
+        setPagination={setPagination}
+      />
     </SidebarWithHeader>
   );
 }
