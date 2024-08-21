@@ -7,6 +7,9 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_ERROR,
   GET_SINGLE_PRODUCT_SUCCESS,
+  GET_SINGLEPRODUCTFORUPDATE_BEGIN,
+  GET_SINGLEPRODUCTFORUPDATE_ERROR,
+  GET_SINGLEPRODUCTFORUPDATE_SUCCESS
 } from '../actions';
 
 const product_reducer = (state, action) => {
@@ -52,9 +55,33 @@ const product_reducer = (state, action) => {
     const { name, value } = action.payload;
     return {
       ...state,
-      single_product: { ...state.single_product, [name]: value },
+      single_productForUpdate: { ...state.single_productForUpdate, [name]: value },
     };
   }
+
+  if(action.type === GET_SINGLEPRODUCTFORUPDATE_BEGIN) {
+    return {...state,
+      single_productForUpdate_loading: true,
+      single_productForUpdate_error: false
+    }
+  }
+
+  if(action.type === GET_SINGLEPRODUCTFORUPDATE_ERROR) {
+    return {
+      ...state,
+      single_productForUpdate_loading: false,
+      single_productForUpdate_error: action.payload
+    }
+  }
+
+  if(action.type === GET_SINGLEPRODUCTFORUPDATE_SUCCESS) {
+    return {
+      ...state,
+      single_productForUpdate: action.payload,
+      single_productForUpdate_loading: false
+    }
+  }
+
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 

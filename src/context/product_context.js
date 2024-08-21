@@ -6,7 +6,9 @@ import {
   update_product_url,
   create_new_product,
   delete_review,
-  productsTable_url
+  productsTable_url,
+  single_product_url,
+  singleProductForUpdate_url
 } from '../utils/constants';
 import {
   CREATE_NEW_PRODUCT,
@@ -17,6 +19,9 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_ERROR,
   GET_SINGLE_PRODUCT_SUCCESS,
+  GET_SINGLEPRODUCTFORUPDATE_BEGIN,
+  GET_SINGLEPRODUCTFORUPDATE_ERROR,
+  GET_SINGLEPRODUCTFORUPDATE_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -38,6 +43,9 @@ const initialState = {
   single_product_loading: false,
   single_product_error: false,
   single_product: {},
+  single_productForUpdate: {},
+  single_productForUpdate_loading: false,
+  single_productForUpdate_error: false,
 };
 
 const ProductContext = React.createContext();
@@ -50,6 +58,7 @@ export const ProductProvider = ({ children }) => {
     try {
       const response = await axios.get(`${productsTable_url}?page=${newPage}?limit=${limit}`);
       const {data} = response;
+      console.log(data);
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_PRODUCTS_ERROR });
@@ -59,15 +68,26 @@ export const ProductProvider = ({ children }) => {
   const fetchSingleProduct = async (id) => {
     dispatch({ type: GET_SINGLE_PRODUCT_BEGIN });
     try {
-      const response = await axios.get(`${products_url}${id}`);
+      const response = await axios.get(`${single_product_url}${id}`);
       const { data } = response.data;
-      console.log(data);
-      console.log(data);
+      console.log(data);  
       dispatch({ type: GET_SINGLE_PRODUCT_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR });
     }
   };
+
+  const fetchSingleProductForUpdate = async (id) => {
+    dispatch({type: GET_SINGLEPRODUCTFORUPDATE_BEGIN});
+    try {
+      const response = await axios.get(`${singleProductForUpdate_url}${id}`);
+      const {data} = response.data;
+      console.log(data);
+      dispatch({type: GET_SINGLEPRODUCTFORUPDATE_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({GET_SINGLEPRODUCTFORUPDATE_ERROR});
+    }
+  }
 
   const deleteProduct = async (id) => {
     try {
@@ -180,6 +200,7 @@ export const ProductProvider = ({ children }) => {
         createNewProduct,
         fetchProducts,
         fetchSingleProduct,
+        fetchSingleProductForUpdate,
         updateProduct,
         deleteReview,
       }}

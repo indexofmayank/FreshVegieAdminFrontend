@@ -1,39 +1,48 @@
-import React, { useState } from "react";
-import { Box, Flex, Button, Text, Select } from "@chakra-ui/react";
+import React, {useState, useEffect} from 'react';
+import { Flex, Button, Box, Select, Text } from '@chakra-ui/react';
 import { useProductContext } from '../context/product_context';
 
 
-const Pagination = ({Pagination}) => {
-  const {fetchProducts} = useProductContext();
-  const [newlimit, setNewLimit] = useState(10); 
-  console.log(Pagination);
-  
+const Pagination = ({ pagination, setPagination }) => {
+  const { fetchProducts } = useProductContext();
+
+  // Update page and fetch new products when page or limit changes
+  // useEffect(() => {
+  //   fetchProducts(pagination.page, pagination.limit);
+  // }, [pagination.page, pagination.limit]);
 
   const handleLimitChange = (event) => {
-    setNewLimit(Number(event.target.value));
+    setPagination((prev) => ({
+      ...prev,
+      limit: Number(event.target.value),
+      page: 1, // Reset to page 1 when the limit changes
+    }));
   };
 
-  // const handlePageChange = (newPage) => {
-  //   fetchProducts(newPage, limit);
-  // };
+  const handlePageChange = (newPage) => {
+    setPagination((prev) => ({
+      ...prev,
+      page: newPage,
+    }));
+  };
 
   return (
     <Flex justifyContent="space-between" alignItems="center" mt={4}>
-      <Button 
-      variant="link" 
-      colorScheme="blue" 
-      // disabled={pageNumber === 1}
-      // onClick={() => handlePageChange(pageNumber - 1)}
+      <Button
+        variant="link"
+        colorScheme="blue"
+        disabled={pagination.page === 1}
+        onClick={() => handlePageChange(pagination.page - 1)}
       >
-      Previous
+        Previous
       </Button>
       <Box>
         <Text fontSize="sm" color="gray.600" mb={2}>
           Showing results with limit:
         </Text>
         <Select
-          // value={limit}
-          // onChange={handleLimitChange}
+          value={pagination.limit}
+          onChange={handleLimitChange}
           size="sm"
           width="120px"
         >
@@ -43,11 +52,11 @@ const Pagination = ({Pagination}) => {
           <option value={50}>50</option>
         </Select>
       </Box>
-      <Button 
-      variant="link" 
-      colorScheme="blue" 
-      // disabled={pageNumber === totalPages}
-      // onClick={() => handlePageChange(pageNumber + 1) }
+      <Button
+        variant="link"
+        colorScheme="blue"
+        disabled={pagination.page === pagination.totalPage}
+        onClick={() => handlePageChange(pagination.page + 1)}
       >
         Next
       </Button>

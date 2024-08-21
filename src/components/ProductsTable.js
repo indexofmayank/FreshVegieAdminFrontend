@@ -55,7 +55,6 @@ function ProductsTable({ products, pagination, setPagination }) {
     }
   };
 
-  console.log(pagination);
 
   return (
     <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
@@ -77,9 +76,8 @@ function ProductsTable({ products, pagination, setPagination }) {
           </Thead>
           <Tbody>
             {products.map((product, index) => {
-              const { image, name, category, stock, price, _id } =
+              const { image, name, category, stock, price, product_status, _id } =
               product;
-              console.log(_id);
               return (
                 <Tr key={index}>
                   <Td>
@@ -112,7 +110,8 @@ function ProductsTable({ products, pagination, setPagination }) {
                   <Td>{stock}</Td>
                   <Td>
                     <Switch
-                      colorScheme='brown'
+                      colorScheme='green'
+                      isChecked={product_status}
                     />
                   </Td>
                   <Td>
@@ -134,12 +133,13 @@ function ProductsTable({ products, pagination, setPagination }) {
                     </Menu>
                   </Td>
                 </Tr>
+
               );
             })}
           </Tbody>
         </Table>
       )}
-      <Pagination pagination={pagination}/>
+      <Pagination pagination={pagination} setPagination={setPagination}/>
     </SimpleGrid>
   );
 }

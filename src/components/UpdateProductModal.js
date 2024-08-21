@@ -34,7 +34,7 @@ import { useCategoryContext } from '../context/category_context';
 
 function UpdateProductModal({ id }) {
   const {
-    single_product: {
+    single_productForUpdate: {
       name = '',
       price = '',
       offer_price = '',
@@ -57,17 +57,19 @@ function UpdateProductModal({ id }) {
       product_status = '',
       images = [],
     },
-    single_product_loading,
-    fetchProducts,
-    fetchSingleProduct,
+    single_productForUpdate_loading,
+    single_productForUpdate_error,
+    fetchSingleProductForUpdate,
     updateExistingProductDetails,
     updateProduct,
+    fetchProducts,
   } = useProductContext();
 
   const {
     categories,
     fetchCategory
   } = useCategoryContext();
+
 
   const [loading, setLoading] = useState(false);
   const [imageList, setImageList] = useState([]);
@@ -92,7 +94,7 @@ function UpdateProductModal({ id }) {
 
   useEffect(() => {
     setImageList(images);
-  }, [single_product_loading]);
+  }, [single_productForUpdate_loading]);
 
   const removeImage = (index) => {
     setImageList((prev) => {
@@ -187,7 +189,7 @@ function UpdateProductModal({ id }) {
         onClose();
         toast({
             position: 'top',
-            description: 'Banner updated',
+            description: 'Product updated',
             status: 'success',
             duration: 5000,
             isClosable: true
@@ -204,14 +206,13 @@ function UpdateProductModal({ id }) {
     }
 
   }
-
   return (
     <>
       <Text
         colorScheme='brown'
         minW='100%'
         onClick={() => {
-          fetchSingleProduct(id)
+          fetchSingleProductForUpdate(id)
           onOpen();
         }}
       >

@@ -14,14 +14,13 @@ function SingleProductPage() {
   const {
     single_product_loading: loading,
     single_product_error: error,
-    single_product: product,
+    single_product,
     fetchSingleProduct,
   } = useProductContext();
 
   useEffect(() => {
     fetchSingleProduct(id);
-    // eslint-disable-next-line
-  }, []);
+  }, [id]);
 
   if (loading) {
     return (
@@ -43,7 +42,8 @@ function SingleProductPage() {
     );
   }
 
-  const { images, reviews = [] } = product;
+
+  console.log(single_product[0])
   return (
     <SidebarWithHeader>
       <Stack
@@ -57,14 +57,11 @@ function SingleProductPage() {
         shadow='sm'
         overflowX='auto'
       >
-        <ImagesList images={images} />
-        <SingleProductInfo product={product} />
+        <SingleProductInfo single_product={single_product[0]}/>
       </Stack>
-      {reviews.length > 0 && (
-        <SingleProductReviews reviews={reviews} productId={id} />
-      )}
     </SidebarWithHeader>
   );
 }
 
 export default SingleProductPage;
+  

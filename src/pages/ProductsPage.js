@@ -18,7 +18,7 @@ function ProductsPage() {
 
   const [pagination, setPagination] = useState({
     page: '',
-    limit: '',
+    limit: 10,
     totalPage: '',
     totalProducts: '',
   })
@@ -31,6 +31,7 @@ function ProductsPage() {
       totalProducts: products.totalProducts
     });
   }, [setPagination, products]);
+
 
   const handleRefresh = async () => {
     await fetchProducts();
