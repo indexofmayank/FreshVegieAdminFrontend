@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
     SidebarWithHeader
 } from '../components';
@@ -18,9 +18,31 @@ function CategoryPage() {
         updateNewCategoryDetails
     } = useCategoryContext();
 
+    const [pagination, setPagination] = useState({
+        page: 1,
+        limit: 5,
+        totalPage: 0,
+        totalItems: 0
+    });
+
+    useEffect(() => {
+        setPagination({
+            limit: categories.limit || 5,
+            page: categories.page || 1,
+            totalPage: categories.totalPage || 0,
+            totalItems: categories.totalCategories || 0,
+        });
+    }, [ ]);
+
+    useEffect(() => {
+        fetchCategory(pagination.page, pagination.limit);
+    }, []);
+
     const handleRefresh = async () => {
         await fetchCategory();
     }
+
+    console.log(categories);
 
     if (loading) {
         return (
@@ -79,7 +101,11 @@ function CategoryPage() {
                     Refresh
                 </Button>
             </HStack>
-            <CategoryTable categories={categories} />
+            <CategoryTable 
+            categories={categories.data}
+            pagination={pagination}
+            setPagination={setPagination}
+            />
         </SidebarWithHeader>
     )
 }

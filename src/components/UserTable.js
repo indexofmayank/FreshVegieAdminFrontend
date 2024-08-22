@@ -49,7 +49,7 @@ export const UserTable = ({ customers }) => {
                     </Thead>
                     <Tbody>
                         {customers.map((customer, index) => {
-                            const { name, phone, email, address, status, _id } = customer;
+                            const { name, phone, email, status, _id } = customer;
                             return (
                                 <Tr key={index}>
                                     <Td>{name}</Td>

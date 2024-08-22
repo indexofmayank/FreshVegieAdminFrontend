@@ -6,7 +6,10 @@ import {
     GET_SINGLE_CATEGORY_BEGIN,
     GET_SINGLE_CATEGORY_ERROR,
     GET_SINGLE_CATEGORY_SUCCESS,
-    UPDATE_EXISTING_CATEGORY
+    UPDATE_EXISTING_CATEGORY,
+    GET_ALLCATEGORYBYNAME_BEGIN,
+    GET_ALLCATEGORYBYNAME_ERROR,
+    GET_ALLCATEGORYBYNAME_SUCCESS
 } from '../actions';
 
 const category_reducer = (state, action) => {
@@ -58,6 +61,31 @@ const category_reducer = (state, action) => {
             single_category: action.payload,
         }
     }
+
+    if(action.type === GET_ALLCATEGORYBYNAME_BEGIN) {
+        return {
+            ...state,
+            categoriesByName_loading: true,
+            categoriesByName_error: false
+        }
+    }
+
+    if(action.type === GET_ALLCATEGORYBYNAME_ERROR) {
+        return {
+            ...state,
+            categoriesByName_loading: false,
+            categoriesByName_error: true
+        }
+    }
+
+    if(action.type ===GET_ALLCATEGORYBYNAME_SUCCESS) {
+        return {
+            ...state,
+            categoriesByName_loading: false,
+            categoriesByName: action.payload
+        }
+    }
+    
 
     throw new Error(`No matching ${action.type} - action type`);
 };

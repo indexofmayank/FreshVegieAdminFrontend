@@ -10,8 +10,7 @@ import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helper
 import {Pagination, OrderHistoryCard, OrderLogCard, TransactionCard} from '../components/';
 
 
-function UserDetailTab({userLogs, userOrderHistory, userTransaction}) {
-    console.log(userOrderHistory);
+function UserDetailTab({userOrderLogs, userOrderHistory, userTransaction}) {
     return (
         <HStack align="start" spacing={8} p={4}>
             <Tabs variant="soft-rounded" colorScheme="teal">
@@ -33,7 +32,7 @@ function UserDetailTab({userLogs, userOrderHistory, userTransaction}) {
                     <TabPanel>
                     <Tab>
                         <VStack>
-                        {userLogs.map((logs, index) => {
+                        {userOrderLogs.map((logs, index) => {
                                 const {timestampFormatted, message} = logs;
                                 return (
                                     <OrderLogCard message={message} date={timestampFormatted}/>

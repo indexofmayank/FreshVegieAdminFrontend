@@ -48,7 +48,9 @@ const initialState = {
   single_productForUpdate_error: false,
 };
 
-const ProductContext = React.createContext();
+
+
+export const ProductContext = React.createContext();
 
 export const ProductProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -56,15 +58,15 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async (newPage, limit) => {
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
-      const response = await axios.get(`${productsTable_url}?page=${newPage}?limit=${limit}`);
-      const {data} = response;
+      const response = await axios.get(`${productsTable_url}?page=${newPage}&limit=${limit}`);
+      const { data } = response;
       console.log(data);
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_PRODUCTS_ERROR });
     }
   };
-
+  
   const fetchSingleProduct = async (id) => {
     dispatch({ type: GET_SINGLE_PRODUCT_BEGIN });
     try {
@@ -127,22 +129,7 @@ export const ProductProvider = ({ children }) => {
   const updateExistingProductDetails = (e) => {
     const name = e.target.name;
     let value = e.target.value;
-    if (name === 'price' || name === 'stock') {
-      value = Number(value);
-    }
-    if (name === 'colors' || name === 'sizes') {
-      value = value.replace(/\s+/g, '');
-      if (value === '') {
-        value = [];
-      } else if (value.indexOf(',') > -1) {
-        value = value.split(',');
-      } else {
-        value = value.split();
-      }
-    }
-    if (name === 'shipping' || name === 'featured') {
-      value = e.target.checked;
-    }
+    
     dispatch({ type: UPDATE_EXISTING_PRODUCT, payload: { name, value } });
   };
 

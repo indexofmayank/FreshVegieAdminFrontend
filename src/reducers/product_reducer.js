@@ -53,6 +53,8 @@ const product_reducer = (state, action) => {
   }
   if (action.type === UPDATE_EXISTING_PRODUCT) {
     const { name, value } = action.payload;
+    console.log(name);
+    console.log(value);
     return {
       ...state,
       single_productForUpdate: { ...state.single_productForUpdate, [name]: value },

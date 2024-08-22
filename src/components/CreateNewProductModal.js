@@ -57,12 +57,15 @@ function CreateNewProductModal() {
   } = useProductContext();
 
   const {
-    categories,
-    fetchCategory
+    categoriesByName,
+    fetchCategoryByName
   } = useCategoryContext();
   const [imageList, setImageList] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    fetchCategoryByName();
+  }, []);
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
@@ -92,25 +95,6 @@ function CreateNewProductModal() {
   };
 
   const handleSubmit = async () => {
-    console.log(category);
-    console.log(selling_method);
-    console.log(name);
-    console.log(price);
-    console.log(offer_price);
-    console.log(stock);
-    console.log(description);
-    console.log(category);
-    console.log(add_ons);
-    console.log(search_tags);
-    console.log(sku);
-    console.log(barcode);
-    console.log(stock_notify);
-    console.log(tax);
-    console.log(product_detail_max);
-    console.log(product_detail_min);
-    console.log(imageList);
-    console.log(purchase_price);
-    console.log(product_status);
     if (
       !name ||
       !product_status ||
@@ -192,6 +176,7 @@ function CreateNewProductModal() {
       });
     }
   };
+  const {data = []} = categoriesByName;
 
   return (
     <>
@@ -299,11 +284,12 @@ function CreateNewProductModal() {
                 value={category}
                 onChange={updateNewProductDetails}
               >
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
+               {data.map((cat, index) => {
+                const {name, _id} = cat;
+                return(
+                  <option value={_id}>{name}</option>
+                )
+               })}
               </Select>
             </FormControl>
 
@@ -454,17 +440,6 @@ function CreateNewProductModal() {
                   );
                 })}
               </HStack>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <Checkbox
-                name='shipping'
-                colorScheme='brown'
-                isChecked={shipping}
-                onChange={updateNewProductDetails}
-              >
-                Shipping
-              </Checkbox>
             </FormControl>
 
             <FormControl mt={4}>

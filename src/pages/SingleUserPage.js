@@ -17,10 +17,11 @@ import {useUserDetailProviderContext} from '../context/user_detail_context';
 
 function SingleUserPage () {
     const {id} = useParams();
-    const {userDetail_loading,
-        userDetail_error,
-        userDetails,
-        fetchUserDetail,
+    const {
+        userOrderLogs_loading,
+        userOrderLogs_error,
+        userOrderLogs,
+        fetchUserOrderLogs,
         userOrderHistory_loading,
         userOrderHistory_error,
         userOrderHistory,
@@ -32,16 +33,16 @@ function SingleUserPage () {
     } = useUserDetailProviderContext();
 
     useEffect(() => {
-        fetchUserDetail(id);
+        fetchUserOrderLogs(id);
         fetchUserOrderHistroy(id);
         getUserTransaction(id);
     }, [id]);
-    console.log(userTransactions);
+    
     return (
         <SidebarWithHeader>
             <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
                 <VStack>
-                <UserDetailTab userLogs={userDetails} userOrderHistory={userOrderHistory} userTransaction={userTransactions}/>
+                <UserDetailTab userOrderLogs={userOrderLogs} userOrderHistory={userOrderHistory} userTransaction={userTransactions}/>
                 </VStack>
             </HStack>
         </SidebarWithHeader>

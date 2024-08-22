@@ -162,7 +162,7 @@ const UpdateCategoryModal = ({ id }) => {
                 onChange={updateExistingCategoryDetails}
               >
                 <option value='true'>active</option>
-                <option value='false'>nactive</option>
+                <option value='false'>inactive</option>
               </Select>
             </FormControl>
             <FormControl mt={4}>

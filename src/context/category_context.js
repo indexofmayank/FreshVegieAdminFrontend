@@ -5,7 +5,9 @@ import reducer from '../reducers/category_reducer';
 import {
     category_url,
     delete_category_url,
-    create_category_url
+    create_category_url,
+    getCategoryForTable_url,
+    getAllCategoryByName_url
 } from '../utils/constants';
 
 import {
@@ -16,13 +18,19 @@ import {
     GET_SINGLE_CATEGORY_ERROR,
     GET_SINGLE_CATEGORY_SUCCESS,
     CREATE_NEW_CATEGORY,
-    UPDATE_EXISTING_CATEGORY
+    UPDATE_EXISTING_CATEGORY,
+    GET_ALLCATEGORYBYNAME_BEGIN,
+    GET_ALLCATEGORYBYNAME_ERROR,
+    GET_ALLCATEGORYBYNAME_SUCCESS
 } from '../actions';
 
 const initialState = {
     category_loading: false,
     category_error: false,
     categories: [],
+    categoriesByName_loading: false,
+    categoriesByName_error: false,
+    categoriesByName: [],
     single_category: {},
     new_category: {
         name: '',
@@ -38,16 +46,28 @@ const CategoryContext = React.createContext();
 export const CategoryProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const fetchCategory = async () => {
+    const fetchCategory = async (newPage, limit) => {
         dispatch({type: GET_CATEGORY_BEGIN});
         try {
-            const response = await axios.get(category_url);
-            const {data} = response.data;
+            const response = await axios.get(`${getCategoryForTable_url}?page=${newPage}&limit=${limit}`);
+            const data = response.data;
             dispatch({type: GET_CATEGORY_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_CATEGORY_ERROR});
         }
     };
+
+    const fetchCategoryByName = async () => {
+        dispatch({type: GET_ALLCATEGORYBYNAME_BEGIN});
+        try {
+            const response = await axios.get(`${getAllCategoryByName_url}`);
+            const data = response.data;
+            console.log(data);
+            dispatch({type: GET_ALLCATEGORYBYNAME_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_ALLCATEGORYBYNAME_ERROR});
+        }
+    }
 
     const updateCategory = async (id, category) => {
         try {
@@ -121,7 +141,8 @@ export const CategoryProvider = ({children}) => {
                 createNewCategory,
                 updateNewCategoryDetails,
                 updateExistingCategoryDetails,
-                updateCategory
+                updateCategory,
+                fetchCategoryByName
             }}
         >
             {children}

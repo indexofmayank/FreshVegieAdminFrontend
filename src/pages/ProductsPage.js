@@ -17,24 +17,29 @@ function ProductsPage() {
   } = useProductContext();
 
   const [pagination, setPagination] = useState({
-    page: '',
-    limit: 10,
-    totalPage: '',
-    totalProducts: '',
-  })
+    page: 1,
+    limit: 5,
+    totalPage: 0,
+    totalItems: 0,
+    })
 
   useEffect(() => {
     setPagination({
-      limit: products.limit,
-      page: products.page,
-      totalPage: products.totalPage,
-      totalProducts: products.totalProducts
+      limit: products.limit || 5,
+      page: products.page || 1,
+      totalPage: products.totalPage || 0,
+      totalItems: products.totalProducts || 0,
     });
-  }, [setPagination, products]);
+  }, [ ]);
+
+  useEffect(() => {
+    fetchProducts(pagination.page, pagination.limit);
+  }, []);
+
 
 
   const handleRefresh = async () => {
-    await fetchProducts();
+    await fetchProducts(pagination.page, pagination.limit);
   };
 
   if (loading) {

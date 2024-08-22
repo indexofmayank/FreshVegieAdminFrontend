@@ -22,8 +22,10 @@ import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useCategoryContext } from '../context/category_context';
 import { UpdateCategoryModal } from '../components';
+import Pagination from './Pagination';
 
-export const CategoryTable = ({ categories }) => {
+
+export const CategoryTable = ({ categories, pagination, setPagination }) => {
     const toast = useToast();
     const { fetchCategory, deleteCategory } = useCategoryContext();
     const [loading, setLoading] = useState(false);
@@ -93,9 +95,6 @@ export const CategoryTable = ({ categories }) => {
                                                 Actions
                                             </MenuButton>
                                             <MenuList>
-                                                <Link to={`/category/${id}`}>
-                                                    <MenuItem>View</MenuItem>
-                                                </Link>
                                                 <MenuItem>
                                                     <UpdateCategoryModal id={id} />
                                                 </MenuItem>
@@ -111,6 +110,7 @@ export const CategoryTable = ({ categories }) => {
                     </Tbody>
                 </Table>
             )}
+            <Pagination pagination={pagination} setPagination={setPagination}/>
         </SimpleGrid>
     );
 };

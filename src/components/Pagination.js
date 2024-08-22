@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { Flex, Button, Box, Select, Text } from '@chakra-ui/react';
 import { useProductContext } from '../context/product_context';
 
@@ -6,26 +6,24 @@ import { useProductContext } from '../context/product_context';
 const Pagination = ({ pagination, setPagination }) => {
   const { fetchProducts } = useProductContext();
 
-  // Update page and fetch new products when page or limit changes
-  // useEffect(() => {
-  //   fetchProducts(pagination.page, pagination.limit);
-  // }, [pagination.page, pagination.limit]);
+  
+  
 
+  console.log(pagination);
   const handleLimitChange = (event) => {
-    setPagination((prev) => ({
-      ...prev,
-      limit: Number(event.target.value),
-      page: 1, // Reset to page 1 when the limit changes
-    }));
+    const newLimit = Number(event.target.value);
+    setPagination((prev) => {
+      const updatedState = { ...prev, limit: newLimit, page: 1 };
+      fetchProducts(updatedState.page, updatedState.limit);
+      return updatedState;
+    });
   };
-
+  
   const handlePageChange = (newPage) => {
-    setPagination((prev) => ({
-      ...prev,
-      page: newPage,
-    }));
+    setPagination((prev) => ({ ...prev, page: newPage }));
+    fetchProducts(newPage, pagination.limit); // Fetch products after setting the new page.
   };
-
+  
   return (
     <Flex justifyContent="space-between" alignItems="center" mt={4}>
       <Button
@@ -51,6 +49,9 @@ const Pagination = ({ pagination, setPagination }) => {
           <option value={20}>20</option>
           <option value={50}>50</option>
         </Select>
+        <Text fontSize="sm" color="gray.600" mt={2}>
+         Total items: {pagination.totalItems}
+        </Text>
       </Box>
       <Button
         variant="link"

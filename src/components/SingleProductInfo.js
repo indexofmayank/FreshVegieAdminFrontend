@@ -18,6 +18,7 @@ const ProductDetailPage = ({ single_product }) => {
     images: [{ secure_url: 'https://via.placeholder.com/300', public_id: 'placeholder-image' }],
     sku: 'Loading...',
     barcode: 'Loading...',
+    featured: '',
     stock: 0,
     stock_notify: 0,
     tax: 0,
@@ -95,10 +96,6 @@ const ProductDetailPage = ({ single_product }) => {
             <Text fontSize="md"><strong>Product Detail Range:</strong> {product.product_detail_min} - {product.product_detail_max}</Text>
 
             {/* Action Buttons */}
-            <Flex gap={4} mt={6}>
-              <Button colorScheme="teal" size="lg">Update Product</Button>
-              <Button colorScheme="red" size="lg">Delete Product</Button>
-            </Flex>
           </Stack>
         </Box>
       </Flex>
@@ -108,7 +105,7 @@ const ProductDetailPage = ({ single_product }) => {
 
       <Box>
         <Heading as="h3" size="md" mb={4}>Additional Product Info</Heading>
-        {/* Display any additional fields or details here */}
+        <Text fontSize="md"><strong>Featured: </strong> <i>{product.featured ? 'Yes' : 'No'}</i> </Text>
       </Box>
     </Box>
   );

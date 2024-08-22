@@ -52,7 +52,6 @@ function UpdateProductModal({ id }) {
       tax = '',
       product_detail_max = '',
       product_detail_min = '',
-      shipping = '',
       featured = '',
       product_status = '',
       images = [],
@@ -66,9 +65,12 @@ function UpdateProductModal({ id }) {
   } = useProductContext();
 
   const {
-    categories,
-    fetchCategory
+    categoriesByName,
+    fetchCategoryByName,
+    fetchSingleCategory,
+    single_category
   } = useCategoryContext();
+
 
 
   const [loading, setLoading] = useState(false);
@@ -86,7 +88,7 @@ function UpdateProductModal({ id }) {
       };
       reader.readAsDataURL(file);
     }
-  }, []);  
+  }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: 'image/jpeg, image/png',
@@ -105,26 +107,7 @@ function UpdateProductModal({ id }) {
   };
 
   const handleSubmit = async () => {
-    console.log(category);
-    console.log(selling_method);
-    console.log(name);
-    console.log(price);
-    console.log(offer_price);
-    console.log(stock);
-    console.log(description);
-    console.log(category);
-    console.log(add_ons);
-    console.log(search_tags);
-    console.log(sku);
-    console.log(barcode);
-    console.log(stock_notify);
-    console.log(tax);
-    console.log(product_detail_max);
-    console.log(product_detail_min);
-    console.log(imageList);
-    console.log(purchase_price);
-    console.log(product_status);
-    if(
+    if (
       !name ||
       !product_status ||
       !price ||
@@ -183,29 +166,31 @@ function UpdateProductModal({ id }) {
       featured,
       images: imageList,
     };
-    const responseCreate = await updateProduct(id, product) 
+    const responseCreate = await updateProduct(id, product)
     setLoading(false);
-    if(responseCreate.success) {
-        onClose();
-        toast({
-            position: 'top',
-            description: 'Product updated',
-            status: 'success',
-            duration: 5000,
-            isClosable: true
-        });
-        await fetchProducts();
+    if (responseCreate.success) {
+      onClose();
+      toast({
+        position: 'top',
+        description: 'Product updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      await fetchProducts();
     } else {
-        return toast({
-            position: 'top',
-            description: responseCreate.message,
-            status: 'error',
-            duration: 5000,
-            isClosable: true
-        });
+      return toast({
+        position: 'top',
+        description: responseCreate.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
 
   }
+  const { data = [] } = categoriesByName;
+
   return (
     <>
       <Text
@@ -262,8 +247,8 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-            <FormLabel>Purchase Price</FormLabel>
-            <Input
+              <FormLabel>Purchase Price</FormLabel>
+              <Input
                 type='number'
                 placeholder='Purchase Price'
                 name='purchase_price'
@@ -306,20 +291,27 @@ function UpdateProductModal({ id }) {
                 value={product_status}
                 onChange={updateExistingProductDetails}
               >
-              <option value={true}>Active</option>
-              <option value={false}>Inactive</option>
+                <option value={true}>Active</option>
+                <option value={false}>Inactive</option>
               </Select>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Category</FormLabel>
-              <Input
-                placeholder='Product Category'
+              <Select
+                placeholder=''
                 name='category'
                 focusBorderColor='brown.500'
                 value={category}
                 onChange={updateExistingProductDetails}
-              />
+              >
+               {data.map((cat, index) => {
+                const {name, _id} = cat;
+                return(
+                  <option value={_id}>{name}</option>
+                )
+               })}
+              </Select>
             </FormControl>
 
             <FormControl mt={4}>
@@ -332,7 +324,7 @@ function UpdateProductModal({ id }) {
                 onChange={updateExistingProductDetails}
               />
             </FormControl>
-            
+
             <FormControl mt={4}>
               <FormLabel>Search Tags</FormLabel>
               <Input
@@ -452,7 +444,7 @@ function UpdateProductModal({ id }) {
                   return (
                     <VStack key={index} spacing={3}>
                       <Image
-                        src={image?.url ? image.url : image}
+                        src={image?.secure_url ? image.secure_url : image}
                         boxSize='70px'
                         objectFit='cover'
                         borderRadius='lg'
@@ -474,21 +466,15 @@ function UpdateProductModal({ id }) {
 
             <FormControl mt={4}>
               <Checkbox
-                name='shipping'
-                colorScheme='brown'
-                isChecked={shipping}
-                onChange={updateExistingProductDetails}
-              >
-                Shipping
-              </Checkbox>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <Checkbox
-                name='featured'
-                colorScheme='brown'
-                isChecked={featured}
-                onChange={updateExistingProductDetails}
+                name="featured"
+                colorScheme="brown"
+                isChecked={featured} // Replace with the appropriate state, e.g., featured
+                onChange={(event) => {
+                  console.log(event.target.checked);
+                  updateExistingProductDetails({
+                    target: { name: 'featured', value: event.target.checked },
+                  })
+                }}
               >
                 Featured
               </Checkbox>

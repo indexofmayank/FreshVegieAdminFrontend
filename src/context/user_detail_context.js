@@ -31,8 +31,7 @@ const UserDetailContext = React.createContext();
 export const UserDetailProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const fetchUserDetail = async (id) => {
-        console.log(id);
+    const fetchUserOrderLogs = async (id) => {
         dispatch({type:GET_USERLOGS_BEGIN });
         try {
             const respone = await axios.get(`${get_orderLogs_url}${id}`);
@@ -41,12 +40,11 @@ export const UserDetailProvider = ({children}) => {
             dispatch({type: GET_USERLOGS_SUCCESS, payload: data});
         } catch (error) {
             console.log(error);
-            dispatch({type:GET_USERLOGS_ERROR })
+            dispatch({type: GET_USERLOGS_ERROR });
         }
     };
 
     const fetchUserOrderHistroy = async (id) => {
-        console.log(id);
         dispatch({type: GET_ORDERHISTORY_BEGIN});
         try {
             const respone = await axios.get(`${get_userOrderHistory_url}${id}`);
@@ -59,12 +57,10 @@ export const UserDetailProvider = ({children}) => {
     };
 
     const getUserTransaction = async (id) => {
-        console.log(id);
         dispatch({type: GET_USERTRANSACTION_BEGIN});
         try {
             const respone = await axios.get(`${get_userTransaction_url}${id}`);
             const {data} = respone.data;
-            console.log(data);
             dispatch({type: GET_USERTRANSACTION_ERROR, payload: data});
         } catch (error) {
             console.log(error);
@@ -77,7 +73,7 @@ export const UserDetailProvider = ({children}) => {
     <UserDetailContext.Provider 
         value={{
             ...state,
-            fetchUserDetail,
+            fetchUserOrderLogs,
             fetchUserOrderHistroy,
             getUserTransaction
         }}
