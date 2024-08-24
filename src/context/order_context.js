@@ -6,7 +6,13 @@ import {
   orders_url,
   single_order_url,
   update_order_status,
-  get_orderWithItem_url
+  get_orderWithItem_url,
+  get_userBillingInfo_url,
+  get_userPaymentInfo_url,
+  get_userDeliveryInfo_url,
+  get_customOrderId_url,
+  updatePaymentStatus_url,
+  get_orderQuantityWise_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -19,6 +25,21 @@ import {
   GET_ORDERWITHITEM_BEGIN,
   GET_ORDERWITHITEM_SUCCESS,
   GET_ORDERWITHITEM_ERROR,
+  GET_USERBILLINGINFO_BEGIN,
+  GET_USERBILLINGINFO_ERROR,
+  GET_USERBILLINGINFO_SUCCESS,
+  GET_USERPAYMENTINFO_BEGIN,
+  GET_USERPAYMENTINFNO_ERROR,
+  GET_USERPAYMENTINFO_SUCCESS,
+  GET_USERDELIVERYINFO_BEGIN,
+  GET_USERDELIVERYINFO_ERROR,
+  GET_USERDELIVERYINFO_SUCCESS,
+  GET_CUSTOMORDERID_BEGIN,
+  GET_CUSTOMORDERID_ERROR,
+  GET_CUSTOMORDERID_SUCCESS,
+  GET_QUANTITYWISEORDER_BEGIN,
+  GET_QUANTITYWISEORDER_ERROR,
+  GET_QUANTITYWISEORDER_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -27,10 +48,25 @@ const initialState = {
   order_withItems_loading: false,
   order_withItems_error: false,
   orders: [],
-  order_withItems: {},
+  order_withItems:   {},
   single_order_loading: false,
   single_order_error: false,
   single_order: {},
+  userBillingInfo_loading: false,
+  userBillingInfo_error: false,
+  userBillingInfo: {},
+  userPaymentInfo_loading: false,
+  userPaymentInfo_error: false,
+  userPaymentInfo: {},
+  userDeliveryInfo_loading: false,
+  userDeliveryInfo_error: false,
+  userDeliveryInfo: {},
+  customOrderId_loading: false,
+  customOrderId_error: false,
+  customOrderId: {},
+  quantityWiseOrder_laoding: false,
+  quantityWiseOrder_error: false,
+  quantityWiseOrder: {},
   single_order_status: '',
   recent_orders: [],
   pending_orders: 0,
@@ -77,6 +113,40 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
+  const fetchUserOrderBillingInfo = async (id) => {
+    dispatch({type: GET_USERBILLINGINFO_BEGIN});
+    try {
+      const response = await axios.get(`${get_userBillingInfo_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_USERBILLINGINFO_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_USERBILLINGINFO_ERROR});
+    }
+  }
+
+  const fetchUserOrderPaymentInfo = async (id) => {
+    dispatch({type: GET_USERBILLINGINFO_BEGIN});
+    try {
+      const response = await axios.get(`${get_userPaymentInfo_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_USERPAYMENTINFO_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_USERBILLINGINFO_ERROR});
+    }
+  }  
+
+  const fetchUserOrderDeliveryInfo = async (id) => {
+    dispatch({type: GET_USERDELIVERYINFO_BEGIN});
+    try {
+      const response = await axios.get(`${get_userDeliveryInfo_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_USERDELIVERYINFO_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_USERDELIVERYINFO_ERROR});
+    }
+  }
+
+
   const updateOrderStatus = async (status, id) => {
     try {
       const response = await axios.put(`${update_order_status}${id}`, {
@@ -104,6 +174,40 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
+  const fetchCustomOrderId = async (id) => {
+    dispatch({type: GET_CUSTOMORDERID_BEGIN});
+    try {
+      const response = await axios.get(`${get_customOrderId_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_CUSTOMORDERID_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_CUSTOMORDERID_ERROR});
+    }
+  };
+
+  const updateOrderPaymentStatus = async (id, updateStatus) => {
+    try {
+      const response = await axios.put(`${updatePaymentStatus_url}${id}`({
+        updateStatus
+      }));
+      const {success, message} = response.data;
+      return {success, message};
+    } catch (error) {
+      const {success, message} = error.response.data;
+      return {success, message};
+    }
+  }
+
+  const fetchQuantityWiseOrder = async (id) => {
+    dispatch({type: GET_QUANTITYWISEORDER_BEGIN});
+    try {
+      const response = await axios.get(`${get_orderQuantityWise_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_QUANTITYWISEORDER_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_QUANTITYWISEORDER_ERROR});
+    }
+  }
 
   useEffect(() => {
     fetchOrders();
@@ -117,7 +221,12 @@ export const OrderProvider = ({ children }) => {
         fetchSingleOrder,
         updateOrderStatus,
         deleteOrder,
-        fetchOrderWithItems
+        fetchOrderWithItems,
+        fetchUserOrderBillingInfo,
+        fetchUserOrderPaymentInfo,
+        fetchUserOrderDeliveryInfo,
+        fetchCustomOrderId,
+        fetchQuantityWiseOrder
       }}
     >
       {children}

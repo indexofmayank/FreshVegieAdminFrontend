@@ -82,37 +82,36 @@ function OrdersTable({ orders }) {
             {orders.map((order, index) => {
               const {
                 orderId,
-                createdAt,
-                user: {name},
-                orderItemsCount,
-                // weight
-                //location
-                paymentInfo: { status },
-                orderStatus,
-                totalPrice,
+                timestampFormatted,
+                user,
+                totalItems,
+                weight,
+                location,
+                payment_status,
+                order_status,
+                grand_total,
                 _id: id,
               } = order;
-              console.log(order.createdAt);
               return (
                 <Tr key={index}>
                   <Td>{orderId}</Td>
-                  <Td>{FormattedDate(createdAt)}</Td>
-                  <Td>{name}</Td>
+                  <Td>{timestampFormatted}</Td>
+                  <Td>{user}</Td>
                   <Td>
-                    {orderItemsCount}
+                    {totalItems}
                   </Td>
 
-                  <Td><strong>-</strong></Td>
-                  <Td><strong>-</strong></Td>
+                  <Td>{weight}</Td>
+                  <Td>{location}</Td>
                   <Td color='green.500'>
-                    <Badge colorScheme='green'>{status}</Badge>
+                    <Badge colorScheme='green'>{payment_status}</Badge>
                   </Td>
                   <Td>
-                    <Badge colorScheme={getOrderStatusColor(orderStatus)}>
-                      {orderStatus}
+                    <Badge colorScheme={getOrderStatusColor(order_status)}>
+                      {order_status}
                     </Badge>
                   </Td>
-                  <Td>{totalPrice}</Td>
+                  <Td>{grand_total}</Td>
                   <Td>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
@@ -122,11 +121,6 @@ function OrdersTable({ orders }) {
                         <Link to={`/orders/${id}`}>
                           <MenuItem>View</MenuItem>
                         </Link>
-                        {currentUser.privilege !== 'low' && (
-                          <MenuItem onClick={() => handleDelete(id)}>
-                            Delete
-                          </MenuItem>
-                        )}
                       </MenuList>
                     </Menu>
                   </Td>

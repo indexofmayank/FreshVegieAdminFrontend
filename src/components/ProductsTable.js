@@ -25,6 +25,7 @@ import {
   Switch
 } from '@chakra-ui/react';
 import UpdateProductModal from './UpdateProductModal';
+import FilterComponent from './FilterComponent';
 import Pagination from './Pagination';
 
 function ProductsTable({ products, pagination, setPagination }) {

@@ -31,6 +31,16 @@ export const orderStatusList = [
   {name: 'Assign Delivery', valuel: 'assign_delivery'}
 ];
 
+export const paymentStatusList = [
+  {name: 'Pending', value: 'pending'},
+  {name: 'Completed', value: 'completed'},
+  {name: 'Failed', value: 'failed'},
+  {name: 'Cancelled', value: 'cancelled'},
+  {name: 'Refunded', value: 'refuned'},
+  {name: 'Processing', value: 'processing'},
+  {name : 'Disputed', value: 'disputed'}
+];
+
 export const domain = process.env.REACT_APP_BACKEND_HOST;
 export const auth_url = `${domain}/api/admin/auth`;
 export const login_url = `${domain}/api/admin/login`;
@@ -61,7 +71,14 @@ export const get_banner_by_id_url = `${domain}/api/banner/`;
 export const delete_banner_by_id_url = `${domain}/api/banner/`;
 export const geoFancing_url = `${domain}/api/polygon/`;
 export const inventory_url = `${domain}/api/inventory/`;
-export const get_orderWithItem_url = `${domain}/api/orders/`;
-export const get_orderLogs_url = `${domain}/admin/orderlogs/`;
+export const get_orderWithItem_url = `${domain}/api/orders/orderItems/`;
+export const get_orderLogs_url = `${domain}/api/admin/orderlogs/`;
 export const get_userOrderHistory_url = `${domain}/api/orders/history/`;
 export const get_userTransaction_url = `${domain}/api/user/transactions/`;
+export const get_userBillingInfo_url = `${domain}/api/orders/billingInfo/`;
+export const get_userPaymentInfo_url = `${domain}/api/orders/paymentInfo/`;
+export const get_userDeliveryInfo_url = `${domain}/api/orders/deliveryInfo/`;
+export const get_userCardInfo_url = `${domain}/api/user/metadata/`;
+export const get_customOrderId_url = `${domain}/api/orders/customOrderId/`;
+export const updatePaymentStatus_url = `${domain}/api/orders/paymentstatus/`;
+export const get_orderQuantityWise_url = `${domain}/api/orders/quantitywise/`;

@@ -26,7 +26,25 @@ function SingleOrderPage() {
     order_withItems,
     single_order_status,
     updateOrderStatus,
-    fetchOrderWithItems
+    fetchOrderWithItems,
+    userBillingInfo,
+    fetchUserOrderBillingInfo,
+    userPaymentInfo_loading,
+    userPaymentInfo_error,
+    userPaymentInfo,
+    fetchUserOrderPaymentInfo,
+    userDeliveryInfo_loading,
+    userDeliveryInfo_error,
+    userDeliveryInfo,
+    fetchUserOrderDeliveryInfo,
+    customOrderId_loading,
+    customOrderId_error,
+    customOrderId,
+    fetchCustomOrderId,
+    quantityWiseOrder_laoding,
+    quantityWiseOrder_error,
+    quantityWiseOrder,
+    fetchQuantityWiseOrder
   } = useOrderContext();
 
   const handleChange = async (e) => {
@@ -50,12 +68,14 @@ function SingleOrderPage() {
       });
     }
   };
-
-
   useEffect(() => {
     fetchOrderWithItems(id);
+    fetchUserOrderBillingInfo(id);
+    fetchUserOrderPaymentInfo(id);
+    fetchUserOrderDeliveryInfo(id);
+    fetchCustomOrderId(id);
+    fetchQuantityWiseOrder(id)
   }, [id]);
-
   if (loading) {
     return (
       <SidebarWithHeader>
@@ -101,7 +121,14 @@ function SingleOrderPage() {
         </Select>
       </HStack>
       <VStack>
-        <OrderTableWithItem orderWithItems={order_withItems[0]} />
+        <OrderTableWithItem 
+         orderWithItems={order_withItems[0]}
+         userBillingInfo={userBillingInfo}
+         userPaymentInfo={userPaymentInfo}
+         userDeliveryInfo={userDeliveryInfo}
+         customOrderId={customOrderId}
+         quantityWiseOrder={quantityWiseOrder}
+         />
 
       </VStack>
     </SidebarWithHeader>

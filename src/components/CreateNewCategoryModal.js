@@ -196,8 +196,10 @@ function CreateNewCategoryModal() {
                             Cancel
                         </Button>
                         <Button
+                            isLoading={loading}
                             colorScheme='brown'
                             onClick={handleSubmit}
+                            loadingText='Creating categories'
                         >
                             Save
                         </Button>

@@ -29,20 +29,35 @@ function SingleUserPage () {
         userTransaction_loading,
         userTransaction_error,
         userTransactions,
-        getUserTransaction
+        getUserTransaction,
+        userDetailCardInfo_loading,
+        userDetailCardInfo_error,
+        userDetailCardInfo,
+        fetchUserSingleCardInfo
     } = useUserDetailProviderContext();
 
     useEffect(() => {
         fetchUserOrderLogs(id);
         fetchUserOrderHistroy(id);
         getUserTransaction(id);
+        fetchUserSingleCardInfo(id);
     }, [id]);
+    // console.log(userDetailCardInfo);
+    // console.log(userOrderLogs);
+    // console.log(userOrderHistory);
+    // console.log(userTransactions);
+    // console.log(userMetaData);
     
     return (
         <SidebarWithHeader>
             <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
                 <VStack>
-                <UserDetailTab userOrderLogs={userOrderLogs} userOrderHistory={userOrderHistory} userTransaction={userTransactions}/>
+                <UserDetailTab 
+                userOrderHistory={userOrderHistory} 
+                userTransactions={userTransactions}
+                userOrderLogs={userOrderLogs} 
+                userDetailCardInfo={userDetailCardInfo}
+                />
                 </VStack>
             </HStack>
         </SidebarWithHeader>

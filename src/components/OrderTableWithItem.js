@@ -1,226 +1,173 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
 import {
-    Box, HStack, VStack, Text, Badge,
-    SimpleGrid, Table, Thead, Tr, Th, Tbody, Td, Image, Spinner
-} from '@chakra-ui/react';
-import {
-    Stat,
-    StatLabel,
-    StatNumber,
-    StatHelpText,
-    StatArrow,
-    StatGroup,
-  } from '@chakra-ui/react'
-import { useOrderContext } from '../context/order_context';
+  Box,
+  Grid,
+  GridItem,
+  Heading,
+  SimpleGrid,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Text,
+  Image,
+  Button,
+  VStack,
+  HStack,
+} from "@chakra-ui/react";
+import {OrderWeightPopover} from '../components/';
 
+const OrderTableWithItem = ({ orderWithItems, userBillingInfo, userPaymentInfo, userDeliveryInfo, customOrderId, quantityWiseOrder }) => {
+  // Safely access orderItems using optional chaining
+  const userBillingdata = userBillingInfo?.userBillingInfo?.[0] || [];
+  const orderItems = orderWithItems?.orderItems || [];
+  const paymentInfo = userPaymentInfo?.userPaymentDetail || {};
+  const deliveryInfo = userDeliveryInfo?.userDeliveryDetail || {};
+  const orderId = customOrderId?.data?.orderId || 'N/A';
+  const weightWiseOrder = quantityWiseOrder?.data?.orderItems || [];
+  const totalWeight = quantityWiseOrder?.data?.total_quantity || null;
 
- function OrderTableWithItem({ orderWithItems }) {
-    console.log('Order Data:', orderWithItems);
-    const [date, setDate] = useState(""); // Input date as string
-    const [newDate, setNewDate] = useState(""); // New date after adding 1 day
-    let total = 0;
-    let itemcount = 0;
-    let itemcounttotal = 0;
-    // let givenDate = new Date(orderWithItems.createdAt);
-    // console.log(orderWithItems.createdAt);
-    // console.log(givenDate.getDate() + 1);
-    // Safely check if orderWithItems is defined and contains orderItems
-
-    // useEffect(() => {
-    //     if (date) {
-    //       let givenDate = new Date(date);
-    
-    //       // Ensure the date is valid before trying to manipulate it
-    //       if (!isNaN(givenDate.getTime())) {
-    //         givenDate.setDate(givenDate.getDate() + 1);
-    //         setNewDate(givenDate.toString()); // Update newDate with the full date string
-    //       } else {
-    //         console.error("Invalid date provided");
-    //       }
-    //     }
-    //   }, [date]);
-
-      const addOneDay = () => {
-        
-        let givenDate = new Date(date);
-      
-      // Add 1 day
-      givenDate.setDate(givenDate.getDate() + 1);
-
-      // Format the new date with full details
-      setNewDate(givenDate.toString())
-    // const formattedDate = givenDate.toISOString().split('T')[0];
-    // setNewDate(formattedDate);
-        // if (orderWithItems.createdAt) {
-        //   let givenDate = new Date(orderWithItems.createdAt);
-        //   let newdata =  givenDate.getDate() + 1;
-        // console.log(newDate);
-        console.log(givenDate);
-        //   // Format new date to "YYYY-MM-DD"
-        //   const formattedDate = newdata.toISOString().split('T')[0];
-        //   return formattedDate;
-        // }
-      };
-
-
-      useEffect(() => {
-        if(orderWithItems){
-            setDate(orderWithItems.createdAt);
-            // addOneDay()
-        }
-       
-        // addOneDay()
-      }, [orderWithItems]);
-
-      useEffect(() => {
-        // if(orderWithItems){
-        //     setDate(orderWithItems.createdAt);
-            addOneDay()
-        // }
-       
-        // addOneDay()
-      }, [date]);
-
-
-    if (!orderWithItems || !orderWithItems.orderItems) {
-        console.error('No orderItems found or orderWithItems is undefined');
-        return <Text>No order items available.</Text>;
-    }
-   
-  
-
-
-   
-     // let givenDate = new Date(orderWithItems.createdAt);
-    // console.log(orderWithItems.createdAt);
-    // console.log(givenDate.getDate() + 1);
-
-    return (
-        <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto' columns={2} spacing={10}>
-             <Box width={'100%'}>
-             <Table variant='simple' maxWidth={'100%'}>
-                <Thead>
-                    <Tr>
-                        <Th></Th>
-                        <Th>Item Name</Th>
-                        <Th>Item Price</Th>
-                        <Th>Disc. Price</Th>
-                        <Th>Quantity</Th>
-                        <Th>Tax</Th>
-                        <Th>Total</Th>
+  return (
+    <Grid templateColumns="2fr 1fr" gap={6} p={4}>
+      {/* Left Side: Order Table */}
+      <GridItem>
+        <Box bg="white" shadow="md" p={4} borderRadius="md">
+          <Heading size="md" mb={4}>
+            Order Details of {orderId}
+          </Heading>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Item Name</Th>
+                <Th>Item Price</Th>
+                <Th>Disc. Price</Th>
+                <Th>Quantity</Th>
+                <Th>Tax</Th>
+                <Th>Total</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {orderItems.length > 0 ? (
+                orderItems.map((item, index) => {
+                  const { name, image, item_price, item_total, item_total_discount, item_total_tax, quantity } = item;
+                  return (
+                    <Tr key={index}>
+                      <Td>
+                        <Box display="flex" alignItems="center">
+                          <Image
+                            src={image}
+                            alt={name}
+                            boxSize="50px"
+                            mr={3}
+                          />
+                          <Box>
+                            <Text>{name}</Text>
+                          </Box>
+                        </Box>
+                      </Td>
+                      <Td>₹{item_price}</Td>
+                      <Td>₹{item_total_discount}</Td>
+                      <Td>{quantity}</Td>
+                      <Td>₹{item_total_tax}</Td>
+                      <Td>₹{item_total}</Td>
                     </Tr>
-                </Thead>
-                <Tbody>
-                    {orderWithItems.orderItems.map((item, index) => {
-                        const { name, image, price, quantity } = item;
-                        itemcounttotal = quantity * price;
-                        total = total+itemcounttotal;
-                        itemcount = itemcount + quantity;
-                        return (
-                            <Tr key={index}>
-                                <Td>
-                                    <Image
-                                        src={image}
-                                        boxSize='100px'
-                                        objectFit='cover'
-                                        borderRadius='lg'
-                                    />
+                  );
+                })
+              ) : (
+                <Tr>
+                  <Td colSpan={6} textAlign="center">
+                    No items found.
+                  </Td>
+                </Tr>
+              )}
+              <Td>Total</Td>
+              <Td></Td>
+              <Td>{orderWithItems?.total_discount}</Td>
+              <Td>{orderWithItems?.total_item_count}</Td>
+              <Td>{orderWithItems?.total_tax}</Td>
+              <Td>{orderWithItems?.items_grand_total}</Td>
+            </Tbody>
+          </Table>
+          {/* Additional Order Summary */}
+          <Box mt={4}>
+            <SimpleGrid columns={2} spacing={4}>
+              <Text>Delivery Fee</Text>
+              <Text textAlign="right">Free</Text>
+              <Text>Additional Charges</Text>
+              <Text textAlign="right">₹0.00</Text>
+              <Text>Service Charges</Text>
+              <Text textAlign="right">₹0.00</Text>
+              <Text>Discounts</Text>
+              <Text textAlign="right">₹0.00</Text>
+              <Heading size="sm" mt={2}>
+                Grand Total
+              </Heading>
+              <Heading size="sm" mt={2} textAlign="right">
+                {orderWithItems?.grand_total}
+              </Heading>
+            </SimpleGrid>
+          </Box>
+        </Box>
+      </GridItem>
 
-                                </Td>
-                                <Td>{name}</Td>
-                                <Td>{price}</Td>
-                                <Td>-</Td>
-                                <Td>{quantity}</Td>
-                                <Td>0</Td>
-                                <Td>{price * quantity} </Td>
-                            </Tr>
-                        )
-                    })}
-                     <tr>
-                        <td colSpan={4}></td>
-                        <td>{itemcount}</td>
-                        <td></td>
-                        <td>{total}</td>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}></td>
-                        
-                        <td colSpan={2}>Delivery Fee</td>
-                        <td>free</td>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}></td>
-                       
-                        <td colSpan={2}>Discounts</td>
-                        <td>{orderWithItems.discountPrice}</td>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}></td>
-                       
-                        <td colSpan={2}>Grand Total</td>
-                        <td>{orderWithItems.totalPrice}</td>
-                    </tr>
-                </Tbody>
-            </Table>
-             </Box>
-             <Box>
-                <Box height='auto'  m={4}>
-                    <Stat>
-                        <StatLabel>Customer Details</StatLabel>
-                        <StatHelpText>{orderWithItems.user.name}</StatHelpText>
-                        <Text fontSize='xl'>{orderWithItems.user.phone}</Text>
-                        <StatHelpText>{orderWithItems.shippingInfo.deliveryAddress.address}</StatHelpText>
-                        <StatHelpText>{orderWithItems.shippingInfo.deliveryAddress.address},{orderWithItems.shippingInfo.deliveryAddress.locality},{orderWithItems.shippingInfo.deliveryAddress.landmark},{orderWithItems.shippingInfo.deliveryAddress.city},{orderWithItems.shippingInfo.deliveryAddress.pin_code},{orderWithItems.shippingInfo.deliveryAddress.state}</StatHelpText>
-                    </Stat>
-                </Box>
-                <Box m={4}>
-                <StatGroup>
-                    <Stat>
-                        <StatNumber>Payment Details</StatNumber>
-                        <StatLabel>Payment Mode</StatLabel>
-                        <StatHelpText>{orderWithItems.paymentInfo.payment_type}</StatHelpText>
-                        <StatHelpText>COD : ₹{orderWithItems.itemsPrice}</StatHelpText>
-                    
-                    </Stat>
+      {/* Right Side: Customer and Payment Details */}
+      <GridItem>
+        <SimpleGrid spacing={4}>
+          <Box bg="white" shadow="md" p={4} borderRadius="md">
+            <Heading size="sm" mb={2}>
+              Customer Details
+            </Heading>
+            <Text>{userBillingdata.name}</Text>
+            <Text>{userBillingdata.phone}</Text>
+            <Text>{userBillingdata.email}</Text>
+            <Text>{userBillingdata.address}</Text>
+            <Text>{userBillingdata.locality}</Text>
+            <Text>{userBillingdata.landmark}</Text>
+            <Text>{userBillingdata.city}</Text>
+            <Text>{userBillingdata.pin_code}</Text>
+            <Text>{userBillingdata.state}</Text>
+            <Text>{userBillingdata.city}</Text>
 
-                    <Stat>
-                        <StatLabel>{orderWithItems.paymentInfo.status}</StatLabel>
-                    </Stat>
-                    </StatGroup>
-                </Box>
-                <Box m={4}>
-                     <StatGroup>
-                    <Stat>
-                        <StatLabel>Weight</StatLabel>
-                    </Stat>
-                    <Stat>
-                        <StatLabel>Order Status</StatLabel>
-                    </Stat>
-                    </StatGroup>
-                </Box>
-                <Box m={4}>
-                <StatGroup>
-                    <Stat>
-                        <StatNumber>Delivery Details</StatNumber>
-                        <StatHelpText>Delivery Type</StatHelpText>
-                        <StatHelpText>Standard Delivery</StatHelpText>
-                        <StatHelpText>Ordered On</StatHelpText>
-                        <StatHelpText>{orderWithItems.createdAt}</StatHelpText>
-                        <StatHelpText>Delivery Time</StatHelpText>
-                        <StatHelpText>{newDate}</StatHelpText>
-                        <StatHelpText>Delivery Address</StatHelpText>
-                        <StatHelpText>{orderWithItems.shippingInfo.deliveryAddress.address}</StatHelpText>
-                        <StatHelpText>{orderWithItems.shippingInfo.deliveryAddress.address},{orderWithItems.shippingInfo.deliveryAddress.locality},{orderWithItems.shippingInfo.deliveryAddress.landmark},{orderWithItems.shippingInfo.deliveryAddress.city},{orderWithItems.shippingInfo.deliveryAddress.pin_code},{orderWithItems.shippingInfo.deliveryAddress.state}</StatHelpText>
-                    </Stat>
+          </Box>
 
-                    <Stat>
-                        <StatLabel>icon</StatLabel>
-                    </Stat>
-                    </StatGroup>
-                </Box>
-             </Box>
+          <Box bg="white" shadow="md" p={4} borderRadius="md">
+            <Heading size="sm" mb={2}>
+              Payment Details
+            </Heading>
+            <Text>Payment Mode: {paymentInfo.paymentType}</Text>
+            <Text>Amount: ₹{paymentInfo.amount}</Text>
+            <Text>Status: {paymentInfo.status}</Text>
+            <HStack justifyContent="space-between" mt={4}>
+              <Button colorScheme="red" isDisabled={paymentInfo.status === 'completed' ? true : false}>Mark as Paid</Button>
+              <Button colorScheme="red">Change status</Button>
+            </HStack>
+          </Box>
+
+          <Box bg="white" shadow="md" p={4} borderRadius="md" >
+              <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder}/>
+          </Box>
+
+
+          <Box bg="white" shadow="md" p={4} borderRadius="md">
+            <Heading size="sm" mb={2}>
+              Delivery Details
+            </Heading>
+            <Text>Delivery Type: {deliveryInfo.deliveryType}</Text>
+            <Text>Delivery cost: ₹{paymentInfo.totalPrice}</Text>
+            <Text>Name: {deliveryInfo.name}</Text>
+            <Text>Phone: {deliveryInfo.phone}</Text>
+            <Text>Email: {deliveryInfo.email}</Text>
+            <Button colorScheme="red" mt={4}>
+              Cancel order
+            </Button>
+          </Box>
+
         </SimpleGrid>
-    );
-}
+      </GridItem>
+    </Grid>
+  );
+};
 
 export default OrderTableWithItem;

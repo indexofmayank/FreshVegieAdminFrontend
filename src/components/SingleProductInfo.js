@@ -64,7 +64,7 @@ const ProductDetailPage = ({ single_product }) => {
             </FormControl>
 
             {/* Category, Add-ons, Search Tags */}
-            <Text fontSize="md"><strong>Category:</strong> {product.category.name}</Text>
+            <Text fontSize="md"><strong>Category:</strong> {product.category}</Text>
             <Text fontSize="md"><strong>Add-ons:</strong> {product.add_ons}</Text>
             <Text fontSize="md"><strong>Search Tags:</strong> {product.search_tags}</Text>
             <Text fontSize="md"><strong>Selling Method:</strong> {product.selling_method}</Text>
@@ -81,7 +81,7 @@ const ProductDetailPage = ({ single_product }) => {
                 <Text fontSize="md" color="gray.500" textDecoration="line-through"><strong>Offer Price:</strong> ₹{product.offer_price}</Text>
               </GridItem>
               <GridItem>
-                <Text fontSize="md"><strong>Purchase Price:</strong> ${product.purchase_price}</Text>
+                <Text fontSize="md"><strong>Purchase Price:</strong> ₹{product.purchase_price}</Text>
               </GridItem>
             </Grid>
 

@@ -7,6 +7,8 @@ import {
 import { HStack, VStack, Spinner, Heading, Button } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useProductContext } from '../context/product_context';
+import FilterComponent from '../components/FilterComponent';
+import SearchBox from '../components/SearchBox';
 
 function ProductsPage() {
   const {
@@ -83,7 +85,7 @@ function ProductsPage() {
       </SidebarWithHeader>
     );
   }
-
+  console.log(products);
   return (
     <SidebarWithHeader>
       <HStack mb={5}>
@@ -96,6 +98,10 @@ function ProductsPage() {
         >
           Refresh
         </Button>
+      </HStack>
+      <HStack>
+      <SearchBox />
+      <FilterComponent />
       </HStack>
       <ProductsTable 
         products={products.data} 

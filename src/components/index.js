@@ -33,6 +33,8 @@ import Pagination from './Pagination';
 import OrderHistoryCard from './OrderHistoryCard';
 import OrderLogCard from './OrderLogCard';
 import TransactionCard from './TransactionCard';
+import FilterComponent from './FilterComponent';
+import OrderWeightPopover from './OrderWeightPopover';
 
 export {
   SidebarWithHeader,
@@ -69,5 +71,7 @@ export {
   Pagination,
   OrderHistoryCard,
   OrderLogCard,
-  TransactionCard
+  TransactionCard,
+  FilterComponent,
+  OrderWeightPopover
 };

@@ -35,7 +35,6 @@ export const getAdminPrivilegeColor = (privilege) => {
 };
 
 export const FormattedDate = (dateString ) => {
-  console.log(dateString);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
