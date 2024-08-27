@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { InventoryTable, SidebarWithHeader } from "../components";
 import { HStack, VStack, Spinner, Heading, Button } from "@chakra-ui/react";
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -10,20 +10,27 @@ import { useInventoryContext } from "../context/inventory_context";
 function InventoryPage() {
 
   const {
-    categories,
-    fetchCategory
+    categoriesByName,
+    fetchCategoryByName
   } = useCategoryContext();
-
+  
   const {
     inventory_loading: loading,
     inventory_error: error,
     inventory,
     fetchInventory
   } = useInventoryContext();
+  
+  useEffect(() => {
+    const callAsyncCategories = async () => {
+      await fetchCategoryByName();
+    }
+    callAsyncCategories();
+  }, []);
 
   const handleRefresh = async () => {
-    await fetchCategory();
     await fetchInventory();
+    await fetchCategoryByName();
   };
   if (loading) {
     return (
@@ -77,7 +84,7 @@ function InventoryPage() {
           Refresh
         </Button>
       </HStack>
-      <InventoryTable products={inventory} categories={categories} />
+      <InventoryTable products={inventory} categoriesByName={categoriesByName} />
     </SidebarWithHeader>
   )
 }

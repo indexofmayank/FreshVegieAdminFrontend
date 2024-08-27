@@ -30,7 +30,7 @@ const initialState = {
     categories: [],
     categoriesByName_loading: false,
     categoriesByName_error: false,
-    categoriesByName: [],
+    categoriesByName: {},
     single_category: {},
     new_category: {
         name: '',
@@ -58,6 +58,7 @@ export const CategoryProvider = ({children}) => {
     };
 
     const fetchCategoryByName = async () => {
+        console.log('we hit here');
         dispatch({type: GET_ALLCATEGORYBYNAME_BEGIN});
         try {
             const response = await axios.get(`${getAllCategoryByName_url}`);

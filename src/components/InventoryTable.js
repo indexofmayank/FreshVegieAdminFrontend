@@ -9,7 +9,11 @@ import {
 } from '@chakra-ui/react';
 import { useInventoryContext } from '../context/inventory_context';
 
-const InventoryTable = ({ products, categories }) => {
+const InventoryTable = ({ products, categoriesByName }) => {
+  console.log(products);
+  const  categories = categoriesByName?.data;
+  console.log(categories);
+
 
   const { fetchInventory, updateInventory } = useInventoryContext();
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -105,7 +109,7 @@ const InventoryTable = ({ products, categories }) => {
       <Stack spacing={4} direction='row'>
         <SearchBox placeholder="Search for items..." onSearch={handleSearch} width='50%' />
         <Select placeholder='All Categories' onChange={handleCategoryChange}>
-          {categories.map((cat) => (
+          {categoriesByName?.data?.map((cat) => (
             <option key={cat._id} value={cat._id}>
               {cat.name}
             </option>
