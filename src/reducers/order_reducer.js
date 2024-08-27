@@ -23,8 +23,11 @@ import {
   GET_CUSTOMORDERID_SUCCESS,
   GET_QUANTITYWISEORDER_BEGIN,
   GET_QUANTITYWISEORDER_ERROR,
-  GET_QUANTITYWISEORDER_SUCCESS
-
+  GET_QUANTITYWISEORDER_SUCCESS,
+  UPDATE_ORDERPAYMENT_STATUS,
+  GET_SINGLEORDERSTATUS_BEGIN,
+  GET_SINGLEORDERSTATUS_ERROR,
+  GET_SINGLEORDERSTATUS_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -78,6 +81,10 @@ const order_reducer = (state, action) => {
   }
   if (action.type === UPDATE_ORDER_STATUS) {
     return { ...state, single_order_status: action.payload };
+  }
+
+  if (action.type === UPDATE_ORDERPAYMENT_STATUS) {
+    return {...state, single_order_payment_status: action.payload}
   }
 
   if(action.type === GET_ORDERWITHITEM_BEGIN) {
@@ -134,6 +141,15 @@ const order_reducer = (state, action) => {
   }
   if(action.type === GET_QUANTITYWISEORDER_SUCCESS) {
     return {...state, quantityWiseOrder_laoding: false,  quantityWiseOrder: action.payload}
+  }
+  if(action.type === GET_SINGLEORDERSTATUS_BEGIN ) {
+    return {...state, singleOrderStatus_loading: true, singleOrderStatus_error: false }
+  }
+  if(action.type === GET_SINGLEORDERSTATUS_ERROR) {
+    return {...state, singleOrderStatus_loading: false, singleOrderStatus_error: true}
+  }
+  if(action.type === GET_SINGLEORDERSTATUS_SUCCESS) {
+    return {...state, singleOrderStatus_loading: false, singleOrderStatus: action.payload}
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);

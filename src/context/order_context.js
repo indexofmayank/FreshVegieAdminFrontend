@@ -12,7 +12,11 @@ import {
   get_userDeliveryInfo_url,
   get_customOrderId_url,
   updatePaymentStatus_url,
-  get_orderQuantityWise_url
+  updatePaymentStatusToPaid_url,
+  get_orderQuantityWise_url,
+  updateOrderStatusToCancelled_url,
+  getSingleOrderStatus_url,
+  updateOrderStatusToDelivered
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -39,7 +43,12 @@ import {
   GET_CUSTOMORDERID_SUCCESS,
   GET_QUANTITYWISEORDER_BEGIN,
   GET_QUANTITYWISEORDER_ERROR,
-  GET_QUANTITYWISEORDER_SUCCESS
+  GET_QUANTITYWISEORDER_SUCCESS,
+  UPDATE_ORDERPAYMENT_STATUS,
+  UPDATE_ORDERPAYMENTTO_PAID,
+  GET_SINGLEORDERSTATUS_BEGIN,
+  GET_SINGLEORDERSTATUS_ERROR,
+  GET_SINGLEORDERSTATUS_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -68,6 +77,10 @@ const initialState = {
   quantityWiseOrder_error: false,
   quantityWiseOrder: {},
   single_order_status: '',
+  single_order_payment_status: '',
+  singleOrderStatus_loading: false,
+  singleOrderStatus_error: false,
+  singleOrderStatus: {},
   recent_orders: [],
   pending_orders: 0,
   delivered_orders: 0,
@@ -187,13 +200,14 @@ export const OrderProvider = ({ children }) => {
 
   const updateOrderPaymentStatus = async (id, updateStatus) => {
     try {
-      const response = await axios.put(`${updatePaymentStatus_url}${id}`({
-        updateStatus
-      }));
+      const response = await axios.put(`${updatePaymentStatus_url}${id}`,{
+        "status" : updateStatus
+      });
       const {success, message} = response.data;
+      fetchUserOrderPaymentInfo(id);
       return {success, message};
     } catch (error) {
-      const {success, message} = error.response.data;
+      const {success, message} = error;
       return {success, message};
     }
   }
@@ -206,6 +220,57 @@ export const OrderProvider = ({ children }) => {
       dispatch({type: GET_QUANTITYWISEORDER_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_QUANTITYWISEORDER_ERROR});
+    }
+  }
+
+  const markOrderPaymentToPaid = async (id, amount) => {
+    try {
+      const response = await axios.put(`${updatePaymentStatusToPaid_url}${id}`, {
+        'amount': amount
+      });
+      const {data} = response;
+      fetchUserOrderPaymentInfo(id);
+      return data;
+    } catch (error) {
+      const {success, message} = error;
+      return {success, message};
+    }
+  }
+
+  const updateOrderStatusToCancelled = async (id) => {
+    try {
+      const response = await axios.put(`${updateOrderStatusToCancelled_url}${id}`);
+      const {data} = response;
+      fetchUserOrderDeliveryInfo(id);
+      fetchUserOrderDeliveryInfo(id);
+      return data;
+    } catch (error) {
+      const {success, message} = error;
+      return  {success, message};
+    }
+  }
+
+  const fetchSingleOrderStatus = async (id) => {
+    dispatch({type: GET_SINGLEORDERSTATUS_BEGIN});
+    try {
+      const response = await axios.get(`${getSingleOrderStatus_url}${id}`);
+      const {data} = response;
+      dispatch({type: GET_SINGLEORDERSTATUS_SUCCESS, payload: data});
+    } catch (error) {
+      const {success, message} = error;
+      dispatch({type: GET_SINGLEORDERSTATUS_ERROR});
+    }
+  } 
+
+  const udpateOrderStatusAsDelivered = async (id) => {
+    try {
+      const response = await axios.put(`${updateOrderStatusToDelivered}${id}`);
+      const {success, message} = response.data;
+      fetchUserOrderDeliveryInfo(id);
+      return {success, message};
+    } catch (error) {
+      const {success, message} = error;
+      return {success, message};
     }
   }
 
@@ -226,7 +291,12 @@ export const OrderProvider = ({ children }) => {
         fetchUserOrderPaymentInfo,
         fetchUserOrderDeliveryInfo,
         fetchCustomOrderId,
-        fetchQuantityWiseOrder
+        fetchQuantityWiseOrder,
+        updateOrderPaymentStatus,
+        markOrderPaymentToPaid,
+        updateOrderStatusToCancelled,
+        fetchSingleOrderStatus,
+        udpateOrderStatusAsDelivered
       }}
     >
       {children}

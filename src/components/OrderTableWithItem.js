@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -13,13 +13,30 @@ import {
   Tr,
   Text,
   Image,
+  Input,
   Button,
   VStack,
   HStack,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+  Select,
+  useToast,
+  useDisclosure,
+  Badge
 } from "@chakra-ui/react";
-import {OrderWeightPopover} from '../components/';
+import { OrderWeightPopover } from '../components/';
+import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helpers';
+import { paymentStatusList } from '../utils/constants';
+import { useOrderContext } from "../context/order_context";
 
-const OrderTableWithItem = ({ orderWithItems, userBillingInfo, userPaymentInfo, userDeliveryInfo, customOrderId, quantityWiseOrder }) => {
+const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentInfo, userDeliveryInfo, customOrderId, quantityWiseOrder, singleOrderStatus }) => {
   // Safely access orderItems using optional chaining
   const userBillingdata = userBillingInfo?.userBillingInfo?.[0] || [];
   const orderItems = orderWithItems?.orderItems || [];
@@ -28,6 +45,101 @@ const OrderTableWithItem = ({ orderWithItems, userBillingInfo, userPaymentInfo, 
   const orderId = customOrderId?.data?.orderId || 'N/A';
   const weightWiseOrder = quantityWiseOrder?.data?.orderItems || [];
   const totalWeight = quantityWiseOrder?.data?.total_quantity || null;
+  const orderStatus = singleOrderStatus?.data?.status || null;
+
+  console.log(singleOrderStatus);
+
+  const [amount, setAmount] = useState(orderWithItems?.items_grand_total || 0);
+  const [paymentStatus, setPaymentStatus] = useState(paymentInfo?.status || '');
+  const [paidLoading, setPaidLoading] = useState(false);
+  const [cancelButtonLoading, setCancelButtonLoading] = useState(false);
+  const [deliverButtonLoading, setDeliverButtonLoading] = useState(false);
+  const toast = useToast();
+  const firstPopover = useDisclosure();
+  const secondPopover = useDisclosure();
+  const {
+    updateOrderPaymentStatus,
+    markOrderPaymentToPaid,
+    updateOrderStatusToCancelled,
+    fetchSingleOrderStatus,
+    udpateOrderStatusAsDelivered,
+    fetchUserOrderDeliveryInfo
+  } = useOrderContext();
+  const handlePaymentStatus = async (e) => {
+    const status = e.target.value;
+    if (!status) {
+      return toast({
+        position: 'top',
+        description: `Please provide all detail`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+
+    }
+    const response = await updateOrderPaymentStatus(id, status);
+    if (response.success) {
+      secondPopover.onClose();
+      return toast({
+        position: 'top',
+        description: `Order Id ${orderId} updated to ${status}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } else {
+      secondPopover.onClose();
+      return toast({
+        position: 'top',
+        description: response.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
+  const handleMarkAsPaidInputChange = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const handleMarkAsPaid = async () => {
+    console.log('Submitting amount:', amount);
+    if (
+      !amount
+    ) {
+      return toast({
+        position: 'top',
+        descirption: 'Provide all the details',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      firstPopover.onClose();
+    }
+    setPaidLoading(true);
+    const responseUpdate = await markOrderPaymentToPaid(id, amount);
+    setPaidLoading(false);
+    if (responseUpdate.success) {
+      firstPopover.onClose();
+      return toast({
+        position: 'top',
+        description: 'Updated successfully',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } else {
+      firstPopover.onClose();
+      return toast({
+        position: 'top',
+        description: responseUpdate.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  }
 
   return (
     <Grid templateColumns="2fr 1fr" gap={6} p={4}>
@@ -140,29 +252,190 @@ const OrderTableWithItem = ({ orderWithItems, userBillingInfo, userPaymentInfo, 
             <Text>Amount: ₹{paymentInfo.amount}</Text>
             <Text>Status: {paymentInfo.status}</Text>
             <HStack justifyContent="space-between" mt={4}>
-              <Button colorScheme="red" isDisabled={paymentInfo.status === 'completed' ? true : false}>Mark as Paid</Button>
-              <Button colorScheme="red">Change status</Button>
+              {
+                paymentInfo.status === 'completed' ? (
+                  <Button colorScheme="red" isDisabled>Mark Paid</Button>
+                ) : (
+                  <Popover isOpen={firstPopover.isOpen} onClose={firstPopover.onClose}>
+                    <PopoverTrigger>
+                      <Button colorScheme="red" onClick={firstPopover.onOpen}>Mark Paid</Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Order Id: {orderId}</PopoverHeader>
+
+                      <PopoverBody>
+                        <HStack justifyContent="space-between" mt={4}>
+                          <Input
+                            htmlSize={4}
+                            width='auto'
+                            variant="outline"
+                            value={amount}
+                            placeholder="amount"
+                            onChange={handleMarkAsPaidInputChange}
+                            focusBorderColor='brown.500'
+                          />
+                          <Button
+                            isLoading={paidLoading}
+                            colorScheme="blue"
+                            onClick={handleMarkAsPaid}
+                            loadingText="Updating"
+                          >
+                            Submit
+                          </Button>
+
+                        </HStack>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                )
+              }
+              <Popover isOpen={secondPopover.isOpen} onClose={secondPopover.onClose} >
+                <PopoverTrigger>
+                  <Button colorScheme="red" onClick={secondPopover.onOpen}>Change status</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>Status for {orderId}</PopoverHeader>
+                  <PopoverBody>
+                    <Select
+                      variant='filled'
+                      name="status"
+                      focusBorderColor='brown.500'
+                      value={paymentStatus}
+                      onChange={handlePaymentStatus}
+                    >
+                      {paymentStatusList.map((status, index) => {
+                        const { name, value } = status;
+                        return (
+                          <option key={index} value={value}>
+                            {name}
+                          </option>
+                        )
+                      })}
+                    </Select>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+
             </HStack>
           </Box>
 
           <Box bg="white" shadow="md" p={4} borderRadius="md" >
-              <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder}/>
+            <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder} />
           </Box>
 
 
           <Box bg="white" shadow="md" p={4} borderRadius="md">
-            <Heading size="sm" mb={2}>
-              Delivery Details
-            </Heading>
+            <HStack justifyContent='space-between' mt={4}>
+              <Heading size="sm" mb={2}>
+                Delivery Details
+              </Heading>
+              <Badge colorScheme={getOrderStatusColor(orderStatus)}>
+                {orderStatus}
+              </Badge>
+            </HStack>
             <Text>Delivery Type: {deliveryInfo.deliveryType}</Text>
             <Text>Delivery cost: ₹{paymentInfo.totalPrice}</Text>
             <Text>Name: {deliveryInfo.name}</Text>
             <Text>Phone: {deliveryInfo.phone}</Text>
             <Text>Email: {deliveryInfo.email}</Text>
-            <Button colorScheme="red" mt={4}>
-              Cancel order
-            </Button>
+            <HStack justifyContent='space-between' mt={4}>
+              {orderStatus !== 'cancelled' || 'delivered' ? (
+
+                <>
+                  <Button
+                    isLoading={cancelButtonLoading}
+                    loadingText="Cancelling"
+                    colorScheme="red"
+                    mt={4}
+                    onClick={async () => {
+                      setCancelButtonLoading(true)
+                      const response = await updateOrderStatusToCancelled(id)
+                      setCancelButtonLoading(false);
+                      await fetchSingleOrderStatus(id);
+                      if (response.success) {
+                        return toast({
+                          position: 'top',
+                          description: `Order Id ${orderId} updated to cancelled`,
+                          status: 'success',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      } else {
+                        return toast({
+                          position: 'top',
+                          description: response.message,
+                          status: 'error',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      }
+                    }}
+                  >
+                    Cancel order
+                  </Button>
+                  <Button
+                    loadingText="Updating"
+                    isLoading={deliverButtonLoading}
+                    colorScheme="red"
+                    mt={4}
+                    onClick={async () => {
+                      setDeliverButtonLoading(true);
+                      const response = await udpateOrderStatusAsDelivered(id);
+                      setDeliverButtonLoading(false);
+                      await fetchSingleOrderStatus(id);
+                      await fetchUserOrderDeliveryInfo(id);
+                      if (response.success) {
+                        return toast({
+                          position: 'top',
+                          description: `Order Id ${orderId} updated to delivered`,
+                          status: 'success',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      } else {
+                        return toast({
+                          position: 'top',
+                          description: response.message,
+                          status: 'error',
+                          duration: 5000,
+                          isClosable: true
+                        });
+                      }
+                    }}
+                  >
+                    Mark delivered
+                  </Button>
+
+                </>
+
+              ) : (
+                <>
+                  <Button
+                    colorScheme="red"
+                    mt={4}
+                    isDisabled
+                  >
+                    Cancel order
+                  </Button>
+                  <Button
+                    colorScheme="red"
+                    mt={4}
+                    isDisabled
+                  >
+                    Mark delivered
+                  </Button>
+
+                </>
+
+              )}
+
+            </HStack>
           </Box>
+
 
         </SimpleGrid>
       </GridItem>

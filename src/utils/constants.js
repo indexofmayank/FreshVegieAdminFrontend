@@ -28,7 +28,9 @@ export const orderStatusList = [
   {name: 'Received', value: 'received'},
   { name: 'Rejected', value: 'rejected' },
   {name: 'Packed', value: 'packed'},
-  {name: 'Assign Delivery', valuel: 'assign_delivery'}
+  {name: 'Assign Delivery', valuel: 'assign_delivery'},
+  {name: 'Cancelled', value: 'cancelled'},
+  {name: 'Delivered', value: 'delivered' }
 ];
 
 export const paymentStatusList = [
@@ -82,3 +84,7 @@ export const get_userCardInfo_url = `${domain}/api/user/metadata/`;
 export const get_customOrderId_url = `${domain}/api/orders/customOrderId/`;
 export const updatePaymentStatus_url = `${domain}/api/orders/paymentstatus/`;
 export const get_orderQuantityWise_url = `${domain}/api/orders/quantitywise/`;
+export const updatePaymentStatusToPaid_url = `${domain}/api/orders/markpaid/`;
+export const updateOrderStatusToCancelled_url = `${domain}/api/admin/order/markcancelled/`;
+export const getSingleOrderStatus_url = `${domain}/api/orders/orderStatus/`;
+export const updateOrderStatusToDelivered = `${domain}/api/orders/markdelivered/`;

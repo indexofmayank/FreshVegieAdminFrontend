@@ -27,6 +27,7 @@ import {
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Order Weight</ModalHeader>
+            <Divider />
             <ModalBody>
               <Box>
                 <Heading size="sm" mb={4}>
@@ -44,7 +45,7 @@ import {
                           boxSize="40px"
                           borderRadius="md"
                         />
-                        <Text>{name} Kg</Text>
+                        <Text>{name} </Text>
                       </HStack>
                       <Text>{quantity} Kg</Text>
                     </HStack>

@@ -44,12 +44,17 @@ function SingleOrderPage() {
     quantityWiseOrder_laoding,
     quantityWiseOrder_error,
     quantityWiseOrder,
-    fetchQuantityWiseOrder
+    fetchQuantityWiseOrder,
+    singleOrderStatus_loading,
+    singleOrderStatus_error,
+    singleOrderStatus,
+    fetchSingleOrderStatus
   } = useOrderContext();
 
   const handleChange = async (e) => {
     const status = e.target.value;
     const response = await updateOrderStatus(status, id);
+    fetchSingleOrderStatus(id);
     if(response.success) {
       return toast({
         position: 'top',
@@ -74,7 +79,8 @@ function SingleOrderPage() {
     fetchUserOrderPaymentInfo(id);
     fetchUserOrderDeliveryInfo(id);
     fetchCustomOrderId(id);
-    fetchQuantityWiseOrder(id)
+    fetchQuantityWiseOrder(id);
+    fetchSingleOrderStatus(id);
   }, [id]);
   if (loading) {
     return (
@@ -121,13 +127,15 @@ function SingleOrderPage() {
         </Select>
       </HStack>
       <VStack>
-        <OrderTableWithItem 
+        <OrderTableWithItem
+        id={id}
          orderWithItems={order_withItems[0]}
          userBillingInfo={userBillingInfo}
          userPaymentInfo={userPaymentInfo}
          userDeliveryInfo={userDeliveryInfo}
          customOrderId={customOrderId}
          quantityWiseOrder={quantityWiseOrder}
+         singleOrderStatus={singleOrderStatus}
          />
 
       </VStack>
