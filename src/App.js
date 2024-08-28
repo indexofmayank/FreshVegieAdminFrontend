@@ -14,7 +14,8 @@ import {
   BannerPage,
   GeoFancing,
   InventoryPage,
-  SingleUserPage
+  SingleUserPage,
+  NotificationPage
 } from './pages';
 
 function App() {
@@ -59,6 +60,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/inventory'>
           <InventoryPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/notification'>
+          <NotificationPage />
         </PrivateRoute>
       </Switch>
     </Router>

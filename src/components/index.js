@@ -35,6 +35,9 @@ import OrderLogCard from './OrderLogCard';
 import TransactionCard from './TransactionCard';
 import FilterComponent from './FilterComponent';
 import OrderWeightPopover from './OrderWeightPopover';
+import SearchBoxForInventory from './SearchBoxForInventory';
+import CreateNewNotificationModal from './CreateNewNotificationModal';
+import NotificationTable from './NotificationTable';
 
 export {
   SidebarWithHeader,
@@ -73,5 +76,8 @@ export {
   OrderLogCard,
   TransactionCard,
   FilterComponent,
-  OrderWeightPopover
+  OrderWeightPopover,
+  SearchBoxForInventory,
+  CreateNewNotificationModal,
+  NotificationTable
 };

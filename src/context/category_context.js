@@ -63,7 +63,6 @@ export const CategoryProvider = ({children}) => {
         try {
             const response = await axios.get(`${getAllCategoryByName_url}`);
             const data = response.data;
-            console.log(data);
             dispatch({type: GET_ALLCATEGORYBYNAME_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_ALLCATEGORYBYNAME_ERROR});

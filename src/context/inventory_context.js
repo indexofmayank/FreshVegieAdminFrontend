@@ -5,13 +5,17 @@ import {
     GET_INVENTORY_BEGIN,
     GET_INVENTORY_SUCCESS,
     GET_INVENTORY_ERROR,
-    UPDATE_INVENTORY
+    UPDATE_INVENTORY,
+    GET_PRODUCTBYNAMEFORINVENTORY_SUCCESS
 } from '../actions';
-import { inventory_url, update_product_url } from "../utils/constants";
+import { inventory_url, update_product_url, getProductByNameForInventory } from "../utils/constants";
 
 const initialState = {
     invetory_loading: false,
     inventory_error: false,
+    inventoryProductName_loading: false,
+    inventoryProductName_error: false,
+    inventoryProductName: [],
     inventory: [],
 }
 
@@ -42,6 +46,18 @@ export const InventoryProvider = ({children}) => {
         }
     }
 
+
+    const fetchProductByNameForInventory = async (name='') => {
+        try {
+            const response = await axios.get(`${getProductByNameForInventory}?name=${name}`);
+            const {data} = response;
+            dispatch({type: GET_PRODUCTBYNAMEFORINVENTORY_SUCCESS, payload: data});
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    };
+
     useEffect(() => {
         fetchInventory();
     }, []);
@@ -51,7 +67,8 @@ export const InventoryProvider = ({children}) => {
             value={{
                 ...state,
                 fetchInventory,
-                updateInventory
+                updateInventory,
+                fetchProductByNameForInventory
             }}
         >
             {children}

@@ -7,13 +7,18 @@ import {
   toast,
   position
 } from '@chakra-ui/react';
-import { useInventoryContext } from '../context/inventory_context';
+import { useInventoryContext, fetchProductByNameForInventory} from '../context/inventory_context';
+import { SearchBoxForInventory } from '../components/';
 
 const InventoryTable = ({ products, categoriesByName }) => {
-  console.log(products);
   const  categories = categoriesByName?.data;
-  console.log(categories);
 
+  const {
+    fetchProductByNameForInventory,
+    inventoryProductName,
+    inventoryProductName_error,
+    inventoryProductName_loading
+  } = useInventoryContext();
 
   const { fetchInventory, updateInventory } = useInventoryContext();
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -24,6 +29,17 @@ const InventoryTable = ({ products, categoriesByName }) => {
 
   const toast = useToast();
 
+  
+  
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  //for searching, sorting, filterling
   useEffect(() => {
     let filtered = products;
 
@@ -40,14 +56,17 @@ const InventoryTable = ({ products, categoriesByName }) => {
     }
 
     setFilteredProducts(filtered);
+    fetchProductByNameForInventory();
   }, [searchQuery, selectedCategory, products]);
 
+
+  //for bulk update
   const handleInputChange = (e, index, field) => {
     const { value } = e.target;
     const updatedList = [...filteredProducts];
     updatedList[index] = { ...updatedList[index], [field]: value };
 
-    setFilteredProducts(updatedList); // Update filtered products list
+    setFilteredProducts(updatedList); 
     setUpdatedProducts((prevState) => {
       const updatedProduct = updatedList[index];
       return {
@@ -57,13 +76,6 @@ const InventoryTable = ({ products, categoriesByName }) => {
     });
   };
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-  };
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
 
   const handleBulkUpdate = async () => {
     const productsToUpdate = Object.values(updatedProducts);
@@ -107,15 +119,25 @@ const InventoryTable = ({ products, categoriesByName }) => {
   return (
     <>
       <Stack spacing={4} direction='row'>
-        <SearchBox placeholder="Search for items..." onSearch={handleSearch} width='50%' />
-        <Select placeholder='All Categories' onChange={handleCategoryChange}>
+      <SearchBoxForInventory 
+      placeholder="Search for items..." 
+      onSelectProduct={() => {}} 
+      initialProductName={inventoryProductName}
+       width="50%" 
+      />
+      <Select placeholder='All Categories' onChange={handleCategoryChange}>
           {categoriesByName?.data?.map((cat) => (
             <option key={cat._id} value={cat._id}>
               {cat.name}
             </option>
           ))}
         </Select>
-        <Button colorScheme="brown" px={5} size='xl' onClick={handleBulkUpdate} isLoading={bulkUpdateLoading} loadingText='Bluk Updating'>
+        <Button colorScheme="brown" px={5} 
+        size='xl' 
+        onClick={handleBulkUpdate} 
+        isLoading={bulkUpdateLoading} 
+        loadingText='Bluk Updating'
+        >
           Bulk Update
         </Button>
       </Stack>

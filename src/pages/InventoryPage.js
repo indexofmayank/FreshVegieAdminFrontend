@@ -84,7 +84,10 @@ function InventoryPage() {
           Refresh
         </Button>
       </HStack>
-      <InventoryTable products={inventory} categoriesByName={categoriesByName} />
+      <InventoryTable 
+      products={inventory} 
+      categoriesByName={categoriesByName}
+      />
     </SidebarWithHeader>
   )
 }

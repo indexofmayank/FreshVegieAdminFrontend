@@ -8,7 +8,8 @@ import {
   FaTh,
   FaAdversal,
   FaGlobe,
-  FaAlignJustify
+  FaAlignJustify,
+  FaRocketchat
 } from 'react-icons/fa';
 
 export const LinkItems = [
@@ -20,7 +21,9 @@ export const LinkItems = [
   { name: 'Users', url: '/users', icon: <FaUser />},
   {name: 'Banners', url: '/banners', icon: <FaAdversal />},
   {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />},
-  {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />}
+  {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />},
+  {name: 'Notification', url: '/notification', icon: <FaRocketchat />}
+  //we are here
 ];
 
 export const orderStatusList = [
@@ -88,3 +91,4 @@ export const updatePaymentStatusToPaid_url = `${domain}/api/orders/markpaid/`;
 export const updateOrderStatusToCancelled_url = `${domain}/api/admin/order/markcancelled/`;
 export const getSingleOrderStatus_url = `${domain}/api/orders/orderStatus/`;
 export const updateOrderStatusToDelivered = `${domain}/api/orders/markdelivered/`;
+export const getProductByNameForInventory = `${domain}/api/inventory/product-dropdown/`;
