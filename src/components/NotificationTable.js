@@ -22,8 +22,7 @@ import {
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 
-function NotificationTable() {
-
+function NotificationTable({ notifications }) {
     const loading = false;
 
     return (
@@ -47,7 +46,54 @@ function NotificationTable() {
                         </Tr>
                     </Thead>
                     <Tbody>
-
+                        {notifications.map((notification, index) => {
+                            const {
+                                name,
+                                redirect_to,
+                                audience,
+                                banner,
+                                status,
+                                lastLive
+                            } = notification;
+                            console.log(banner);
+                            return (
+                                <Tr key={index}>
+                                    <Td>{name}</Td>
+                                    <Td>{redirect_to}</Td>
+                                    <Td>{audience}</Td>
+                                    <Td>
+                                        <Image
+                                            src={banner}
+                                            boxSize='100px'
+                                            objectFit='cover'
+                                            borderRadius='lg'
+                                        />
+                                    </Td>
+                                    <Td>
+                                        <Switch
+                                            colorScheme='green'
+                                            isChecked={status}
+                                        />
+                                    </Td>
+                                    <Td>{lastLive}</Td>
+                                    <Td>
+                                        <Menu>
+                                            <MenuButton as={Button} rightIcon={<BiChevronDown />}>
+                                                Actions
+                                            </MenuButton>
+                                            <MenuList>
+                                                <MenuItem>
+                                                    Edit
+                                                </MenuItem>
+                                                <MenuItem>
+                                                    Delete
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </Td>
+                                </Tr>
+                            );
+                        })}
                     </Tbody>
                 </Table>
             )}

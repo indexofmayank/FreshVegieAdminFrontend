@@ -39,27 +39,6 @@ const InventoryTable = ({ products, categoriesByName }) => {
     setSelectedCategory(event.target.value);
   };
 
-  //for searching, sorting, filterling
-  useEffect(() => {
-    let filtered = products;
-
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (selectedCategory) {
-      filtered = filtered.filter(product =>
-        product.categoryId === selectedCategory
-      );
-    }
-
-    setFilteredProducts(filtered);
-    fetchProductByNameForInventory();
-  }, [searchQuery, selectedCategory, products]);
-
-
   //for bulk update
   const handleInputChange = (e, index, field) => {
     const { value } = e.target;
@@ -122,7 +101,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
       <SearchBoxForInventory 
       placeholder="Search for items..." 
       onSelectProduct={() => {}} 
-      initialProductName={inventoryProductName}
+      category={selectedCategory}
        width="50%" 
       />
       <Select placeholder='All Categories' onChange={handleCategoryChange}>

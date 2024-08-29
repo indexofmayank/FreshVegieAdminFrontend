@@ -47,10 +47,11 @@ export const InventoryProvider = ({children}) => {
     }
 
 
-    const fetchProductByNameForInventory = async (name='') => {
+    const fetchProductByNameForInventory = async (name='', categoryId='') => {
+        console.log(categoryId);
         try {
             const response = await axios.get(`${getProductByNameForInventory}?name=${name}`);
-            const {data} = response;
+            const {data} = response.data;
             dispatch({type: GET_PRODUCTBYNAMEFORINVENTORY_SUCCESS, payload: data});
         } catch (error) {
             const {success, message} = error.response.data;

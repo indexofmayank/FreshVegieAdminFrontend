@@ -13,6 +13,7 @@ import { BannerProvider } from './context/banner_context';
 import { GeoFancingProvider } from './context/geoFancing_context';
 import { InventoryProvider } from './context/inventory_context';
 import { UserDetailProvider } from './context/user_detail_context';
+import { NotificationProvider } from './context/notification_context';
 
 
 ReactDOM.render(
@@ -25,11 +26,13 @@ ReactDOM.render(
               <BannerProvider>
                 <GeoFancingProvider>
                   <UserDetailProvider>
-                    <InventoryProvider>
-                      <ChakraProvider theme={theme}>
-                        <App />
-                      </ChakraProvider>
-                    </InventoryProvider>
+                    <NotificationProvider>
+                      <InventoryProvider>
+                        <ChakraProvider theme={theme}>
+                          <App />
+                        </ChakraProvider>
+                      </InventoryProvider>
+                    </NotificationProvider>
                   </UserDetailProvider>
                 </GeoFancingProvider>
               </BannerProvider>
