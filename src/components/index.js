@@ -38,6 +38,7 @@ import OrderWeightPopover from './OrderWeightPopover';
 import SearchBoxForInventory from './SearchBoxForInventory';
 import CreateNewNotificationModal from './CreateNewNotificationModal';
 import NotificationTable from './NotificationTable';
+import UpdateNotificationModal from './UpdateNotificationModal';
 
 export {
   SidebarWithHeader,
@@ -79,5 +80,6 @@ export {
   OrderWeightPopover,
   SearchBoxForInventory,
   CreateNewNotificationModal,
-  NotificationTable
+  NotificationTable,
+  UpdateNotificationModal
 };

@@ -16,7 +16,6 @@ function OrdersPage() {
     await fetchOrders();
   };
 
-  console.log(orders);
 
   if (loading) {
     return (

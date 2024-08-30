@@ -27,7 +27,10 @@ import {
   UPDATE_ORDERPAYMENT_STATUS,
   GET_SINGLEORDERSTATUS_BEGIN,
   GET_SINGLEORDERSTATUS_ERROR,
-  GET_SINGLEORDERSTATUS_SUCCESS
+  GET_SINGLEORDERSTATUS_SUCCESS,
+  GET_DELIVERYPARTNERBYNAME_BEGIN,
+  GET_DELIVERYPARTNERBYNAME_ERROR,
+  GET_DELIVERYPARTNERBYNAME_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -150,6 +153,15 @@ const order_reducer = (state, action) => {
   }
   if(action.type === GET_SINGLEORDERSTATUS_SUCCESS) {
     return {...state, singleOrderStatus_loading: false, singleOrderStatus: action.payload}
+  }
+  if(action.type === GET_DELIVERYPARTNERBYNAME_BEGIN) {
+    return {...state, deliveryPartner_loading: true,  deliveryPartner_error: false}
+  }
+  if(action.type === GET_DELIVERYPARTNERBYNAME_ERROR) {
+    return {...state, deliveryPartner_loading: false, deliveryPartner_error: true}
+  }
+  if(action.type === GET_DELIVERYPARTNERBYNAME_SUCCESS) {
+    return {...state, deliveryPartner_loading: false,  deliveryPartner: action.payload}
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);

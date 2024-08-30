@@ -196,8 +196,6 @@ function CreateNewBannerModal() {
                         <Button
                             isLoading={loading}
                             loadingText='Creating Banner'
-                            colorScheme='brown'
-                            onClick={handleSubmit}
                         >
                             Save
                         </Button>
@@ -209,4 +207,4 @@ function CreateNewBannerModal() {
     )
 }
 
-export default CreateNewBannerModal;
+export default CreateNewBannerModal;                            

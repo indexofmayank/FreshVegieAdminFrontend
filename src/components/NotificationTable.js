@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
+import { UpdateNotificationModal } from '../components';
 
 function NotificationTable({ notifications }) {
     const loading = false;
@@ -53,9 +54,9 @@ function NotificationTable({ notifications }) {
                                 audience,
                                 banner,
                                 status,
-                                lastLive
+                                lastLive,
+                                _id
                             } = notification;
-                            console.log(banner);
                             return (
                                 <Tr key={index}>
                                     <Td>{name}</Td>
@@ -83,7 +84,7 @@ function NotificationTable({ notifications }) {
                                             </MenuButton>
                                             <MenuList>
                                                 <MenuItem>
-                                                    Edit
+                                                    <UpdateNotificationModal id={_id} />
                                                 </MenuItem>
                                                 <MenuItem>
                                                     Delete

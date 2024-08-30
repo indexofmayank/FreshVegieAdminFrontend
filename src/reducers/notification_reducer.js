@@ -11,7 +11,10 @@ import {
     GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS,
     GET_USERNAMEFORNOTIFICATION_BEGIN,
     GET_USERNAMEFORNOTIFICATION_ERROR,
-    GET_USERNAMEFORNOTIFICATION_SUCCESS
+    GET_USERNAMEFORNOTIFICATION_SUCCESS,
+    GET_SINGLENOTIFICATION_BEGIN,
+    GET_SINGLENOTIFICATION_ERROR,
+    GET_SINGLENOTIFICATION_SUCCESS
 } from '../actions';
 
 const notification_reducer = (state, action) => {
@@ -29,7 +32,6 @@ const notification_reducer = (state, action) => {
 
     if(action.type === CREATE_NEW_NOTIFICATION) {
         const {name, value} = action.payload;
-        console.log(value);
         return {...state, new_notification: {...state.new_notification, [name]: value}};
 
     }
@@ -68,6 +70,18 @@ const notification_reducer = (state, action) => {
 
     if(action.type === GET_USERNAMEFORNOTIFICATION_ERROR) {
         return {...state, userName_loading: false,  userName_error: true}
+    }
+
+    if(action.type === GET_SINGLENOTIFICATION_BEGIN) {
+        return {...state, single_notification_loading: true, single_notification_error: false}
+    }
+
+    if(action.type === GET_SINGLENOTIFICATION_ERROR ) {
+        return {...state, single_notification_loading: false, single_notification_error: true}
+    }  
+
+    if(action.type === GET_SINGLENOTIFICATION_SUCCESS) {
+        return {...state, single_notification_loading: false, single_notification: action.payload }
     }
 
     throw new Error(`No matching "${action.type}" - action type`);

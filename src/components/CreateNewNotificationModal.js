@@ -53,7 +53,7 @@ function CreateNewNotificationModal() {
             audience,
             branch,
             customFilters,
-            customer,
+            customers,
             status,
             image
         },
@@ -104,12 +104,11 @@ function CreateNewNotificationModal() {
         console.log(message);
         console.log(redirect_to);
         console.log(specific_product);
-        console.log(category);
+        console.log(selectedCustomers);
         console.log(link);
         console.log(audience);
         console.log(branch);
         console.log(customFilters);
-        console.log(customer);
         console.log(status);
         console.log(imageList);
 
@@ -119,7 +118,7 @@ function CreateNewNotificationModal() {
             !status ||
             !heading ||
             !message ||
-            !customer ||
+            !selectedCustomers ||
             !redirect_to
         ) {
             return toast({
@@ -152,7 +151,7 @@ function CreateNewNotificationModal() {
             audience,
             branch,
             customFilters,
-            customer,
+            customers: selectedCustomers,
             status,
             image: imageList
         }
@@ -179,9 +178,6 @@ function CreateNewNotificationModal() {
     }
 
     const handleProductSelect = (product) => {
-        console.log("Select product name: ", product.name);
-        console.log("Select Product Id: ", product._id);
-
         udpateNewNotificationDetails({
             target: {
                 name: 'specific_product',
@@ -193,8 +189,6 @@ function CreateNewNotificationModal() {
     };
 
     const handleUserSelect = (name, _id) => {
-        console.log("Select user name: ", name);
-        console.log("select user id: ", _id);
         setSelectedCustomers(prevState => [...prevState, { _id, name }]);
         udpateNewNotificationDetails({
             target: {
@@ -209,8 +203,6 @@ function CreateNewNotificationModal() {
     }
 
     const handleCategorySelect = (name, _id) => {
-        console.log('select category name: ', name);
-        console.log('select category Id: ', _id);
 
         udpateNewNotificationDetails({
             target: {
@@ -501,7 +493,7 @@ function CreateNewNotificationModal() {
                                         name='customer'
                                         focusBorderColor='brown.500'
                                         value={
-                                            userName.find(user => user._id === customer)?.name || ''
+                                            userName.find(user => user._id === customers)?.name || ''
                                         }
                                         readOnly
                                         onClick={() => setUsernameDropdownOpen(!isUsernameDropdownOpen)}
@@ -563,8 +555,8 @@ function CreateNewNotificationModal() {
                                                         cursor="pointer"
                                                         _hover={{ bg: 'gray.100' }}
                                                         p="2"
-                                                        borderWidth={customer === _id ? '1px' : '0'}
-                                                        borderColor={customer === _id ? 'brown.500' : 'transparent'}
+                                                        borderWidth={customers === _id ? '1px' : '0'}
+                                                        borderColor={customers === _id ? 'brown.500' : 'transparent'}
                                                         borderRadius="md"
                                                     >
                                                         {name}

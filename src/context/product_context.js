@@ -60,7 +60,6 @@ export const ProductProvider = ({ children }) => {
     try {
       const response = await axios.get(`${productsTable_url}?page=${newPage}&limit=${limit}`);
       const { data } = response;
-      console.log(data);
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_PRODUCTS_ERROR });
@@ -72,7 +71,6 @@ export const ProductProvider = ({ children }) => {
     try {
       const response = await axios.get(`${single_product_url}${id}`);
       const { data } = response.data;
-      console.log(data);  
       dispatch({ type: GET_SINGLE_PRODUCT_SUCCESS, payload: data });
     } catch (error) {
       dispatch({ type: GET_SINGLE_PRODUCT_ERROR });
@@ -84,7 +82,6 @@ export const ProductProvider = ({ children }) => {
     try {
       const response = await axios.get(`${singleProductForUpdate_url}${id}`);
       const {data} = response.data;
-      console.log(data);
       dispatch({type: GET_SINGLEPRODUCTFORUPDATE_SUCCESS, payload: data});
     } catch (error) {
       dispatch({GET_SINGLEPRODUCTFORUPDATE_ERROR});

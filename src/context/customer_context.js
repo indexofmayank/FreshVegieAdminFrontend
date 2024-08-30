@@ -28,7 +28,6 @@ export const CustomerProvider = ({children}) => {
         try{
             const response = await axios.get(customers_url)
             const {data} = response.data;
-            console.log(response);
             dispatch({type: GET_CUSTOMER_SUCCESS, payload: data});
         } catch(error) {
             dispatch({type: GET_CUSTOMER_ERROR});

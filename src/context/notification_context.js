@@ -1,24 +1,28 @@
-import React, {useContext, useEffect, useReducer} from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import reducer from '../reducers/notification_reducer';
-import {getAllNotification_url, getProductByNameForInventory, getAllProductName_url,
-    getAllCategoryName_url, getAllUserName_url
+import {
+    getAllNotification_url, getProductByNameForInventory, getAllProductName_url,
+    getAllCategoryName_url, getAllUserName_url, getSingleNotification_url
 } from '../utils/constants';
-import { 
+import {
     GET_NOTIFICATIONS_BEGIN,
-     GET_NOTIFICATIONS_ERROR, 
-     GET_NOTIFICATIONS_SUCCESS,
-     CREATE_NEW_NOTIFICATION,
-     GET_PRODUCTBYNAMEFORNOTIFICATION_BEGIN,
-     GET_PRODUCTBYNAMEFORNOTIFICATION_ERROR,
-     GET_PRODUCTBYNAMEFORNOTIFICATION_SUCCESS,
-     GET_CATEGORYBYNAMEFORNOTIFICATION_BEGIN,
-     GET_CATEGORYBYNAMEFORNOTIFICATION_ERROR,
-     GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS,
-     GET_USERNAMEFORNOTIFICATION_BEGIN,
-     GET_USERNAMEFORNOTIFICATION_ERROR,
-     GET_USERNAMEFORNOTIFICATION_SUCCESS 
-    } from "../actions";
+    GET_NOTIFICATIONS_ERROR,
+    GET_NOTIFICATIONS_SUCCESS,
+    CREATE_NEW_NOTIFICATION,
+    GET_PRODUCTBYNAMEFORNOTIFICATION_BEGIN,
+    GET_PRODUCTBYNAMEFORNOTIFICATION_ERROR,
+    GET_PRODUCTBYNAMEFORNOTIFICATION_SUCCESS,
+    GET_CATEGORYBYNAMEFORNOTIFICATION_BEGIN,
+    GET_CATEGORYBYNAMEFORNOTIFICATION_ERROR,
+    GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS,
+    GET_USERNAMEFORNOTIFICATION_BEGIN,
+    GET_USERNAMEFORNOTIFICATION_ERROR,
+    GET_USERNAMEFORNOTIFICATION_SUCCESS,
+    GET_SINGLENOTIFICATION_BEGIN,
+    GET_SINGLENOTIFICATION_ERROR,
+    GET_SINGLENOTIFICATION_SUCCESS
+} from "../actions";
 
 const initialState = {
     notificatin_loading: false,
@@ -35,7 +39,7 @@ const initialState = {
         audience: '',
         branch: '',
         customFilters: '',
-        customer: '',
+        customers: '',
         status: '',
         image: '',
         lastLive: '',
@@ -48,54 +52,69 @@ const initialState = {
     categories: [],
     userName_loading: false,
     userName_error: false,
-    userName: []
+    userName: [],
+    single_notification_loading: false,
+    single_notification_error: false,
+    single_notification: {}
 
 };
 
 const NotificationContext = React.createContext();
-export const NotificationProvider = ({children}) => {
+export const NotificationProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const fetchNotifications = async () => {
-        try {   
-            dispatch({type: GET_NOTIFICATIONS_BEGIN});
+        try {
+            dispatch({ type: GET_NOTIFICATIONS_BEGIN });
             const response = await axios.get(getAllNotification_url);
-            const {data} = response.data;
-            dispatch({type: GET_NOTIFICATIONS_SUCCESS, payload: data});
+            const { data } = response.data;
+            dispatch({ type: GET_NOTIFICATIONS_SUCCESS, payload: data });
         } catch (error) {
-            dispatch({type: GET_NOTIFICATIONS_ERROR});
+            dispatch({ type: GET_NOTIFICATIONS_ERROR });
         }
     }
 
-        const fetchProductNameForNotification = async () => {
+    const fetchSingleNotification = async (id) => {
+        dispatch({type: GET_SINGLENOTIFICATION_BEGIN});
         try {
-            dispatch({type: GET_PRODUCTBYNAMEFORNOTIFICATION_BEGIN});
-            const response = await axios.get(getProductByNameForInventory);
+            const response = await axios.get(`${getSingleNotification_url}${id}`);
             const {data} = response.data;
-            dispatch({type: GET_PRODUCTBYNAMEFORNOTIFICATION_SUCCESS, payload: data});
+            dispatch({type: GET_SINGLENOTIFICATION_SUCCESS, payload: data});
         } catch (error) {
-            dispatch({type: GET_PRODUCTBYNAMEFORNOTIFICATION_ERROR});
+            dispatch({type: GET_SINGLENOTIFICATION_ERROR});
         }
     }
-    
+
+
+    const fetchProductNameForNotification = async () => {
+        try {
+            dispatch({ type: GET_PRODUCTBYNAMEFORNOTIFICATION_BEGIN });
+            const response = await axios.get(getProductByNameForInventory);
+            const { data } = response.data;
+            dispatch({ type: GET_PRODUCTBYNAMEFORNOTIFICATION_SUCCESS, payload: data });
+        } catch (error) {
+            dispatch({ type: GET_PRODUCTBYNAMEFORNOTIFICATION_ERROR });
+        }
+    }
+
 
     const createNewNotification = async (notification) => {
         console.log(notification);
         try {
             const response = await axios.post(getAllNotification_url, notification);
-            const {success, data} = response.data;
+            const { success, data } = response.data;
             fetchNotifications();
-            return {success, data};
+            return { success, data };
         } catch (error) {
-            const {success, message} = error.response.data;
-            return {success, message};
+            const { success, message } = error.response.data;
+            return { success, message };
         }
     }
 
     const udpateNewNotificationDetails = (e) => {
         const name = e.target.name;
         let value = e.target.value;
-        dispatch({type: CREATE_NEW_NOTIFICATION, payload: {name, value}});
+        dispatch({ type: CREATE_NEW_NOTIFICATION, payload: { name, value } });
     };
 
     const updateExistingNotificationDetails = (e) => {
@@ -105,32 +124,31 @@ export const NotificationProvider = ({children}) => {
     }
 
     const fetchCategoryNameForNotification = async () => {
-        dispatch({type: GET_CATEGORYBYNAMEFORNOTIFICATION_BEGIN});
+        dispatch({ type: GET_CATEGORYBYNAMEFORNOTIFICATION_BEGIN });
         try {
             const response = await axios.get(getAllCategoryName_url);
-            const {data} = response.data;
-            console.log(data);
-            dispatch({type: GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS, payload: data});
+            const { data } = response.data;
+            dispatch({ type: GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS, payload: data });
         } catch (error) {
             console.error(error);
-            dispatch({type: GET_CATEGORYBYNAMEFORNOTIFICATION_ERROR});
+            dispatch({ type: GET_CATEGORYBYNAMEFORNOTIFICATION_ERROR });
         }
     }
 
     const fetchUserNameForNotification = async () => {
-        dispatch({type: GET_USERNAMEFORNOTIFICATION_BEGIN});
+        dispatch({ type: GET_USERNAMEFORNOTIFICATION_BEGIN });
         try {
             const response = await axios.get(getAllUserName_url);
-            const {data} = response.data;
-            dispatch({type: GET_USERNAMEFORNOTIFICATION_SUCCESS, payload: data});
+            const { data } = response.data;
+            dispatch({ type: GET_USERNAMEFORNOTIFICATION_SUCCESS, payload: data });
         } catch (error) {
             console.error(error);
-            dispatch({type: GET_USERNAMEFORNOTIFICATION_ERROR});
+            dispatch({ type: GET_USERNAMEFORNOTIFICATION_ERROR });
         }
     }
 
-    useEffect( () => {
-         fetchNotifications()
+    useEffect(() => {
+        fetchNotifications()
     }, []);
 
     return (
@@ -142,7 +160,8 @@ export const NotificationProvider = ({children}) => {
                 createNewNotification,
                 fetchProductNameForNotification,
                 fetchCategoryNameForNotification,
-                fetchUserNameForNotification
+                fetchUserNameForNotification,
+                fetchSingleNotification
             }}
         >
             {children}

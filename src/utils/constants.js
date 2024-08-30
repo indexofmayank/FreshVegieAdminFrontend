@@ -97,3 +97,7 @@ export const getAllNotification_url = `${domain}/api/notification/`;
 export const getAllProductName_url = `${domain}/api/notification/products/name`;
 export const getAllCategoryName_url = `${domain}/api/notification/category/name`;
 export const getAllUserName_url = `${domain}/api/notification/user/name`;
+export const getSingleNotification_url = `${domain}/api/notification/`;
+export const getDeliveryPartnerName_url = `${domain}/api/deliveryPartner`;
+export const updateDeliveryPartnerDetails_url = `${domain}/api/orders/deliverypartnerdetails/`;
+export const getDeliveryPartnerDetailById_url = `${domain}/api/deliveryPartner/`;

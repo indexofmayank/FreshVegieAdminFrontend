@@ -16,7 +16,10 @@ import {
   get_orderQuantityWise_url,
   updateOrderStatusToCancelled_url,
   getSingleOrderStatus_url,
-  updateOrderStatusToDelivered
+  updateOrderStatusToDelivered,
+  getDeliveryPartnerName_url,
+  updateDeliveryPartnerDetails_url,
+  getDeliveryPartnerDetailById_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -48,7 +51,10 @@ import {
   UPDATE_ORDERPAYMENTTO_PAID,
   GET_SINGLEORDERSTATUS_BEGIN,
   GET_SINGLEORDERSTATUS_ERROR,
-  GET_SINGLEORDERSTATUS_SUCCESS
+  GET_SINGLEORDERSTATUS_SUCCESS,
+  GET_DELIVERYPARTNERBYNAME_BEGIN,
+  GET_DELIVERYPARTNERBYNAME_ERROR,
+  GET_DELIVERYPARTNERBYNAME_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -82,6 +88,9 @@ const initialState = {
   singleOrderStatus_error: false,
   singleOrderStatus: {},
   recent_orders: [],
+  deliveryPartner_loading: false,
+  deliveryPartner_error: false,
+  deliveryPartner: [],
   pending_orders: 0,
   delivered_orders: 0,
   total_revenue: 0,
@@ -175,6 +184,25 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
+  const updateDeliveryInfo = async (id, type, name, email, phone) => {
+    try {
+      const response = await axios.put(`${updateDeliveryPartnerDetails_url}${id}`, {
+        type,
+        name,
+        phone,
+        email
+      });
+      console.log(response);
+      const {success, data} = response.data;
+      fetchOrders();
+      fetchUserOrderDeliveryInfo(id);
+      return {success, data};
+    } catch (error) {
+      const {success, message} = error.response.data;
+      return {success, message};
+    }
+  }
+
 
   const deleteOrder = async (id) => {
     try {
@@ -262,12 +290,36 @@ export const OrderProvider = ({ children }) => {
     }
   } 
 
+  const fetchDeliveryPartnersName = async () => {
+    dispatch({type: GET_DELIVERYPARTNERBYNAME_BEGIN});
+    try {
+      const response = await axios.get(getDeliveryPartnerName_url);
+      const {data} = response.data;
+      console.log(data);
+      dispatch({type: GET_DELIVERYPARTNERBYNAME_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_DELIVERYPARTNERBYNAME_ERROR});
+    }
+  }
+
   const udpateOrderStatusAsDelivered = async (id) => {
     try {
       const response = await axios.put(`${updateOrderStatusToDelivered}${id}`);
       const {success, message} = response.data;
       fetchUserOrderDeliveryInfo(id);
       return {success, message};
+    } catch (error) {
+      const {success, message} = error;
+      return {success, message};
+    }
+  }
+
+  const deliveryPartnerDetailById = async (id) => {
+    try {
+      const response = await axios.get(`${getDeliveryPartnerDetailById_url}${id}`);
+      const {data} = response.data;
+      console.log(data);
+      return data;
     } catch (error) {
       const {success, message} = error;
       return {success, message};
@@ -296,7 +348,10 @@ export const OrderProvider = ({ children }) => {
         markOrderPaymentToPaid,
         updateOrderStatusToCancelled,
         fetchSingleOrderStatus,
-        udpateOrderStatusAsDelivered
+        udpateOrderStatusAsDelivered,
+        fetchDeliveryPartnersName,
+        updateDeliveryInfo,
+        deliveryPartnerDetailById
       }}
     >
       {children}

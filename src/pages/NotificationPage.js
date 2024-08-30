@@ -26,7 +26,6 @@ function NotificationPage() {
         await fetchNotifications();
     }
 
-    console.log(notificationProductName);
     if (loading) {
         return (
             <SidebarWithHeader>
