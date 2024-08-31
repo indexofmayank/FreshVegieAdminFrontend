@@ -3,6 +3,9 @@ import { SidebarWithHeader, OrdersTable } from '../components';
 import { useOrderContext } from '../context/order_context';
 import { Heading, VStack, HStack, Button, Spinner } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
+import { FaDownload } from "react-icons/fa";
+import axios from 'axios';
+import { getCsvDownload_url } from '../utils/constants';
 
 function OrdersPage() {
   const {
@@ -16,6 +19,22 @@ function OrdersPage() {
     await fetchOrders();
   };
 
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get(getCsvDownload_url, {
+        responseType: 'blob', // Ensure the response is treated as a file
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Orders.csv'); // Specify the download file name
+      document.body.appendChild(link);
+      link.click();
+      link.remove(); // Clean up and remove the link
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -68,6 +87,11 @@ function OrdersPage() {
         >
           Refresh
         </Button>
+        <FaDownload 
+          size={30}
+          style={{ cursor: 'pointer' }}
+          onClick={handleDownload}
+        />
       </HStack>
       <OrdersTable orders={orders} />
     </SidebarWithHeader>

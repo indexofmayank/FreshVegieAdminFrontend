@@ -101,3 +101,4 @@ export const getSingleNotification_url = `${domain}/api/notification/`;
 export const getDeliveryPartnerName_url = `${domain}/api/deliveryPartner`;
 export const updateDeliveryPartnerDetails_url = `${domain}/api/orders/deliverypartnerdetails/`;
 export const getDeliveryPartnerDetailById_url = `${domain}/api/deliveryPartner/`;
+export const getCsvDownload_url = `${domain}/api/csv/`;
