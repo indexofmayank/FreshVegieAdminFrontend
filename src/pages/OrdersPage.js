@@ -1,7 +1,7 @@
 import React from 'react';
 import { SidebarWithHeader, OrdersTable } from '../components';
 import { useOrderContext } from '../context/order_context';
-import { Heading, VStack, HStack, Button, Spinner } from '@chakra-ui/react';
+import { Heading, VStack, HStack, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { FaDownload } from "react-icons/fa";
 import axios from 'axios';
@@ -78,7 +78,7 @@ function OrdersPage() {
 
   return (
     <SidebarWithHeader>
-      <HStack mb={5}>
+      <HStack mb={5} spacing={4}>
         <Button
           colorScheme='brown'
           variant='outline'
@@ -87,11 +87,13 @@ function OrdersPage() {
         >
           Refresh
         </Button>
-        <FaDownload 
-          size={30}
-          style={{ cursor: 'pointer' }}
-          onClick={handleDownload}
-        />
+        <Tooltip label="Download Orders CSV" aria-label="Download Orders CSV Tooltip">
+          <FaDownload 
+            size={30}
+            style={{ cursor: 'pointer' }}
+            onClick={handleDownload}
+          />
+        </Tooltip>
       </HStack>
       <OrdersTable orders={orders} />
     </SidebarWithHeader>
