@@ -47,12 +47,15 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   const totalWeight = quantityWiseOrder?.data?.total_quantity || null;
   const orderStatus = singleOrderStatus?.data?.status || null;
 
+  console.log(orderStatus);
 
   const [amount, setAmount] = useState(orderWithItems?.items_grand_total || 0);
   const [paymentStatus, setPaymentStatus] = useState(paymentInfo?.status || '');
   const [paidLoading, setPaidLoading] = useState(false);
   const [cancelButtonLoading, setCancelButtonLoading] = useState(false);
   const [deliverButtonLoading, setDeliverButtonLoading] = useState(false);
+  const [showOrderStatusDisableButton, setOrderStatusDisableButton] = useState(false);
+  const [showOrderStatusActiveButton, setOrderStatusActiveButton] = useState(false);
   const toast = useToast();
   const firstPopover = useDisclosure();
   const secondPopover = useDisclosure();
@@ -342,8 +345,23 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
             <Text>Phone: {deliveryInfo.phone}</Text>
             <Text>Email: {deliveryInfo.email}</Text>
             <HStack justifyContent='space-between' mt={4}>
-              {orderStatus !== 'cancelled' || 'delivered' ? (
+              {orderStatus === 'cancelled' || orderStatus === 'delivered' ? (
+                <>
+                  <Button
+                    isDisabled
+                    colorScheme="red"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    isDisabled
+                    colorScheme="red"
+                  >
+                    Mark Deliver
+                  </Button>
 
+                </>
+              ) : (
                 <>
                   <Button
                     isLoading={cancelButtonLoading}
@@ -409,29 +427,9 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
                     Mark delivered
                   </Button>
 
-                </>
-
-              ) : (
-                <>
-                  <Button
-                    colorScheme="red"
-                    mt={4}
-                    isDisabled
-                  >
-                    Cancel order
-                  </Button>
-                  <Button
-                    colorScheme="red"
-                    mt={4}
-                    isDisabled
-                  >
-                    Mark delivered
-                  </Button>
 
                 </>
-
               )}
-
             </HStack>
           </Box>
 
