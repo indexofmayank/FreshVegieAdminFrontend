@@ -32,6 +32,7 @@ function SingleOrderPage() {
   const [deliveryPartnerPhone, setDeliveryPartnerPhone] = useState();
   const [deliveryPartnerEmail, setDeliveryPartnerEmail] = useState();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
+  const [cleandOrderStatus, setCleanedOrderStatus] = useState('');
   const {
     order_withItem_loading: loading,
     order_withItem_error: error,
@@ -69,7 +70,7 @@ function SingleOrderPage() {
     deliveryPartnerDetailById
   } = useOrderContext();
 
-
+  console.log(singleOrderStatus);
   const handleChange = async (e) => {
     const status = e.target.value;
     const response = await updateOrderStatus(status, id);
@@ -104,10 +105,32 @@ function SingleOrderPage() {
   }, [id]);
 
   useEffect(() => {
-    if (singleOrderStatus?.data?.status === 'Assign Delivery') {
+    const loadData = () => {
+      const status = singleOrderStatus?.data?.status || '';
+      const cleanedStr = status.replace(/[^a-zA-Z0-9\s]/g, ' ');
+
+      // Capitalize the first letter of each word
+      const capitalizedStr = cleanedStr
+        .toLowerCase()
+        .split(' ')
+        .filter(word => word) // To avoid empty strings
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
+      setCleanedOrderStatus(capitalizedStr);
+      return;
+    }
+
+    loadData();
+
+  }, [id, singleOrderStatus]);
+
+
+  useEffect(() => {
+    if (singleOrderStatus?.data?.status === 'assign_delivery') {
       setAssignDeliveryDetailOpen(true);
     }
-    if(userDeliveryInfo?.userDeliveryDetail?.deliveryType !== 'N/A') {
+    if (userDeliveryInfo?.userDeliveryDetail?.deliveryType !== 'N/A') {
       setAssignDeliveryDetailOpen(false);
     }
   }, [id, singleOrderStatus, setAssignDeliveryDetailOpen, userDeliveryInfo]);
@@ -122,6 +145,7 @@ function SingleOrderPage() {
       </SidebarWithHeader>
     );
   }
+
 
   if (error) {
     return (
@@ -141,7 +165,7 @@ function SingleOrderPage() {
         <Select
           variant='filled'
           focusBorderColor='brown.500'
-          value={single_order_status}
+          value={() => cleandOrderStatus}
           onChange={handleChange}
         >
           {statusList.map((status, index) => {
@@ -154,7 +178,7 @@ function SingleOrderPage() {
           })}
         </Select>
       </HStack>
-      {isAssignDeliveryDetailOpen && singleOrderStatus?.data?.status === 'Assign Delivery' && (
+      {isAssignDeliveryDetailOpen && singleOrderStatus?.data?.status === 'assign_delivery' && (
         <VStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
           <Select
             variant='filled'

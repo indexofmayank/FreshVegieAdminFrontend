@@ -39,6 +39,7 @@ import SearchBoxForInventory from './SearchBoxForInventory';
 import CreateNewNotificationModal from './CreateNewNotificationModal';
 import NotificationTable from './NotificationTable';
 import UpdateNotificationModal from './UpdateNotificationModal';
+import OrderStatus from './OrderStatus';
 
 export {
   SidebarWithHeader,
@@ -81,5 +82,6 @@ export {
   SearchBoxForInventory,
   CreateNewNotificationModal,
   NotificationTable,
-  UpdateNotificationModal
+  UpdateNotificationModal,
+  OrderStatus
 };

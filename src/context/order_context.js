@@ -19,7 +19,9 @@ import {
   updateOrderStatusToDelivered,
   getDeliveryPartnerName_url,
   updateDeliveryPartnerDetails_url,
-  getDeliveryPartnerDetailById_url
+  getDeliveryPartnerDetailById_url,
+  getOrderForTable_url,
+  getRecentOrderForTable_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -54,7 +56,13 @@ import {
   GET_SINGLEORDERSTATUS_SUCCESS,
   GET_DELIVERYPARTNERBYNAME_BEGIN,
   GET_DELIVERYPARTNERBYNAME_ERROR,
-  GET_DELIVERYPARTNERBYNAME_SUCCESS
+  GET_DELIVERYPARTNERBYNAME_SUCCESS,
+  GET_ORDERFORTABEL_BEGIN,
+  GET_ORDERFORTABEL_SUCCESS,
+  GET_ORDERFORTABLE_ERROR,
+  GET_RECENTORDERFORTABLE_BEGIN,
+  GET_RECENTORDERFORTABLE_ERROR,
+  GET_RECENTORDERFORTABLE_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -91,6 +99,12 @@ const initialState = {
   deliveryPartner_loading: false,
   deliveryPartner_error: false,
   deliveryPartner: [],
+  orderForTable_loading: false,
+  orderForTable_error: false,
+  orderForTable: [],
+  recentOrder_loading: false,
+  recentOrder_error: false,
+  recentOrder: [],
   pending_orders: 0,
   delivered_orders: 0,
   total_revenue: 0,
@@ -101,6 +115,31 @@ const OrderContext = React.createContext();
 export const OrderProvider = ({ children }) => {
   const { currentUser } = useUserContext();
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const fetchOrdersForTable = async (label='') => {
+    try {
+      dispatch({type:GET_ORDERFORTABEL_BEGIN });
+      const response = await axios.get(`${getOrderForTable_url}?label=${label}`);
+      const {data} = response.data;
+      console.log(data);
+      dispatch({type: GET_ORDERFORTABEL_SUCCESS, payload: data});
+    } catch (error) {
+      console.error(error);
+      dispatch({type: GET_ORDERFORTABLE_ERROR});
+    }
+  }
+
+  const fetchRecentOrderForTable = async () => {
+    try {
+      dispatch({type:GET_RECENTORDERFORTABLE_BEGIN });
+      const response = await axios.get(getRecentOrderForTable_url);
+      const {data} = response.data;
+      dispatch({type: GET_RECENTORDERFORTABLE_SUCCESS, payload: data});
+    } catch (error) {
+      console.error(error);
+      dispatch({type: GET_RECENTORDERFORTABLE_ERROR});
+    }
+  }
 
   const fetchOrders = async () => {
     dispatch({ type: GET_ORDERS_BEGIN });
@@ -351,7 +390,9 @@ export const OrderProvider = ({ children }) => {
         udpateOrderStatusAsDelivered,
         fetchDeliveryPartnersName,
         updateDeliveryInfo,
-        deliveryPartnerDetailById
+        deliveryPartnerDetailById,
+        fetchOrdersForTable,
+        fetchRecentOrderForTable
       }}
     >
       {children}

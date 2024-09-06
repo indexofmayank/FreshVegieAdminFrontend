@@ -30,7 +30,13 @@ import {
   GET_SINGLEORDERSTATUS_SUCCESS,
   GET_DELIVERYPARTNERBYNAME_BEGIN,
   GET_DELIVERYPARTNERBYNAME_ERROR,
-  GET_DELIVERYPARTNERBYNAME_SUCCESS
+  GET_DELIVERYPARTNERBYNAME_SUCCESS,
+  GET_ORDERFORTABEL_BEGIN,
+  GET_ORDERFORTABEL_SUCCESS,
+  GET_ORDERFORTABLE_ERROR,
+  GET_RECENTORDERFORTABLE_BEGIN,
+  GET_RECENTORDERFORTABLE_ERROR,
+  GET_RECENTORDERFORTABLE_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -41,31 +47,28 @@ const order_reducer = (state, action) => {
     return { ...state, orders_error: true, orders_loading: false };
   }
   if (action.type === GET_ORDERS_SUCCESS) {
-    const orders = action.payload;
-    let recent_orders = action.payload;
-    recent_orders = recent_orders
-      .sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      })
-      .slice(0, 11);
-    const pending_orders = orders.filter(
-      (order) => order.orderStatus === 'processing'
-    );
-    const delivered_orders = orders.filter(
-      (order) => order.orderStatus === 'delivered'
-    );
-    const total_revenue = orders.reduce((total, order) => {
-      total += order.totalPrice;
-      return total;
-    }, 0);
+    // const orders = action.payload;
+    // let recent_orders = action.payload;
+    // recent_orders = recent_orders
+    //   .sort((a, b) => {
+    //     return new Date(b.createdAt) - new Date(a.createdAt);
+    //   })
+    //   .slice(0, 11);
+    // const pending_orders = orders.filter(
+    //   (order) => order.orderStatus === 'processing'
+    // );
+    // const delivered_orders = orders.filter(
+    //   (order) => order.orderStatus === 'delivered'
+    // );
+    // const total_revenue = orders.reduce((total, order) => {
+    //   total += order.totalPrice;
+    //   return total;
+    // }, 0);
+
     return {
       ...state,
       orders_loading: false,
-      orders,
-      pending_orders,
-      delivered_orders,
-      total_revenue,
-      recent_orders,
+      orders: action.payload,
     };
   }
   if (action.type === GET_SINGLE_ORDER_BEGIN) {
@@ -162,6 +165,30 @@ const order_reducer = (state, action) => {
   }
   if(action.type === GET_DELIVERYPARTNERBYNAME_SUCCESS) {
     return {...state, deliveryPartner_loading: false,  deliveryPartner: action.payload}
+  }
+
+  if(action.type === GET_ORDERFORTABEL_BEGIN) {
+    return {...state, orderForTable_loading: true, orderForTable_error: false}
+  }
+
+  if(action.type === GET_ORDERFORTABLE_ERROR) {
+    return {...state, orderForTable_loading: false, orderForTable_error: true}
+  }
+
+  if(action.type === GET_ORDERFORTABEL_SUCCESS) {
+    return {...state,  orderForTable_loading: false, orderForTable: action.payload}
+  }
+
+  if(action.type === GET_RECENTORDERFORTABLE_BEGIN) {
+    return {...state, recentOrder_loading: true, recentOrder_error: false}
+  }
+
+  if(action.type === GET_RECENTORDERFORTABLE_ERROR) {
+    return {...state, recentOrder_loading: false, recentOrder_error: true }
+  }
+
+  if(action.type === GET_RECENTORDERFORTABLE_SUCCESS) {
+    return {...state, recentOrder_loading: false, recentOrder: action.payload}
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);

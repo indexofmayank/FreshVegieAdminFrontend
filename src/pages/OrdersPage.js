@@ -1,24 +1,58 @@
-import React from 'react';
-import { SidebarWithHeader, OrdersTable } from '../components';
+import React, { useEffect, useState } from 'react';
+import { SidebarWithHeader, OrdersTable, OrderStatus } from '../components';
 import { useOrderContext } from '../context/order_context';
 import { Heading, VStack, HStack, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { FaDownload } from "react-icons/fa";
 import axios from 'axios';
 import { getCsvDownload_url } from '../utils/constants';
+import { useOrderStatusContext } from '../context/orderStatus_context';
+
 
 function OrdersPage() {
+
   const {
-    orders,
-    orders_loading: loading,
-    orders_error: error,
-    fetchOrders,
+    orderStatus_loading: loading,
+    orderStatus_error: error,
+    orderStatus,
+    fetchOrderStatus,
+    totalOrder_loading,
+    totalOrder_error,
+    totalOrder,
+    fetchOrderTotalCount,
+    totalAvg_error,
+    totalAvg,
+    fetchOrderAvgCount,
+    totalSales_loading,
+    totalSales_error,
+    totalSales,
+    fetchOrderTotalStats,
+  } = useOrderStatusContext();
+
+  const {
+    orderForTable_loading,
+    orderForTable_error,
+    orderForTable,
+    fetchOrdersForTable
   } = useOrderContext();
 
-  const handleRefresh = async () => {
-    await fetchOrders();
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      await fetchOrderStatus();
+      await fetchOrderTotalCount();
+      await fetchOrderAvgCount();
+      await fetchOrderTotalStats();  
+    };
+    loadData();
 
+  }, []);
+
+
+  // const handleRefresh = async () => {
+  //   await fetchOrders();
+  // };
+
+  
   const handleDownload = async () => {
     try {
       const response = await axios.get(getCsvDownload_url, {
@@ -36,6 +70,13 @@ function OrdersPage() {
     }
   };
 
+  const [tabelLabel, setTableLabel] = useState(null);
+  const handleCardClick = async (label) => {
+    setTableLabel(label);
+    await fetchOrdersForTable(label);
+  };
+
+
   if (loading) {
     return (
       <SidebarWithHeader>
@@ -44,7 +85,7 @@ function OrdersPage() {
             colorScheme='brown'
             variant='outline'
             leftIcon={<MdOutlineRefresh />}
-            onClick={handleRefresh}
+            // onClick={handleRefresh}
           >
             Refresh
           </Button>
@@ -64,7 +105,7 @@ function OrdersPage() {
             colorScheme='brown'
             variant='outline'
             leftIcon={<MdOutlineRefresh />}
-            onClick={handleRefresh}
+            // onClick={handleRefresh}
           >
             Refresh
           </Button>
@@ -83,7 +124,7 @@ function OrdersPage() {
           colorScheme='brown'
           variant='outline'
           leftIcon={<MdOutlineRefresh />}
-          onClick={handleRefresh}
+          // onClick={handleRefresh}
         >
           Refresh
         </Button>
@@ -95,7 +136,19 @@ function OrdersPage() {
           />
         </Tooltip>
       </HStack>
-      <OrdersTable orders={orders} />
+       {tabelLabel === null ? (
+        < OrderStatus
+          orderStatus={orderStatus}
+          totalOrder={totalOrder}
+          totalAvg={totalAvg}
+          totalSales={totalSales}
+          handleCardClick={handleCardClick}
+        />
+
+      ) : (
+        <OrdersTable orders={orderForTable} />
+    )} 
+
     </SidebarWithHeader>
   );
 }

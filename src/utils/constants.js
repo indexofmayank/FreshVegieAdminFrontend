@@ -23,7 +23,6 @@ export const LinkItems = [
   {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />},
   {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />},
   {name: 'Notification', url: '/notification', icon: <FaRocketchat />}
-  //we are here
 ];
 
 export const orderStatusList = [
@@ -31,7 +30,7 @@ export const orderStatusList = [
   {name: 'Received', value: 'received'},
   { name: 'Rejected', value: 'rejected' },
   {name: 'Packed', value: 'packed'},
-  {name: 'Assign Delivery', valuel: 'assign_delivery'},
+  {name: 'Assign Delivery', value: 'assign_delivery'},
   {name: 'Cancelled', value: 'cancelled'},
   {name: 'Delivered', value: 'delivered' }
 ];
@@ -102,3 +101,9 @@ export const getDeliveryPartnerName_url = `${domain}/api/deliveryPartner`;
 export const updateDeliveryPartnerDetails_url = `${domain}/api/orders/deliverypartnerdetails/`;
 export const getDeliveryPartnerDetailById_url = `${domain}/api/deliveryPartner/`;
 export const getCsvDownload_url = `${domain}/api/csv/`;
+export const getOrderStatus_url = `${domain}/api/orderstatus/`;
+export const getTotalOrderCount_url = `${domain}/api/orderstatus/count/`;
+export const getTotalOrderAvgValue_url = `${domain}/api/orderstatus/average/`;
+export const getTotalOrderSalesCount_url = `${domain}/api/orderstatus/totalsales/`;
+export const getOrderForTable_url = `${domain}/api/ordertable/ordertablelabelwise`;
+export const getRecentOrderForTable_url = `${domain}/api/ordertable/ordertableforrecent`;

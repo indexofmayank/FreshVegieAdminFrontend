@@ -81,37 +81,37 @@ function OrdersTable({ orders }) {
           <Tbody>
             {orders.map((order, index) => {
               const {
-                orderId,
+                order_no,
                 timestampFormatted,
-                user,
-                totalItems,
-                weight,
+                customerName,
+                orderItemsCount,
+                totalQuantity,
                 location,
-                payment_status,
-                order_status,
-                grand_total,
+                paymentType,
+                status,
+                amount,
                 _id: id,
               } = order;
               return (
                 <Tr key={index}>
-                  <Td>{orderId}</Td>
+                  <Td>{order_no}</Td>
                   <Td>{timestampFormatted}</Td>
-                  <Td>{user}</Td>
+                  <Td>{customerName}</Td>
                   <Td>
-                    {totalItems}
+                    {orderItemsCount}
                   </Td>
 
-                  <Td>{weight}</Td>
+                  <Td>{totalQuantity}</Td>
                   <Td>{location}</Td>
                   <Td color='green.500'>
-                    <Badge colorScheme='green'>{payment_status}</Badge>
+                    <Badge colorScheme='green'>{paymentType}</Badge>
                   </Td>
                   <Td>
-                    <Badge colorScheme={getOrderStatusColor(order_status)}>
-                      {order_status}
+                    <Badge colorScheme={getOrderStatusColor(status)}>
+                      {status}
                     </Badge>
                   </Td>
-                  <Td>{grand_total}</Td>
+                  <Td>{amount}</Td>
                   <Td>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>

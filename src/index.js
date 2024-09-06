@@ -14,7 +14,7 @@ import { GeoFancingProvider } from './context/geoFancing_context';
 import { InventoryProvider } from './context/inventory_context';
 import { UserDetailProvider } from './context/user_detail_context';
 import { NotificationProvider } from './context/notification_context';
-
+import { OrderStatusProvider } from './context/orderStatus_context';
 
 ReactDOM.render(
   <UserProvider>
@@ -28,9 +28,11 @@ ReactDOM.render(
                   <UserDetailProvider>
                     <NotificationProvider>
                       <InventoryProvider>
-                        <ChakraProvider theme={theme}>
-                          <App />
-                        </ChakraProvider>
+                        <OrderStatusProvider>
+                          <ChakraProvider theme={theme}>
+                            <App />
+                          </ChakraProvider>
+                        </ OrderStatusProvider>
                       </InventoryProvider>
                     </NotificationProvider>
                   </UserDetailProvider>
