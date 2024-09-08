@@ -107,3 +107,5 @@ export const getTotalOrderAvgValue_url = `${domain}/api/orderstatus/average/`;
 export const getTotalOrderSalesCount_url = `${domain}/api/orderstatus/totalsales/`;
 export const getOrderForTable_url = `${domain}/api/ordertable/ordertablelabelwise`;
 export const getRecentOrderForTable_url = `${domain}/api/ordertable/ordertableforrecent`;
+export const getProductForCreateOrder_url = `${domain}/api/products/dropdown/getProductForCreateOrder`;
+export const getUserForCreateOrder_url = `${domain}/api/user/dropdown/createOrder`;

@@ -13,6 +13,7 @@ import GeoFancing from './GeoFancing';
 import InventoryPage from './InventoryPage';
 import SingleUserPage from './SingleUserPage';
 import NotificationPage from './NotificationPage';
+import CreateNewOrderPage from './CreateNewOrderPage';
 
 export {
   Dashboard,
@@ -29,5 +30,6 @@ export {
   GeoFancing,
   InventoryPage,
   SingleUserPage,
-  NotificationPage
+  NotificationPage,
+  CreateNewOrderPage
 };

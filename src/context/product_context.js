@@ -8,7 +8,8 @@ import {
   delete_review,
   productsTable_url,
   single_product_url,
-  singleProductForUpdate_url
+  singleProductForUpdate_url,
+  getProductForCreateOrder_url
 } from '../utils/constants';
 import {
   CREATE_NEW_PRODUCT,
@@ -21,7 +22,10 @@ import {
   GET_SINGLE_PRODUCT_SUCCESS,
   GET_SINGLEPRODUCTFORUPDATE_BEGIN,
   GET_SINGLEPRODUCTFORUPDATE_ERROR,
-  GET_SINGLEPRODUCTFORUPDATE_SUCCESS
+  GET_SINGLEPRODUCTFORUPDATE_SUCCESS,
+  GET_PRODUCTFORCREATEORDER_BEGIN,
+  GET_PRODUCTFORCREATEORDER_ERROR,
+  GET_PRODUCTFORCREATEORDER_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -46,6 +50,9 @@ const initialState = {
   single_productForUpdate: {},
   single_productForUpdate_loading: false,
   single_productForUpdate_error: false,
+  productForCreateOrder_loading: false,
+  productForCreateOrder_error: false,
+  productForCreateOrder: [],
 };
 
 
@@ -84,7 +91,18 @@ export const ProductProvider = ({ children }) => {
       const {data} = response.data;
       dispatch({type: GET_SINGLEPRODUCTFORUPDATE_SUCCESS, payload: data});
     } catch (error) {
-      dispatch({GET_SINGLEPRODUCTFORUPDATE_ERROR});
+      dispatch({type: GET_SINGLEPRODUCTFORUPDATE_ERROR});
+    }
+  }
+
+  const fetchProductForCreateOrder = async (name='') => {
+    dispatch({type: GET_PRODUCTFORCREATEORDER_BEGIN});
+    try {
+      const response = await axios.get(`${getProductForCreateOrder_url}?name=${name}`);
+      const {data} = response.data;
+      dispatch({type: GET_PRODUCTFORCREATEORDER_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_PRODUCTFORCREATEORDER_ERROR});
     }
   }
 
@@ -187,6 +205,7 @@ export const ProductProvider = ({ children }) => {
         fetchSingleProductForUpdate,
         updateProduct,
         deleteReview,
+        fetchProductForCreateOrder
       }}
     >
       {children}

@@ -3,13 +3,14 @@ import { SidebarWithHeader, OrdersTable, OrderStatus } from '../components';
 import { useOrderContext } from '../context/order_context';
 import { Heading, VStack, HStack, Button, Spinner, Tooltip } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
-import { FaDownload } from "react-icons/fa";
+import { FaDownload } from 'react-icons/fa';
 import axios from 'axios';
 import { getCsvDownload_url } from '../utils/constants';
 import { useOrderStatusContext } from '../context/orderStatus_context';
-
+import { useHistory } from 'react-router-dom'; // Import useHistory
 
 function OrdersPage() {
+  const history = useHistory(); // Initialize history object
 
   const {
     orderStatus_loading: loading,
@@ -44,27 +45,20 @@ function OrdersPage() {
       await fetchOrderTotalStats();  
     };
     loadData();
-
   }, []);
 
-
-  // const handleRefresh = async () => {
-  //   await fetchOrders();
-  // };
-
-  
   const handleDownload = async () => {
     try {
       const response = await axios.get(getCsvDownload_url, {
-        responseType: 'blob', // Ensure the response is treated as a file
+        responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'Orders.csv'); // Specify the download file name
+      link.setAttribute('download', 'Orders.csv');
       document.body.appendChild(link);
       link.click();
-      link.remove(); // Clean up and remove the link
+      link.remove();
     } catch (error) {
       console.error('Error downloading the file:', error);
     }
@@ -76,7 +70,6 @@ function OrdersPage() {
     await fetchOrdersForTable(label);
   };
 
-
   if (loading) {
     return (
       <SidebarWithHeader>
@@ -85,7 +78,6 @@ function OrdersPage() {
             colorScheme='brown'
             variant='outline'
             leftIcon={<MdOutlineRefresh />}
-            // onClick={handleRefresh}
           >
             Refresh
           </Button>
@@ -105,7 +97,6 @@ function OrdersPage() {
             colorScheme='brown'
             variant='outline'
             leftIcon={<MdOutlineRefresh />}
-            // onClick={handleRefresh}
           >
             Refresh
           </Button>
@@ -122,9 +113,14 @@ function OrdersPage() {
       <HStack mb={5} spacing={4}>
         <Button
           colorScheme='brown'
+          onClick={() => history.push('/create-order')} // Use history.push for navigation
+        >
+          Create New Orders
+        </Button>
+        <Button
+          colorScheme='brown'
           variant='outline'
           leftIcon={<MdOutlineRefresh />}
-          // onClick={handleRefresh}
         >
           Refresh
         </Button>
@@ -136,19 +132,17 @@ function OrdersPage() {
           />
         </Tooltip>
       </HStack>
-       {tabelLabel === null ? (
-        < OrderStatus
+      {tabelLabel === null ? (
+        <OrderStatus
           orderStatus={orderStatus}
           totalOrder={totalOrder}
           totalAvg={totalAvg}
           totalSales={totalSales}
           handleCardClick={handleCardClick}
         />
-
       ) : (
         <OrdersTable orders={orderForTable} />
-    )} 
-
+      )}
     </SidebarWithHeader>
   );
 }

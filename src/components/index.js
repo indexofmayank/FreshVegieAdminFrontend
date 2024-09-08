@@ -40,6 +40,7 @@ import CreateNewNotificationModal from './CreateNewNotificationModal';
 import NotificationTable from './NotificationTable';
 import UpdateNotificationModal from './UpdateNotificationModal';
 import OrderStatus from './OrderStatus';
+import CreateOrderForm from './CreateOrderForm';
 
 export {
   SidebarWithHeader,
@@ -83,5 +84,6 @@ export {
   CreateNewNotificationModal,
   NotificationTable,
   UpdateNotificationModal,
-  OrderStatus
+  OrderStatus,
+  CreateOrderForm
 };

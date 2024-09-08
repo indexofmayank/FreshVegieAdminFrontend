@@ -15,8 +15,10 @@ import {
   GeoFancing,
   InventoryPage,
   SingleUserPage,
-  NotificationPage
+  NotificationPage,
+  CreateNewOrderPage
 } from './pages';
+
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/orders'>
           <OrdersPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/create-order'>
+          <CreateNewOrderPage />
         </PrivateRoute>
         <PrivateRoute exact path='/orders/:id'>
           <SingleOrderPage />
