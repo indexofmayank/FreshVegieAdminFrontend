@@ -48,6 +48,7 @@ function CreateNewProductModal() {
       tax,
       product_detail_max,
       product_detail_min,
+      increment_value,
       shipping,
       featured,
       purchase_price
@@ -112,6 +113,7 @@ function CreateNewProductModal() {
       !stock_notify ||
       !tax ||
       !product_detail_min ||
+      !increment_value ||
       !product_detail_max ||
       !imageList
     ) {
@@ -152,6 +154,7 @@ function CreateNewProductModal() {
       tax,
       product_detail_max,
       product_detail_min,
+      increment_value,
       featured,
       images: imageList,
     };
@@ -380,7 +383,6 @@ function CreateNewProductModal() {
                 onChange={updateNewProductDetails}
               />
             </FormControl>
-
             <FormControl mt={4}>
               <FormLabel>Product Detail Max</FormLabel>
               <Input
@@ -391,7 +393,16 @@ function CreateNewProductModal() {
                 onChange={updateNewProductDetails}
               />
             </FormControl>
-
+            <FormControl mt={4}>
+              <FormLabel>Increment value</FormLabel>
+              <Input
+                type='number'
+                placeholder='Increment value'
+                name='increment_value'
+                value={increment_value}
+                onChange={updateNewProductDetails}
+              />
+            </FormControl>
             <FormControl mt={4}>
               <FormLabel>Images</FormLabel>
               <Center

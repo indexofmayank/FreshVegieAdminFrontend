@@ -52,6 +52,7 @@ function UpdateProductModal({ id }) {
       tax = '',
       product_detail_max = '',
       product_detail_min = '',
+      increment_value = '',
       featured = '',
       product_status = '',
       images = [],
@@ -107,6 +108,7 @@ function UpdateProductModal({ id }) {
   };
 
   const handleSubmit = async () => {
+    // console.log(product)
     if (
       !name ||
       !product_status ||
@@ -125,6 +127,7 @@ function UpdateProductModal({ id }) {
       !tax ||
       !product_detail_min ||
       !product_detail_max ||
+      !increment_value ||
       !imageList
     ) {
       return toast({
@@ -163,6 +166,7 @@ function UpdateProductModal({ id }) {
       tax,
       product_detail_max,
       product_detail_min,
+      increment_value,
       featured,
       images: imageList,
     };
@@ -412,7 +416,16 @@ function UpdateProductModal({ id }) {
                 onChange={updateExistingProductDetails}
               />
             </FormControl>
-
+            <FormControl mt={4}>
+              <FormLabel>Increment value</FormLabel>
+              <Input
+                type='number'
+                placeholder='Increment value'
+                name='increment_value'
+                value={increment_value}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
             <FormControl mt={4}>
               <FormLabel>Images</FormLabel>
               <Center
