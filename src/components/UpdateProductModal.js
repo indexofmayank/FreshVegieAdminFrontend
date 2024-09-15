@@ -108,36 +108,54 @@ function UpdateProductModal({ id }) {
   };
 
   const handleSubmit = async () => {
-    // console.log(product)
-    if (
-      !name ||
-      !product_status ||
-      !price ||
-      !offer_price ||
-      !purchase_price ||
-      !stock ||
-      !description ||
-      !category ||
-      !add_ons ||
-      !search_tags ||
-      !selling_method ||
-      !sku ||
-      !barcode ||
-      !stock_notify ||
-      !tax ||
-      !product_detail_min ||
-      !product_detail_max ||
-      !increment_value ||
-      !imageList
-    ) {
-      return toast({
-        position: 'top',
-        description: 'Provide all the details',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
+    console.log(name);
+    console.log(product_status);
+    console.log(price);
+    console.log(offer_price);
+    console.log(purchase_price);
+    console.log(stock);
+    console.log(description);
+    console.log(category);
+    console.log(add_ons);
+    console.log(search_tags);
+    console.log(selling_method);
+    console.log(sku);
+    console.log(barcode);
+    console.log(stock_notify);
+    console.log(tax);
+    console.log(product_detail_max);
+    console.log(product_detail_min);
+    console.log(increment_value);
+    console.log(imageList);
+    // if (
+    //   !name ||
+    //   !product_status ||
+    //   !price ||
+    //   !offer_price ||
+    //   !purchase_price ||
+    //   !stock ||
+    //   !description ||
+    //   !category ||
+    //   !add_ons ||
+    //   !search_tags ||
+    //   !selling_method ||
+    //   !sku ||
+    //   !barcode ||
+    //   !stock_notify ||
+    //   !tax ||
+    //   !product_detail_min ||
+    //   !product_detail_max ||
+    //   !increment_value ||
+    //   !imageList
+    // ) {
+    //   return toast({
+    //     position: 'top',
+    //     description: 'Provide all the details',
+    //     status: 'error',
+    //     duration: 5000,
+    //     isClosable: true,
+    //   });
+    // }
     if (imageList.length < 1) {
       return toast({
         position: 'top',

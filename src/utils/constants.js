@@ -109,3 +109,5 @@ export const getOrderForTable_url = `${domain}/api/ordertable/ordertablelabelwis
 export const getRecentOrderForTable_url = `${domain}/api/ordertable/ordertableforrecent`;
 export const getProductForCreateOrder_url = `${domain}/api/products/dropdown/getProductForCreateOrder`;
 export const getUserForCreateOrder_url = `${domain}/api/user/dropdown/createOrder`;
+export const createOrder_url = `${domain}/api/user/`;
+export const getUserById_url = `${domain}/api/user/`

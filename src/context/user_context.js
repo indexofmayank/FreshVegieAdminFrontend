@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
 import axios from 'axios';
-import { login_url, auth_url, logout_url, getUserForCreateOrder_url } from '../utils/constants';
+import { login_url, auth_url, logout_url, getUserForCreateOrder_url, getUserById_url } from '../utils/constants';
 import {
   GET_USERFORCREATEORDER_BEGIN,
   GET_USERFORCREATEORDER_ERROR,
-  GET_USERFORCREATEORDER_SUCCESS
+  GET_USERFORCREATEORDER_SUCCESS,
+  GET_USERBYID_BEGIN,
+  GET_USERBYID_ERROR,
+  GET_USERBYID_SUCCESS
 } from '../actions';
 import reducer from '../reducers/user_reducer';
 
@@ -13,7 +16,10 @@ axios.defaults.withCredentials = true;
 const initialState = {
   usernameForCreateOrder_loading: false,
   usernameForCreateOrder_error: false,
-  usernameForCreateOrder: []
+  usernameForCreateOrder: [],
+  userById_loading: false,
+  userById_error: false,
+  userById: {}
 };
 
 const UserContext = React.createContext();
@@ -75,13 +81,26 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  const fetchUserById = async(id) => {
+    try {
+      // dispatch({type: GET_USERBYID_BEGIN});
+      const response = await axios.get(`${getUserById_url}${id}`);
+      const {data} = response.data;
+      return data;
+      // dispatch({type: GET_USERBYID_SUCCESS, payload: data});
+    } catch (error) {
+      // dispatch({type: GET_USERBYID_ERROR});
+      throw new Error(error);
+    }
+  }
+
   useEffect(() => {
     checkAuth();
     // eslint-disable-next-line
   }, []);
 
   return (
-    <UserContext.Provider value={{...state, currentUser, authLoading, login, logout, fetchUserForCreateOrder }}>
+    <UserContext.Provider value={{...state, currentUser, authLoading, login, logout, fetchUserForCreateOrder, fetchUserById }}>
       {children}
     </UserContext.Provider>
   );

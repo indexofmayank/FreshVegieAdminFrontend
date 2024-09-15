@@ -21,7 +21,8 @@ import {
   updateDeliveryPartnerDetails_url,
   getDeliveryPartnerDetailById_url,
   getOrderForTable_url,
-  getRecentOrderForTable_url
+  getRecentOrderForTable_url,
+  createOrder_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -62,7 +63,8 @@ import {
   GET_ORDERFORTABLE_ERROR,
   GET_RECENTORDERFORTABLE_BEGIN,
   GET_RECENTORDERFORTABLE_ERROR,
-  GET_RECENTORDERFORTABLE_SUCCESS
+  GET_RECENTORDERFORTABLE_SUCCESS,
+  CREATE_NEW_ORDER
 } from '../actions';
 
 const initialState = {
@@ -105,6 +107,18 @@ const initialState = {
   recentOrder_loading: false,
   recentOrder_error: false,
   recentOrder: [],
+  new_order_address: {
+    address_name: '',
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    locality: '',
+    landmark: '',
+    city: '',
+    pin_code: '',
+    state: ''
+  },
   pending_orders: 0,
   delivered_orders: 0,
   total_revenue: 0,
@@ -254,6 +268,12 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
+  const updateNewOrderAddressDetails = (e) => {
+    const name = e.target.name;
+    let value = e.target.value;
+    dispatch({type: CREATE_NEW_ORDER, payload: {name, value}});
+  }
+
   const fetchCustomOrderId = async (id) => {
     dispatch({type: GET_CUSTOMORDERID_BEGIN});
     try {
@@ -392,7 +412,8 @@ export const OrderProvider = ({ children }) => {
         updateDeliveryInfo,
         deliveryPartnerDetailById,
         fetchOrdersForTable,
-        fetchRecentOrderForTable
+        fetchRecentOrderForTable,
+        updateNewOrderAddressDetails
       }}
     >
       {children}

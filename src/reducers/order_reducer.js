@@ -36,7 +36,8 @@ import {
   GET_ORDERFORTABLE_ERROR,
   GET_RECENTORDERFORTABLE_BEGIN,
   GET_RECENTORDERFORTABLE_ERROR,
-  GET_RECENTORDERFORTABLE_SUCCESS
+  GET_RECENTORDERFORTABLE_SUCCESS,
+  CREATE_NEW_ORDER
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -71,6 +72,12 @@ const order_reducer = (state, action) => {
       orders: action.payload,
     };
   }
+
+  if(action.type === CREATE_NEW_ORDER) {
+    const {name, value} = action.payload;
+    return {...state, new_order_address: {...state.new_order_address, [name]: value}};
+  }
+
   if (action.type === GET_SINGLE_ORDER_BEGIN) {
     return { ...state, single_order_error: false, single_order_loading: true };
   }
