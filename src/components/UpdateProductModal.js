@@ -26,7 +26,14 @@ import {
   RadioGroup,
   Select,
   onOpen,
-  toast
+  toast,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Box,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useProductContext } from '../context/product_context';
@@ -55,6 +62,10 @@ function UpdateProductModal({ id }) {
       increment_value = '',
       featured = '',
       product_status = '',
+      variant_type = '',
+      variant_value = '',
+      product_weight_type = '',
+      product_weight = '',
       images = [],
     },
     single_productForUpdate_loading,
@@ -186,6 +197,8 @@ function UpdateProductModal({ id }) {
       product_detail_min,
       increment_value,
       featured,
+      product_weight_type,
+      product_weight,
       images: imageList,
     };
     const responseCreate = await updateProduct(id, product)
@@ -327,12 +340,12 @@ function UpdateProductModal({ id }) {
                 value={category}
                 onChange={updateExistingProductDetails}
               >
-               {data.map((cat, index) => {
-                const {name, _id} = cat;
-                return(
-                  <option value={_id}>{name}</option>
-                )
-               })}
+                {data.map((cat, index) => {
+                  const { name, _id } = cat;
+                  return (
+                    <option value={_id}>{name}</option>
+                  )
+                })}
               </Select>
             </FormControl>
 
@@ -443,6 +456,61 @@ function UpdateProductModal({ id }) {
                 value={increment_value}
                 onChange={updateExistingProductDetails}
               />
+              <FormControl mt={4}>
+                <FormLabel>Variations</FormLabel>
+                <HStack spacing={4}>
+                  <Select
+                    value={variant_type}
+                    name='variant_type'
+                    onChange={updateExistingProductDetails}
+                    placeholder='Select variant type'
+                    width='200px' // Adjust width as needed
+                  >
+                    {/* <option value='Size'>Size</option>
+                  <option value='Color'>Color</option>
+                  <option value='Material'>Material</option>
+                  <option value='Style'>Style</option> */}
+                    <option value='Weight/Volume'>Weight/Volume</option>
+                  </Select>
+                  <Input
+                    type='text'
+                    placeholder='Variant value'
+                    name='variant_value'
+                    value={variant_value}
+                    onChange={updateExistingProductDetails}
+                    width='200px' // Adjust width as needed
+                  />
+                </HStack>
+              </FormControl>
+              <Accordion allowToggle mt={4}>
+                <AccordionItem>
+                  <AccordionButton bg="green.100" borderRadius="md" _hover={{ bg: 'green.200' }}>
+                    <Box flex="1" textAlign="left" fontWeight="bold">
+                      Product weight
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4}>
+                    <Box mb={4} fontSize="sm" color="brown.600">
+                      Provide accurate information and streamline logistics with precise product weight details for shipping and handling.
+                    </Box>
+                    <SimpleGrid columns={2} spacing={4}>
+                      <FormControl>
+                        <FormLabel>Weight</FormLabel>
+                        <Input placeholder="Eg. 10" name='product_weight' value={product_weight} onChange={updateExistingProductDetails} />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Unit</FormLabel>
+                        <Select placeholder="KG" name='product_weight_type' value={product_weight_type} onChange={updateExistingProductDetails}>
+                          <option value="kg">KG</option>
+                          <option value="g">G</option>
+                        </Select>
+                      </FormControl>
+                    </SimpleGrid>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+
             </FormControl>
             <FormControl mt={4}>
               <FormLabel>Images</FormLabel>
