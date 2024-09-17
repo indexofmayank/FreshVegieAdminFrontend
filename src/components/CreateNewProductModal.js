@@ -428,10 +428,10 @@ function CreateNewProductModal() {
                   placeholder='Select variant type'
                   width='200px' // Adjust width as needed
                 >
-                  <option value='Size'>Size</option>
+                  {/* <option value='Size'>Size</option>
                   <option value='Color'>Color</option>
                   <option value='Material'>Material</option>
-                  <option value='Style'>Style</option>
+                  <option value='Style'>Style</option> */}
                   <option value='Weight/Volume'>Weight/Volume</option>
                 </Select>
                 <Input
