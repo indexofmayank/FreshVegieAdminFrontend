@@ -4,7 +4,10 @@ import {
     GET_USERFORCREATEORDER_SUCCESS,
     GET_USERBYID_BEGIN,
     GET_USERBYID_ERROR,
-    GET_USERBYID_SUCCESS  
+    GET_USERBYID_SUCCESS,
+    GET_USERADDRDESSES_BEGIN,
+    GET_USERADDRESSES_ERROR,
+    GET_USERADDRESSES_SUCCESS  
   } from '../actions';
 
 const user_reducer = (state, action) => {
@@ -33,6 +36,17 @@ const user_reducer = (state, action) => {
         return {...state, userById_loading: false, userById: action.payload}
     }
 
+    if(action.type === GET_USERADDRESSES_ERROR) {
+        return {...state}
+    }
+
+    if(action.type === GET_USERADDRDESSES_BEGIN) {
+        return {...state}
+    }
+
+    if(action.type ===   GET_USERADDRESSES_SUCCESS) {
+        return {...state, userAddresses: action.payload};
+    }
 
     throw new Error(`No matching`);
 }

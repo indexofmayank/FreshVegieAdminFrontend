@@ -385,6 +385,22 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
+  const createNewOrder = async (orderItems, user, shippingInfo) => {
+    try {
+      const response = await axios.post(`${createOrder_url}`, {
+        orderItems,
+        shippingInfo,
+        user
+      });
+      console.log(response);
+      const {success, message} = response.data;
+      return {success, message};
+    } catch (error) {
+      const {success, message} = error;
+      return {success, message};
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, [currentUser]);
@@ -413,7 +429,8 @@ export const OrderProvider = ({ children }) => {
         deliveryPartnerDetailById,
         fetchOrdersForTable,
         fetchRecentOrderForTable,
-        updateNewOrderAddressDetails
+        updateNewOrderAddressDetails,
+        createNewOrder
       }}
     >
       {children}

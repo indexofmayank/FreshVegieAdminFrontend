@@ -1,13 +1,16 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
 import axios from 'axios';
-import { login_url, auth_url, logout_url, getUserForCreateOrder_url, getUserById_url } from '../utils/constants';
+import { login_url, auth_url, logout_url, getUserForCreateOrder_url, getUserById_url, getUserAddress_url, getMetaForCreateOrder_url } from '../utils/constants';
 import {
   GET_USERFORCREATEORDER_BEGIN,
   GET_USERFORCREATEORDER_ERROR,
   GET_USERFORCREATEORDER_SUCCESS,
   GET_USERBYID_BEGIN,
   GET_USERBYID_ERROR,
-  GET_USERBYID_SUCCESS
+  GET_USERBYID_SUCCESS,
+  GET_USERADDRDESSES_BEGIN,
+  GET_USERADDRESSES_ERROR,
+  GET_USERADDRESSES_SUCCESS
 } from '../actions';
 import reducer from '../reducers/user_reducer';
 
@@ -19,7 +22,8 @@ const initialState = {
   usernameForCreateOrder: [],
   userById_loading: false,
   userById_error: false,
-  userById: {}
+  userById: {},
+  userAddresses: [],
 };
 
 const UserContext = React.createContext();
@@ -94,13 +98,36 @@ export const UserProvider = ({ children }) => {
     }
   }
 
+  const fetchUserMetaDataForCreateOrder = async (id) => {
+    try {
+      const response = await axios.get(`${getMetaForCreateOrder_url}${id}`);
+      const {data} = response.data;
+      console.log(data);
+      return data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  const fetchUserAddressById = async (id) => {
+    try {
+      dispatch({type: GET_USERADDRDESSES_BEGIN});
+      const response = await axios.get(`${getUserAddress_url}${id}`);
+      const {data} = response.data;
+      console.log(data);
+      dispatch({type: GET_USERADDRESSES_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_USERADDRESSES_ERROR});
+    }
+  }
+
   useEffect(() => {
     checkAuth();
     // eslint-disable-next-line
   }, []);
 
   return (
-    <UserContext.Provider value={{...state, currentUser, authLoading, login, logout, fetchUserForCreateOrder, fetchUserById }}>
+    <UserContext.Provider value={{...state, currentUser, authLoading, login, logout, fetchUserForCreateOrder, fetchUserById, fetchUserAddressById, fetchUserMetaDataForCreateOrder }}>
       {children}
     </UserContext.Provider>
   );
