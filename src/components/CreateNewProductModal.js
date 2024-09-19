@@ -44,6 +44,7 @@ function CreateNewProductModal() {
       price,
       offer_price,
       stock,
+      information,
       description,
       category,
       add_ons,
@@ -114,6 +115,7 @@ function CreateNewProductModal() {
       !offer_price ||
       !purchase_price ||
       !stock ||
+      !information ||
       !description ||
       !category ||
       !add_ons ||
@@ -153,6 +155,7 @@ function CreateNewProductModal() {
       price,
       offer_price,
       stock,
+      information,
       description,
       category,
       add_ons,
@@ -267,7 +270,16 @@ function CreateNewProductModal() {
                 onChange={updateNewProductDetails}
               />
             </FormControl>
-
+            <FormControl mt={4}>
+              <FormLabel>Product information</FormLabel>
+              <Textarea
+                placeholder='Product information'
+                name='information'
+                focusBorderColor='brown.500'
+                value={information}
+                onChange={updateNewProductDetails}
+              />
+            </FormControl>
             <FormControl mt={4}>
               <FormLabel>Description</FormLabel>
               <Textarea

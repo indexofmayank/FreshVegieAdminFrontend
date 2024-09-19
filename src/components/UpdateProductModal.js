@@ -47,6 +47,7 @@ function UpdateProductModal({ id }) {
       offer_price = '',
       purchase_price = '',
       stock = '',
+      information = '',
       description = '',
       status = '',
       category = '',
@@ -183,6 +184,7 @@ function UpdateProductModal({ id }) {
       price,
       offer_price,
       stock,
+      information,
       description,
       category,
       add_ons,
@@ -305,7 +307,16 @@ function UpdateProductModal({ id }) {
                 onChange={updateExistingProductDetails}
               />
             </FormControl>
-
+            <FormControl mt={4}>
+              <FormLabel>Product information</FormLabel>
+              <Textarea
+                placeholder='Product information'
+                name='information'
+                focusBorderColor='brown.500'
+                value={information}
+                onChange={updateExistingProductDetails}
+              />
+            </FormControl>
             <FormControl mt={4}>
               <FormLabel>Description</FormLabel>
               <Textarea
