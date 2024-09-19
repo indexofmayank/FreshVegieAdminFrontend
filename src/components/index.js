@@ -41,6 +41,7 @@ import NotificationTable from './NotificationTable';
 import UpdateNotificationModal from './UpdateNotificationModal';
 import OrderStatus from './OrderStatus';
 import CreateOrderForm from './CreateOrderForm';
+import CreateNewDealOfTheDay from './CreateNewDealOfTheDay';
 
 export {
   SidebarWithHeader,
@@ -85,5 +86,6 @@ export {
   NotificationTable,
   UpdateNotificationModal,
   OrderStatus,
-  CreateOrderForm
+  CreateOrderForm,
+  CreateNewDealOfTheDay
 };

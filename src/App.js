@@ -16,7 +16,8 @@ import {
   InventoryPage,
   SingleUserPage,
   NotificationPage,
-  CreateNewOrderPage
+  CreateNewOrderPage,
+  DealOfTheDayPage
 } from './pages';
 
 
@@ -68,6 +69,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/notification'>
           <NotificationPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/dealoftheday'>
+          <DealOfTheDayPage />
         </PrivateRoute>
       </Switch>
     </Router>
