@@ -116,16 +116,16 @@ function CreateNewProductModal() {
       !offer_price ||
       !purchase_price ||
       !stock ||
-      !information ||
-      !description ||
+      // !information ||
+      // !description ||
       !category ||
-      !add_ons ||
-      !search_tags ||
+      // !add_ons ||
+      // !search_tags ||
       !selling_method ||
-      !sku ||
-      !barcode ||
+      // !sku ||
+      // !barcode ||
       !stock_notify ||
-      !tax ||
+      // !tax ||
       !product_detail_min ||
       !increment_value ||
       !product_detail_max ||
@@ -214,7 +214,7 @@ function CreateNewProductModal() {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name*</FormLabel>
               <Input
                 ref={initialRef}
                 placeholder='Product Name'
@@ -226,7 +226,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Product Price'
@@ -238,7 +238,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Offer Price</FormLabel>
+              <FormLabel>Offer Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Offer Price'
@@ -250,7 +250,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Purchase Price</FormLabel>
+              <FormLabel>Purchase Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Purchase Price'
@@ -262,7 +262,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Stock</FormLabel>
+              <FormLabel>Stock*</FormLabel>
               <Input
                 type='number'
                 placeholder='Product Stock'
@@ -294,7 +294,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Status</FormLabel>
+              <FormLabel>Status*</FormLabel>
               <Select
                 placeholder='Select status'
                 name='product_status'
@@ -308,7 +308,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Category*</FormLabel>
               <Select
                 placeholder='Select category'
                 name='category'
@@ -347,7 +347,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Selling Method</FormLabel>
+              <FormLabel>Selling Method*</FormLabel>
               <RadioGroup
                 name='selling_method'
                 onChange={(value) => updateNewProductDetails({ target: { name: 'selling_method', value } })}
@@ -381,7 +381,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Stock Notify</FormLabel>
+              <FormLabel>Stock Notify*</FormLabel>
               <Input
                 type='number'
                 placeholder='stock notify'
@@ -403,7 +403,7 @@ function CreateNewProductModal() {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Product Detail Min</FormLabel>
+              <FormLabel>Product Detail Min*</FormLabel>
               <Input
                 type='number'
                 placeholder='product detail min'
@@ -413,7 +413,7 @@ function CreateNewProductModal() {
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Product Detail Max</FormLabel>
+              <FormLabel>Product Detail Max*</FormLabel>
               <Input
                 type='number'
                 placeholder='product detail max'
@@ -423,7 +423,7 @@ function CreateNewProductModal() {
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Increment value</FormLabel>
+              <FormLabel>Increment value*</FormLabel>
               <Input
                 type='number'
                 placeholder='Increment value'
@@ -487,7 +487,7 @@ function CreateNewProductModal() {
               </AccordionItem>
             </Accordion>
             <FormControl mt={4}>
-              <FormLabel>Images</FormLabel>
+              <FormLabel>Images*</FormLabel>
               <Center
                 bg='brown.50'
                 minHeight={100}
