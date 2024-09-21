@@ -29,7 +29,8 @@ import {
   GET_PRODUCTFORCREATEORDER_SUCCESS,
   GET_PRODUCTBYNAMEDROPDOWN_BEGIN,
   GET_PRODUCTBYNAMEDROPDOWN_ERROR,
-  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS
+  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS,
+  RESET_NEW_PRODUCT 
 } from '../actions';
 
 const initialState = {
@@ -47,6 +48,33 @@ const initialState = {
     company: '',
     shipping: true,
     featured: false,
+    name: '',
+    product_status:'',
+    price: '',
+    offer_price: '',
+    stock: 10,
+    images: [],
+    information: '',
+    description: '',
+    category: '',
+    add_ons: '',
+    search_tags: '',
+    selling_method: '',
+    sku: '',
+    barcode: '',
+    stock_notify: '',
+    tax: '',
+    product_detail_max: '',
+    product_detail_min: '',
+    increment_value: '',
+    shipping: false,
+    featured: false,
+    variant_type: '',
+    variant_value: '',
+    purchase_price: '',
+    product_weight_type: '',
+    product_weight: '',
+    imageList:[],
   },
   single_product_loading: false,
   single_product_error: false,
@@ -208,8 +236,10 @@ export const ProductProvider = ({ children }) => {
   }
 
   const resetNewProduct = () => {
-    dispatch({ type: CREATE_NEW_PRODUCT, payload: initialState.new_product });
+    console.log("Resetting new product");
+    dispatch({ type: RESET_NEW_PRODUCT });
   };
+  
 
   useEffect(() => {
     fetchProducts();

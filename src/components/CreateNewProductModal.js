@@ -79,6 +79,7 @@ function CreateNewProductModal() {
 
   useEffect(() => {
     fetchCategoryByName();
+    resetNewProduct();
   }, []);
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -109,6 +110,7 @@ function CreateNewProductModal() {
   };
 
   const handleSubmit = async () => {
+    // resetNewProduct();
     if (
       !name ||
       !product_status ||
@@ -131,6 +133,7 @@ function CreateNewProductModal() {
       !product_detail_max ||
       !imageList
     ) {
+      // resetNewProduct();
       return toast({
         position: 'top',
         description: 'Provide all the details',

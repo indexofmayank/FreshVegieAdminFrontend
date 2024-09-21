@@ -15,8 +15,8 @@ import {
   GET_PRODUCTFORCREATEORDER_SUCCESS,
   GET_PRODUCTBYNAMEDROPDOWN_BEGIN,
   GET_PRODUCTBYNAMEDROPDOWN_ERROR,
-  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS
-
+  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS,
+  RESET_NEW_PRODUCT 
 } from '../actions';
 
 const product_reducer = (state, action) => {
@@ -136,6 +136,41 @@ const product_reducer = (state, action) => {
       productByName: action.payload
     }
   }
+  if (action.type === RESET_NEW_PRODUCT) {
+    return {
+      ...state,
+      new_product: {
+      name: '',
+      product_status:'',
+      price: '',
+      offer_price: '',
+      stock: 10,
+      images: [],
+      information: '',
+      description: '',
+      category: '',
+      add_ons: '',
+      search_tags: '',
+      selling_method: '',
+      sku: '',
+      barcode: '',
+      stock_notify: '',
+      tax: '',
+      product_detail_max: '',
+      product_detail_min: '',
+      increment_value: '',
+      shipping: '',
+      featured: false,
+      variant_type: '',
+      variant_value: '',
+      purchase_price: '',
+      product_weight_type: '',
+      product_weight: '',
+      imageList:[],
+      },
+    };
+  }
+  
 
   throw new Error(`No Matching "${action.type}" - action type`);
 };

@@ -85,7 +85,7 @@ function ProductsPage() {
       </SidebarWithHeader>
     );
   }
-  console.log(products);
+  // console.log(products); 
   return (
     <SidebarWithHeader>
       <HStack mb={5}>
@@ -100,8 +100,8 @@ function ProductsPage() {
         </Button>
       </HStack>
       <HStack>
-      <SearchBox />
-      <FilterComponent />
+      {/* <SearchBox /> */}
+      {/* <FilterComponent /> */}
       </HStack>
       <ProductsTable 
         products={products.data} 
