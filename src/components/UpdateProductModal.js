@@ -139,35 +139,36 @@ function UpdateProductModal({ id }) {
     console.log(product_detail_min);
     console.log(increment_value);
     console.log(imageList);
-    // if (
-    //   !name ||
-    //   !product_status ||
-    //   !price ||
-    //   !offer_price ||
-    //   !purchase_price ||
-    //   !stock ||
-    //   !description ||
-    //   !category ||
-    //   !add_ons ||
-    //   !search_tags ||
-    //   !selling_method ||
-    //   !sku ||
-    //   !barcode ||
-    //   !stock_notify ||
-    //   !tax ||
-    //   !product_detail_min ||
-    //   !product_detail_max ||
-    //   !increment_value ||
-    //   !imageList
-    // ) {
-    //   return toast({
-    //     position: 'top',
-    //     description: 'Provide all the details',
-    //     status: 'error',
-    //     duration: 5000,
-    //     isClosable: true,
-    //   });
-    // }
+    if (
+      !name ||
+      !product_status ||
+      !price ||
+      !offer_price ||
+      !purchase_price ||
+      !stock ||
+      // !description ||
+      // !information ||
+      !category ||
+      // !add_ons ||
+      // !search_tags ||
+      !selling_method ||
+      // !sku ||
+      // !barcode ||
+      !stock_notify ||
+      // !tax ||
+      !product_detail_min ||
+      !product_detail_max ||
+      !increment_value ||
+      !imageList
+    ) {
+      return toast({
+        position: 'top',
+        description: 'Provide all the details',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
     if (imageList.length < 1) {
       return toast({
         position: 'top',
@@ -248,7 +249,7 @@ function UpdateProductModal({ id }) {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name*</FormLabel>
               <Input
                 ref={initialRef}
                 placeholder='Product Name'
@@ -260,7 +261,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Product Price'
@@ -272,7 +273,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Offer Price</FormLabel>
+              <FormLabel>Offer Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Offer Price'
@@ -284,7 +285,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Purchase Price</FormLabel>
+              <FormLabel>Purchase Price*</FormLabel>
               <Input
                 type='number'
                 placeholder='Purchase Price'
@@ -297,7 +298,7 @@ function UpdateProductModal({ id }) {
 
 
             <FormControl mt={4}>
-              <FormLabel>Stock</FormLabel>
+              <FormLabel>Stock*</FormLabel>
               <Input
                 type='number'
                 placeholder='Product Stock'
@@ -329,7 +330,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Status</FormLabel>
+              <FormLabel>Status*</FormLabel>
               <Select
                 placeholder='Select status'
                 name='product_status'
@@ -343,7 +344,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>Category*</FormLabel>
               <Select
                 placeholder=''
                 name='category'
@@ -382,7 +383,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Selling Method</FormLabel>
+              <FormLabel>Selling Method*</FormLabel>
               <RadioGroup
                 name='selling_method'
                 onChange={(value) => updateExistingProductDetails({ target: { name: 'selling_method', value } })}
@@ -416,7 +417,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Stock Notify</FormLabel>
+              <FormLabel>Stock Notify*</FormLabel>
               <Input
                 type='number'
                 placeholder='stock notify'
@@ -438,7 +439,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Product Detail Min</FormLabel>
+              <FormLabel>Product Detail Min*</FormLabel>
               <Input
                 type='number'
                 placeholder='product detail min'
@@ -449,7 +450,7 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Product Detail Max</FormLabel>
+              <FormLabel>Product Detail Max*</FormLabel>
               <Input
                 type='number'
                 placeholder='product detail max'
@@ -459,7 +460,7 @@ function UpdateProductModal({ id }) {
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Increment value</FormLabel>
+              <FormLabel>Increment value*</FormLabel>
               <Input
                 type='number'
                 placeholder='Increment value'
@@ -586,7 +587,7 @@ function UpdateProductModal({ id }) {
                   })
                 }}
               >
-                Featured
+                 Deal of the day
               </Checkbox>
             </FormControl>
           </ModalBody>
