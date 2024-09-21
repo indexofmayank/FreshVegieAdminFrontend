@@ -9,7 +9,8 @@ import {
   productsTable_url,
   single_product_url,
   singleProductForUpdate_url,
-  getProductForCreateOrder_url
+  getProductForCreateOrder_url,
+  getProductDropdown_url
 } from '../utils/constants';
 import {
   CREATE_NEW_PRODUCT,
@@ -25,7 +26,10 @@ import {
   GET_SINGLEPRODUCTFORUPDATE_SUCCESS,
   GET_PRODUCTFORCREATEORDER_BEGIN,
   GET_PRODUCTFORCREATEORDER_ERROR,
-  GET_PRODUCTFORCREATEORDER_SUCCESS
+  GET_PRODUCTFORCREATEORDER_SUCCESS,
+  GET_PRODUCTBYNAMEDROPDOWN_BEGIN,
+  GET_PRODUCTBYNAMEDROPDOWN_ERROR,
+  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -53,6 +57,9 @@ const initialState = {
   productForCreateOrder_loading: false,
   productForCreateOrder_error: false,
   productForCreateOrder: [],
+  productByName_loading: false,
+  productByName_error: false,
+  productByName: []
 };
 
 
@@ -188,6 +195,22 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
+  const fetchProductByNameForDropdown = async() => {
+    try {
+      dispatch({type: GET_PRODUCTBYNAMEDROPDOWN_BEGIN});
+      const response = await axios.get(getProductDropdown_url);
+      const {data} = response.data;
+      console.log(data);
+      dispatch({type: GET_PRODUCTBYNAMEDROPDOWN_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_PRODUCTBYNAMEDROPDOWN_ERROR});      
+    }
+  }
+
+  const resetNewProduct = () => {
+    dispatch({ type: CREATE_NEW_PRODUCT, payload: initialState.new_product });
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -205,7 +228,9 @@ export const ProductProvider = ({ children }) => {
         fetchSingleProductForUpdate,
         updateProduct,
         deleteReview,
-        fetchProductForCreateOrder
+        fetchProductForCreateOrder,
+        fetchProductByNameForDropdown,
+        resetNewProduct
       }}
     >
       {children}

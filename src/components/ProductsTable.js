@@ -55,7 +55,7 @@ function ProductsTable({ products, pagination, setPagination }) {
       });
     }
   };
-
+ console.log(products);
 
   return (
     <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>

@@ -67,6 +67,7 @@ function CreateNewProductModal() {
     },
     updateNewProductDetails,
     createNewProduct,
+    resetNewProduct,
   } = useProductContext();
 
   const {
@@ -179,6 +180,7 @@ function CreateNewProductModal() {
     const responseCreate = await createNewProduct(product);
     setLoading(false);
     if (responseCreate.success) {
+      resetNewProduct();
       onClose();
       return toast({
         position: 'top',
@@ -541,7 +543,7 @@ function CreateNewProductModal() {
                 isChecked={featured}
                 onChange={updateNewProductDetails}
               >
-                Featured
+                Deal of the day
               </Checkbox>
             </FormControl>
           </ModalBody>

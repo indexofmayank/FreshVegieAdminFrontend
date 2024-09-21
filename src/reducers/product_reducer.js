@@ -12,7 +12,11 @@ import {
   GET_SINGLEPRODUCTFORUPDATE_SUCCESS,
   GET_PRODUCTFORCREATEORDER_BEGIN,
   GET_PRODUCTFORCREATEORDER_ERROR,
-  GET_PRODUCTFORCREATEORDER_SUCCESS
+  GET_PRODUCTFORCREATEORDER_SUCCESS,
+  GET_PRODUCTBYNAMEDROPDOWN_BEGIN,
+  GET_PRODUCTBYNAMEDROPDOWN_ERROR,
+  GET_PRODUCTBYNAMEDROPDOWN_SUCCESS
+
 } from '../actions';
 
 const product_reducer = (state, action) => {
@@ -108,6 +112,28 @@ const product_reducer = (state, action) => {
       ...state,
       productForCreateOrder_loading: false,
       productForCreateOrder: action.payload
+    }
+  }
+
+  if(action.type === GET_PRODUCTBYNAMEDROPDOWN_BEGIN) {
+    return {...state,
+      productByName_loading: true,
+      productByName_error: false
+    }
+  }
+
+  if(action.type === GET_PRODUCTBYNAMEDROPDOWN_ERROR) {
+    return {...state,
+      productByName_loading: false,
+      productByName_error: true
+    }
+  }
+
+  if(action.type ===GET_PRODUCTBYNAMEDROPDOWN_SUCCESS) {
+    return {
+      ...state,
+      productByName_loading: false,
+      productByName: action.payload
     }
   }
 

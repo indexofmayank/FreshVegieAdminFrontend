@@ -355,7 +355,7 @@ const CreateOrderForm = () => {
                   <ModalHeader>{customerSearchTerm}'s Address</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>
-                    {userAddresses?.[0]?.address.map((data, index) => {
+                    {userAddresses && userAddresses?.[0]?.address.map((data, index) => {
                       const {address_name, name, phone, email, address, locality, city, pin_code, state, landmark} = data;
                       return (
                         <Box key={index} mb={4}>

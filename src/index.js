@@ -15,6 +15,7 @@ import { InventoryProvider } from './context/inventory_context';
 import { UserDetailProvider } from './context/user_detail_context';
 import { NotificationProvider } from './context/notification_context';
 import { OrderStatusProvider } from './context/orderStatus_context';
+import { DealOfTheDayProvider } from './context/dealoftheday_context';
 
 ReactDOM.render(
   <UserProvider>
@@ -29,9 +30,11 @@ ReactDOM.render(
                     <NotificationProvider>
                       <InventoryProvider>
                         <OrderStatusProvider>
-                          <ChakraProvider theme={theme}>
-                            <App />
-                          </ChakraProvider>
+                          <DealOfTheDayProvider>
+                            <ChakraProvider theme={theme}>
+                              <App />
+                            </ChakraProvider>
+                          </DealOfTheDayProvider>
                         </ OrderStatusProvider>
                       </InventoryProvider>
                     </NotificationProvider>

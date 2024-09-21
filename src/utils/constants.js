@@ -115,3 +115,10 @@ export const getUserById_url = `${domain}/api/user/`;
 export const createOrder_url = `${domain}/api/orders/new`;
 export const getUserAddress_url = `${domain}/api/user/address-for-create-order/`;
 export const getMetaForCreateOrder_url = `${domain}/api/user/meta-data-for-create-order/`;
+export const getDealOfTheDayForTable_url = `${domain}/api/dealoftheday/`;
+export const getProductDropdown_url = `${domain}/api/products/dropdown-name/name/`;
+export const getFeaturedProductForTable_url = `${domain}/api/dealoftheday/featuredProduct/`;
+export const getDealOfTheDay_url = `${domain}/api/dealoftheday/featuredProduct/`;
+export const getSingleDealOfTheDay_url = `${domain}/api/dealoftheday/singlefeaturedProduct/`;
+export const updateDealOfTheDay_url = `${domain}/api/dealoftheday/featureProduct/`;
+

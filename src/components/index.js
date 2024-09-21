@@ -42,6 +42,8 @@ import UpdateNotificationModal from './UpdateNotificationModal';
 import OrderStatus from './OrderStatus';
 import CreateOrderForm from './CreateOrderForm';
 import CreateNewDealOfTheDay from './CreateNewDealOfTheDay';
+import DealOfTheDayTable from './DealOfTheDayTable';
+import UpdateDealOfTheDayModal from './UpdateDealOfTheDayModal';
 
 export {
   SidebarWithHeader,
@@ -87,5 +89,7 @@ export {
   UpdateNotificationModal,
   OrderStatus,
   CreateOrderForm,
-  CreateNewDealOfTheDay
+  CreateNewDealOfTheDay,
+  DealOfTheDayTable,
+  UpdateDealOfTheDayModal
 };
