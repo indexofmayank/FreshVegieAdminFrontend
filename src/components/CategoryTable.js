@@ -71,7 +71,7 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                     </Thead>
                     <Tbody>
                         {categories.map((category, index) => {
-                            const { image, name, id, status } = category;
+                            const { image, name, _id, status } = category;
                             return (
                                 <Tr key={index}>
                                     <Td>
@@ -96,9 +96,9 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                                             </MenuButton>
                                             <MenuList>
                                                 <MenuItem>
-                                                    <UpdateCategoryModal id={id} />
+                                                    <UpdateCategoryModal id={_id} />
                                                 </MenuItem>
-                                                <MenuItem onClick={() => handleDelete(id)}>
+                                                <MenuItem onClick={() => handleDelete(_id)}>
                                                     Delete
                                                 </MenuItem>
                                             </MenuList>
