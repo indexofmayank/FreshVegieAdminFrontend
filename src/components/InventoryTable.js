@@ -127,7 +127,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
             <Spinner size='lg' color='brown.500' />
           </HStack>
         ) : (
-          <Table variant='simple' size='sm'>
+          <Table size='sm'>
             <Thead>
               <Tr>
                 <Th>Product</Th>
@@ -159,7 +159,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                       <Input
                         value={stock}
                         size='md'
-                        width='auto'
+                        width='50%'
                         onChange={(e) => handleInputChange(e, index, 'stock')}
                       />
                     </Td>
@@ -167,7 +167,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                       <Input
                         value={stock_notify}
                         size='md'
-                        width='auto'
+                        width='50%'
                         onChange={(e) => handleInputChange(e, index, 'stock_notify')}
                       />
                     </Td>
@@ -178,7 +178,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                         <Input
                           value={price}
                           size='md'
-                          width='auto'
+                          width='50%'
                           onChange={(e) => handleInputChange(e, index, 'price')}
                         />
                       </InputGroup>
@@ -189,12 +189,13 @@ const InventoryTable = ({ products, categoriesByName }) => {
                         <Input
                           value={offer_price}
                           size='md'
-                          width='auto'
+                          width='50%'
                           onChange={(e) => handleInputChange(e, index, 'offer_price')}
                         />
                       </InputGroup>
                     </Td>
                     <Td>
+
                       {
                         !isNaN(purchase_price) && !isNaN(stock) ?
                           (parseFloat(purchase_price) * parseFloat(stock)).toFixed(2) :

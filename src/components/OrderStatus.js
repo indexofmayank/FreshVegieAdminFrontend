@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 const OrderCard = ({ label, value, highlight, onClick }) => (
     <Box
         p={4}
-        bg={highlight ? 'black' : 'gray.100'}
+        bg={highlight ? 'black' : 'white'}
         color={highlight ? 'white' : 'black'}
         borderRadius="md"
         textAlign="center"

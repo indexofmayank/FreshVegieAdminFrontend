@@ -22,6 +22,8 @@ import {
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import {useCustomerContext} from '../context/customer_context';
+import { Icon } from '@chakra-ui/react'
+import { MdViewIcon } from 'react-icons/md'
 
 export const UserTable = ({ customers }) => {
     const toast = useToast();
@@ -63,6 +65,8 @@ export const UserTable = ({ customers }) => {
 
                                     </Td>
                                     <Td>
+                                    
+                                    {/* <Icon as={ViewIcon} /> */}
                                         <Menu>
                                             <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                                                 Actions
@@ -71,9 +75,9 @@ export const UserTable = ({ customers }) => {
                                                 <Link to={`/users/${_id}`}>
                                                     <MenuItem>View</MenuItem>
                                                 </Link>
-                                                <MenuItem onClick={() => handleDelete(_id)}>
+                                                {/* <MenuItem onClick={() => handleDelete(_id)}>
                                                     Delete
-                                                </MenuItem>
+                                                </MenuItem> */}
                                             </MenuList> 
                                         </Menu>
                                     </Td>
