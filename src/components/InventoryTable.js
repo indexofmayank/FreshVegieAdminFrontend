@@ -148,7 +148,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                       <div>
                         <Image
                           src={image}
-                          boxSize='100px'
+                          boxSize='50px'
                           objectFit='cover'
                           borderRadius='lg'
                           size='sm'
@@ -159,7 +159,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                       <Input
                         value={stock}
                         size='md'
-                        width='50%'
+                        width='60%'
                         onChange={(e) => handleInputChange(e, index, 'stock')}
                       />
                     </Td>
@@ -167,7 +167,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                       <Input
                         value={stock_notify}
                         size='md'
-                        width='50%'
+                        width='60%'
                         onChange={(e) => handleInputChange(e, index, 'stock_notify')}
                       />
                     </Td>
@@ -178,7 +178,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
                         <Input
                           value={price}
                           size='md'
-                          width='50%'
+                          width='60%'
                           onChange={(e) => handleInputChange(e, index, 'price')}
                         />
                       </InputGroup>

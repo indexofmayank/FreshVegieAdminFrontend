@@ -38,7 +38,7 @@ const OrderCard = ({ label, value, highlight, onClick }) => (
     </Box>
 );
 
-function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCardClick }) {
+function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCardClick, filter,setFilter }) {
 
     const {
         fetchOrderTotalStats,
@@ -56,7 +56,6 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
         setOrderStatic(prevState => [...prevState, orderStatus]);
     }, [orderStatus]);
 
-    const [filter, setFilter] = useState('All');
     const [startDate, setStartDate] = useState(new Date());
 
     // useEffect(() => {
@@ -64,6 +63,8 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
     // }, [filter]);   
 
     // Example onClick handler
+    console.log(filter);
+    console.log(orderStatus);
 
     return (
         <Box p={6}>

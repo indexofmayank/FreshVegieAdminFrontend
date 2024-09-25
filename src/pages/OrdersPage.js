@@ -65,6 +65,7 @@ function OrdersPage() {
   };
 
   const [tabelLabel, setTableLabel] = useState(null);
+  const [filter, setFilter] = useState('All');
   const handleCardClick = async (label) => {
     setTableLabel(label);
     await fetchOrdersForTable(label);
@@ -139,6 +140,8 @@ function OrdersPage() {
           totalAvg={totalAvg}
           totalSales={totalSales}
           handleCardClick={handleCardClick}
+          filter={filter}
+          setFilter = {setFilter}
         />
       ) : (
         <OrdersTable orders={orderForTable} />
