@@ -28,13 +28,17 @@ export const LinkItems = [
 ];
 
 export const orderStatusList = [
-  {name: 'Accepted', value: 'accepeted'},
+  {name: 'Verifying Payment', value: 'verifying payment'},
   {name: 'Received', value: 'received'},
-  { name: 'Rejected', value: 'rejected' },
+  {name: 'Accepted', value: 'accepted'},
+  {name: 'Processing', value: 'processing'},
   {name: 'Packed', value: 'packed'},
-  {name: 'Assign Delivery', value: 'assign_delivery'},
-  {name: 'Cancelled', value: 'cancelled'},
-  {name: 'Delivered', value: 'delivered' }
+  {name: 'Assigned delivery', value: 'assign_delivery'},
+  {name: 'Out for delivery', value: 'out for delivery'},
+  {name: 'Transit', value: 'transit'},
+  {name: 'Delivered', value: 'delivered'},
+  {name: 'Canceled', value: 'canceled'},
+  {name: 'Failed', value: 'failed'}
 ];
 
 export const paymentStatusList = [
@@ -121,4 +125,8 @@ export const getFeaturedProductForTable_url = `${domain}/api/dealoftheday/featur
 export const getDealOfTheDay_url = `${domain}/api/dealoftheday/featuredProduct/`;
 export const getSingleDealOfTheDay_url = `${domain}/api/dealoftheday/singlefeaturedProduct/`;
 export const updateDealOfTheDay_url = `${domain}/api/dealoftheday/featureProduct/`;
+export const getDashBoardTotalSales = `${domain}/api/dashboard/totalsales/`;
+export const getTotalDeliveredOrderNumber_url = `${domain}/api/orderstatus/totaldelivered/`;
+export const getTotalPendingOrderNumber_url = `${domain}/api/orderstatus/totalpending/`;
+export const getUserAllAddress_url = `${domain}/api/user/address/`;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useOrderContext } from '../context/order_context';
 import { FaShoppingCart, FaRupeeSign } from 'react-icons/fa';
 import { MdPendingActions, MdDeliveryDining } from 'react-icons/md';
@@ -13,32 +13,73 @@ import {
   SimpleGrid,
   Box,
 } from '@chakra-ui/react';
+import { useOrderStatusContext } from '../context/orderStatus_context';
+import {useDashboardContext} from '../context/dashboard_context';
 
 function DashboardCards() {
-  const { orders, pending_orders, delivered_orders, total_revenue } =
-    useOrderContext();
+
+  const {
+    totalOrder_loading,
+    totalOrder_error,
+    totalOrder,
+    totalSales_loading,
+    totalSales_error,
+    totalSales,
+    fetchOrderTotalStats,
+    fetchOrderTotalCount,
+  }  = useOrderStatusContext();
+
+  const {
+    totalDeliveredOrder_loading,
+    totalDeliveredOrder_error,
+    totalDeliveredOrder,
+    fetchTotalDeliveredOrder,
+    totalPendingOrder_loading,
+    totalPendingOrder_error,
+    totalPendingOrder,
+    fetchTotalPendingOrder
+  } = useDashboardContext();
+
+
+
+  useEffect(() => {
+    const loadData = async () => {
+      await fetchOrderTotalCount();
+      await fetchOrderTotalStats();  
+      await fetchTotalDeliveredOrder();
+      await fetchTotalPendingOrder();
+    }
+    loadData();
+  }, []);
+
+
+
+  const numberOfTotalOrders = totalOrder?.[0]?.totalOrders || 'N/a'
+  const numberOfTotalSales = totalSales || 'N/a'
+  const numberOfDeliveredOrder = totalDeliveredOrder?.[0]?.count || 'N/a'
+  const numberOfPendingOrder = totalPendingOrder?.[0]?.count || 'N/a'
   const cardList = [
     {
       title: 'Total Orders',
-      value: orders.length,
+      value:  numberOfTotalOrders,
       icon: FaShoppingCart,
       color: 'brown.500',
     },
     {
       title: 'Pending Orders',
-      value: pending_orders.length,
+      value: numberOfPendingOrder,
       icon: MdPendingActions,
       color: 'red.500',
     },
     {
       title: 'Delivered Orders',
-      value: delivered_orders.length,
+      value: numberOfDeliveredOrder,
       icon: MdDeliveryDining,
       color: 'blue.500',
     },
     {
       title: 'Total Revenue',
-      value: formatPrice(total_revenue),
+      value: numberOfTotalSales,
       icon: FaRupeeSign,
       color: 'green.500',
     },

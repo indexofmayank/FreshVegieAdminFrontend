@@ -7,7 +7,8 @@ import {
     GET_USERBYID_SUCCESS,
     GET_USERADDRDESSES_BEGIN,
     GET_USERADDRESSES_ERROR,
-    GET_USERADDRESSES_SUCCESS  
+    GET_USERADDRESSES_SUCCESS,
+  
   } from '../actions';
 
 const user_reducer = (state, action) => {
@@ -47,7 +48,6 @@ const user_reducer = (state, action) => {
     if(action.type ===   GET_USERADDRESSES_SUCCESS) {
         return {...state, userAddresses: action.payload};
     }
-
     throw new Error(`No matching`);
 }
 

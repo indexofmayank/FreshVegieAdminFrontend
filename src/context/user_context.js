@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react';
 import axios from 'axios';
-import { login_url, auth_url, logout_url, getUserForCreateOrder_url, getUserById_url, getUserAddress_url, getMetaForCreateOrder_url } from '../utils/constants';
+import { login_url, auth_url, logout_url, getUserForCreateOrder_url, getUserById_url, getUserAddress_url, getMetaForCreateOrder_url} from '../utils/constants';
 import {
   GET_USERFORCREATEORDER_BEGIN,
   GET_USERFORCREATEORDER_ERROR,
@@ -10,7 +10,7 @@ import {
   GET_USERBYID_SUCCESS,
   GET_USERADDRDESSES_BEGIN,
   GET_USERADDRESSES_ERROR,
-  GET_USERADDRESSES_SUCCESS
+  GET_USERADDRESSES_SUCCESS,
 } from '../actions';
 import reducer from '../reducers/user_reducer';
 
@@ -120,6 +120,7 @@ export const UserProvider = ({ children }) => {
       dispatch({type: GET_USERADDRESSES_ERROR});
     }
   }
+
 
   useEffect(() => {
     checkAuth();

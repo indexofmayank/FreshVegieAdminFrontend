@@ -33,7 +33,11 @@ function SingleUserPage () {
         userDetailCardInfo_loading,
         userDetailCardInfo_error,
         userDetailCardInfo,
-        fetchUserSingleCardInfo
+        fetchUserSingleCardInfo,
+        userAllAddress_loading,
+        userAllAddress_error,
+        userAllAddress,
+        fetchUserAllAddress
     } = useUserDetailProviderContext();
 
     useEffect(() => {
@@ -41,12 +45,9 @@ function SingleUserPage () {
         fetchUserOrderHistroy(id);
         getUserTransaction(id);
         fetchUserSingleCardInfo(id);
+        fetchUserAllAddress(id);
     }, [id]);
-    // console.log(userDetailCardInfo);
-    // console.log(userOrderLogs);
-    // console.log(userOrderHistory);
-    // console.log(userTransactions);
-    // console.log(userMetaData);
+
     
     return (
         <SidebarWithHeader>
@@ -57,6 +58,8 @@ function SingleUserPage () {
                 userTransactions={userTransactions}
                 userOrderLogs={userOrderLogs} 
                 userDetailCardInfo={userDetailCardInfo}
+                userAllAddress={userAllAddress}
+                id={id}
                 />
                 </VStack>
             </HStack>

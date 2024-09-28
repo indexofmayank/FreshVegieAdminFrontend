@@ -39,6 +39,8 @@ export const OrderStatusProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const fetchOrderStatus = async(period='', startDate='', endDate='') => {
+        console.log(startDate);
+        console.log(endDate);
         dispatch({type: GET_ORDERSTATUS_BEGIN});
         try {
             const response = await axios.get(`${getOrderStatus_url}?period=${period}&startDate=${startDate}&endDate=${endDate}`);

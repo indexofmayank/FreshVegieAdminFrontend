@@ -16,6 +16,10 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useOrderStatusContext } from '../context/orderStatus_context';
 import { Link } from 'react-router-dom';
+import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
+import 'react-calendar/dist/Calendar.css';
+
 
 const OrderCard = ({ label, value, highlight, onClick }) => (
     <Box
@@ -38,7 +42,7 @@ const OrderCard = ({ label, value, highlight, onClick }) => (
     </Box>
 );
 
-function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCardClick, filter,setFilter }) {
+function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCardClick, filter, setFilter }) {
 
     const {
         fetchOrderTotalStats,
@@ -49,28 +53,19 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
 
     const [orderStatic, setOrderStatic] = useState([]);
     const [filteredTotalSale, setFilteredTotalSale] = useState(totalSales);
-
-
-
+    const [selectedDate, setSelectedDate] = useState([new Date(), new Date()])
     useEffect(() => {
         setOrderStatic(prevState => [...prevState, orderStatus]);
     }, [orderStatus]);
 
-    const [startDate, setStartDate] = useState(new Date());
-
-    // useEffect(() => {
-
-    // }, [filter]);   
-
-    // Example onClick handler
     console.log(filter);
     console.log(orderStatus);
-
+        
     return (
         <Box p={6}>
             <HStack justifyContent='space-between' >
                 <Box mb={4}>
-                    {['All', 'Day', 'Week', 'Month', 'Year', 'Custom'].map((period) => (
+                    {['All', 'Day', 'Week', 'Month', 'Year'].map((period) => (
                         <Button
                             key={period}
                             colorScheme={filter === period ? 'yellow' : 'gray'}
@@ -89,14 +84,53 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
                 </Box>
                 <Box>
                     <FormControl>
-                        <FormLabel htmlFor="date-picker">Select Date</FormLabel>
-                        <DatePicker
+                        <FormLabel htmlFor="date-pickerone">Select Date</FormLabel>
+                        {/* <DatePicker
                             selected={startDate}
                             onChange={(date) => {
                                 setStartDate(date);
                             }}
-                            customInput={<Input id="date-picker" />}
+                            customInput={<Input id="date-pickerone" />}
                         />
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => {
+                                setEndDate(date);
+                                console.log(date);
+                            }}
+                            customInput={<Input id="date-pickerone" />}
+                        /> */}
+                        <DateRangePicker 
+                            onChange={ async (value) => { 
+                                await fetchOrderStatus('custom', value[0], value[1]);
+                                setSelectedDate(value);
+                            }}
+                            value={selectedDate} 
+                            format="dd-MM-y"
+                        />
+                        {/* <DatePicker
+                            selected={selectedDate.startDate}
+                            onChange={async (date) => {
+                                setSelectedDate((prevState) => ({
+                                    ...prevState,
+                                    startDate: date
+                                }));
+                                console.log(selectedDate);
+                                await fetchOrderStatus('custom', selectedDate.startDate, selectedDate.endDate);
+                            }}
+                            customInput={<Input id="date-pickerone" />}
+                        />
+                        <DatePicker
+                            selected={selectedDate.endDate}
+                            onChange={async (date) => {
+                                setSelectedDate((prevState) => ({
+                                    ...prevState,
+                                    endDate: date
+                                }));
+                                await fetchOrderStatus('custom', selectedDate.startDate, selectedDate.endDate);
+                            }}
+                            customInput={<Input id="date-pickerone" />}
+                        /> */}
                     </FormControl>
                 </Box>
 

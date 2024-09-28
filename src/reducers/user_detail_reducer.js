@@ -10,7 +10,11 @@ import {
     GET_USERTRANSACTION_SUCCESS,
     GET_USERDETAILCARDINFO_BEGIN,
     GET_USERDETAILCARDINFO_ERROR,
-    GET_USERDETAILCARDINFO_SUCCESS
+    GET_USERDETAILCARDINFO_SUCCESS,
+    GET_ALLUSERADDRESS_BEGIN,
+    GET_ALLUSERADDRESS_ERROR,
+    GET_ALLUSERADDRESS_SUCCESS
+
 } from '../actions';
 
 const userDetail_reducer = (state, action) => {
@@ -62,6 +66,19 @@ const userDetail_reducer = (state, action) => {
     if(action.type ===GET_USERDETAILCARDINFO_SUCCESS) {
         return {...state, userDetailCardInfo_loading: false, userDetailCardInfo: action.payload}
     }
+
+    if(action.type === GET_ALLUSERADDRESS_BEGIN) {
+        return {...state, userAllAddress_loading: true, userAllAddress_error: false}
+    }
+
+    if(action.type === GET_ALLUSERADDRESS_ERROR) {
+        return {...state, userAllAddress_loading: false,  userAllAddress_error: true}
+    }
+
+    if(action.type === GET_ALLUSERADDRESS_SUCCESS) {
+        return {...state, userAllAddress_loading: false, userAllAddress: action.payload}
+    }
+
 
     throw new Error(`No matching`);
 };
