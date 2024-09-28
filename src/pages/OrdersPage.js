@@ -36,6 +36,8 @@ function OrdersPage() {
     orderForTable,
     fetchOrdersForTable
   } = useOrderContext();
+  const [selectedDate, setSelectedDate] = useState([new Date(), new Date()])
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -47,29 +49,50 @@ function OrdersPage() {
     loadData();
   }, []);
 
-  const handleDownload = async () => {
-    try {
-      const response = await axios.get(getCsvDownload_url, {
-        responseType: 'blob',
-      });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'Orders.csv');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-    }
-  };
-
   const [tabelLabel, setTableLabel] = useState(null);
   const [filter, setFilter] = useState('All');
   const handleCardClick = async (label) => {
     setTableLabel(label);
     await fetchOrdersForTable(label);
   };
+
+  const handleDownload = async () => {
+    if(selectedDate.length > 0) {
+      try {
+        const response = await axios.get(`${getCsvDownload_url}?period='custom'&startDate=${selectedDate[0]}&endDate=${selectedDate[1]}`, {
+          responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'Orders.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error downloading the file:', error);
+      }
+  
+    } else {
+      try {
+        const response = await axios.get(`${getCsvDownload_url}?filter=${filter}`, {
+          responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'Orders.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error downloading the file:', error);
+      }
+  
+    }
+
+  };
+
 
   if (loading) {
     return (
@@ -142,6 +165,8 @@ function OrdersPage() {
           handleCardClick={handleCardClick}
           filter={filter}
           setFilter = {setFilter}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
         />
       ) : (
         <OrdersTable orders={orderForTable} />

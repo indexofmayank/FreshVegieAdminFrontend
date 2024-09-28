@@ -96,22 +96,26 @@ function UserDetailTab({ userOrderHistory, userTransactions, userOrderLogs, user
                     );
                   })}
                 </>
-                <HStack justify="center" mt={4}>
-                  <Button fontSize="sm" color="gray.500" onClick={async () => {
-                    await fetchUserOrderHistroy(id, currentOrderHistoryPage - 1);
-                  }}>
-                    Previous
-                  </Button>
-                  <Text fontSize="sm" mx={2}>
-                    {currentOrderHistoryPage} out of {totalOrderHistoryPage} total {totalOrderHistory}
-                  </Text>
-                  <Button fontSize="sm" color="gray.500" onClick={async () => {
-                    await fetchUserOrderHistroy(id, currentOrderHistoryPage + 1);
-                  }}>
-                    Next
-                  </Button>
-                </HStack>
+                {orderHistory.length > 0 ? (
+                  <HStack justify="center" mt={4}>
+                    <Button fontSize="sm" color="gray.500" onClick={async () => {
+                      await fetchUserOrderHistroy(id, currentOrderHistoryPage - 1);
+                    }}>
+                      Previous
+                    </Button>
+                    <Text fontSize="sm" mx={2}>
+                      {currentOrderHistoryPage} out of {totalOrderHistoryPage} total {totalOrderHistory}
+                    </Text>
+                    <Button fontSize="sm" color="gray.500" onClick={async () => {
+                      await fetchUserOrderHistroy(id, currentOrderHistoryPage + 1);
+                    }}>
+                      Next
+                    </Button>
+                  </HStack>
 
+                ) : (
+                  <Text fontSize="sm">No history found</Text>
+                )}
               </VStack>
             </TabPanel>
             <TabPanel>
@@ -136,21 +140,26 @@ function UserDetailTab({ userOrderHistory, userTransactions, userOrderLogs, user
                   </>
                 );
               })}
-              <HStack justify="center" mt={4}>
-                <Button fontSize="sm" color="gray.500" onClick={async () => {
-                  await fetchUserOrderLogs(id, currentOrderLogsPage - 1);
-                }}>
-                  Previous
-                </Button>
-                <Text fontSize="sm" mx={2}>
-                  {currentOrderLogsPage} out of {totalOrderLogsPage} total {totalOrderLogs}
-                </Text>
-                <Button fontSize="sm" color="gray.500" onClick={async () => {
-                  await fetchUserOrderLogs(id, currentOrderLogsPage + 1);
-                }}>
-                  Next
-                </Button>
-              </HStack>
+              {orderLogs.length > 0 ? (
+                <HStack justify="center" mt={4}>
+                  <Button fontSize="sm" color="gray.500" onClick={async () => {
+                    await fetchUserOrderLogs(id, currentOrderLogsPage - 1);
+                  }}>
+                    Previous
+                  </Button>
+                  <Text fontSize="sm" mx={2}>
+                    {currentOrderLogsPage} out of {totalOrderLogsPage} total {totalOrderLogs}
+                  </Text>
+                  <Button fontSize="sm" color="gray.500" onClick={async () => {
+                    await fetchUserOrderLogs(id, currentOrderLogsPage + 1);
+                  }}>
+                    Next
+                  </Button>
+                </HStack>
+
+              ) : (
+                <Text fontSize="sm">No logs found</Text>
+              )}
             </TabPanel>
             <TabPanel>
               {/* First Transaction */}
@@ -182,22 +191,27 @@ function UserDetailTab({ userOrderHistory, userTransactions, userOrderLogs, user
                   </VStack>
                 );
               })}
-              <HStack justify="center" mt={4}>
-                <Button fontSize="sm" color="gray.500" onClick={async () => {
-                  await getUserTransaction(id, currentTransactionPage - 1);
-                }}>
-                  Previous
-                </Button>
-                <Text fontSize="sm" mx={2}>
-                  {currentTransactionPage} out of {totalOrderTransactionPage} total {totalOrderTransactions}
-                </Text>
-                <Button fontSize="sm" color="gray.500" onClick={async () => {
-                  await getUserTransaction(id, currentTransactionPage + 1);
-                }}>
-                  Next
-                </Button>
-              </HStack>
+              {transactions.length > 0 ? (
+                <HStack justify="center" mt={4}>
+                  <Button fontSize="sm" color="gray.500" onClick={async () => {
+                    await getUserTransaction(id, currentTransactionPage - 1);
+                  }}>
+                    Previous
+                  </Button>
+                  <Text fontSize="sm" mx={2}>
+                    {currentTransactionPage} out of {totalOrderTransactionPage} total {totalOrderTransactions}
+                  </Text>
+                  <Button fontSize="sm" color="gray.500" onClick={async () => {
+                    await getUserTransaction(id, currentTransactionPage + 1);
+                  }}>
+                    Next
+                  </Button>
+                </HStack>
 
+
+              ) : (
+                <Text fontSize="sm">No transaction found</Text>
+              )}
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -244,7 +258,6 @@ function UserDetailTab({ userOrderHistory, userTransactions, userOrderLogs, user
                   <Text>{allAddress[0].phone}</Text>
                 </Box>
               </Box>
-
             </>
           )}
           {/* Wallet Balance */}

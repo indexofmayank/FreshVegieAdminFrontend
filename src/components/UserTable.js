@@ -6,33 +6,26 @@ import {
     Tr,
     Th,
     Td,
-    Badge,
     Button,
     SimpleGrid,
     Spinner,
-    Select,
-    useToast,
     HStack,
     Menu,
     MenuItem,
     MenuList,
     MenuButton,
-    Switch
+    Switch,
+    useToast,
 } from '@chakra-ui/react';
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-import {useCustomerContext} from '../context/customer_context';
-import { Icon } from '@chakra-ui/react'
-import { MdViewIcon } from 'react-icons/md'
+import { useCustomerContext } from '../context/customer_context';
 
 export const UserTable = ({ customers }) => {
     const toast = useToast();
-    const {fetchCustomers}  = useCustomerContext();
+    const { fetchCustomers } = useCustomerContext();
     const [loading, setLoading] = useState(false);
 
-    const handleDelete = async (id) => {
-    }
-    console.log(customers);
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
             {loading ? (
@@ -62,31 +55,25 @@ export const UserTable = ({ customers }) => {
                                             colorScheme='brown'
                                             isChecked={status}
                                         />
-
                                     </Td>
                                     <Td>
-                                    
-                                    {/* <Icon as={ViewIcon} /> */}
                                         <Menu>
                                             <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                                                 Actions
                                             </MenuButton>
-                                             <MenuList>
+                                            <MenuList>
                                                 <Link to={`/users/${_id}`}>
                                                     <MenuItem>View</MenuItem>
                                                 </Link>
-                                                {/* <MenuItem onClick={() => handleDelete(_id)}>
-                                                    Delete
-                                                </MenuItem> */}
-                                            </MenuList> 
+                                            </MenuList>
                                         </Menu>
                                     </Td>
                                 </Tr>
-                            )
+                            );
                         })}
                     </Tbody>
                 </Table>
             )}
         </SimpleGrid>
-    )
-}
+    );
+};
