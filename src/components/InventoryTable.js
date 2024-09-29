@@ -110,7 +110,7 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
       category={selectedCategory}
        width="50%" 
       />
-      <Select placeholder='All Categories' onChange={handleCategoryChange}>
+      <Select placeholder='All Categories' onChange={handleCategoryChange} value={selectedCategory}>
           {categoriesByName?.data?.map((cat) => (
             <option key={cat._id} value={cat._id}>
               {cat.name}
