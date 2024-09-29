@@ -30,7 +30,8 @@ const UpdateCategoryModal = ({ id }) => {
     single_category: {
       name = '',
       image = '',
-      status = ''
+      status = '',
+      order = ''
     },
     fetchSingleCategory,
     single_category_loading,
@@ -39,7 +40,6 @@ const UpdateCategoryModal = ({ id }) => {
     updateCategory
   } = useCategoryContext();
 
-  console.log(image);
   const [imageList, setImageList] = useState(image);
   const [loading, setLoading] = useState(false);
   const onDrop = useCallback((acceptedFiles) => {
@@ -68,6 +68,7 @@ const UpdateCategoryModal = ({ id }) => {
   const handleSubmit = async () => {
     console.log(name);
     console.log(status);
+    console.log(order);
     if (
       !name ||
       !status
@@ -93,6 +94,7 @@ const UpdateCategoryModal = ({ id }) => {
     const category = {
       name,
       status,
+      order,
       image: imageList
     };
     const responseCreate = await updateCategory(id, category);
@@ -149,6 +151,16 @@ const UpdateCategoryModal = ({ id }) => {
                 name='name'
                 focusBorderColor='brown.500'
                 value={name}
+                onChange={updateExistingCategoryDetails}
+              />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Order</FormLabel>
+              <Input
+                placeholder='order'
+                name='order'
+                focusBorderColor='brown.500'
+                value={order}
                 onChange={updateExistingCategoryDetails}
               />
             </FormControl>

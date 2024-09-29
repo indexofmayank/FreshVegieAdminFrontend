@@ -24,11 +24,11 @@ const InventoryContext = React.createContext();
 export const InventoryProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const fetchInventory = async () => {
+    const fetchInventory = async (page='', limit='', category='', product='') => {
         dispatch({type: GET_INVENTORY_BEGIN});
         try {
-            const response = await axios.get(inventory_url);
-            const {data} = response.data;
+            const response = await axios.get(`${inventory_url}?page=${page}&limit=${limit}&category=${category}&product=${product}`);
+            const {data} = response;
             dispatch({type: GET_INVENTORY_SUCCESS, payload: data});
         } catch (error) {
             dispatch({type: GET_INVENTORY_ERROR});

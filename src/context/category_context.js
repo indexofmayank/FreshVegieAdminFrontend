@@ -35,7 +35,8 @@ const initialState = {
     new_category: {
         name: '',
         image: '',
-        status: ''
+        status: '',
+        order: ''
     },
     single_category_loading: false,
     single_category_error: false,
@@ -70,6 +71,7 @@ export const CategoryProvider = ({children}) => {
     }
 
     const updateCategory = async (id, category) => {
+        console.log(category);
         try {
             const response = await axios.put(`${category_url}${id}`, category);
             const {success, message} = response.data;

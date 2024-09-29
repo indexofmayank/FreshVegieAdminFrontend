@@ -65,13 +65,14 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                         <Tr>
                             <Th>Image</Th>
                             <Th>Name</Th>
+                            <Th>Order</Th>
                             <Th>Status</Th>
                             <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {categories.map((category, index) => {
-                            const { image, name, _id, status } = category;
+                            const { image, name, _id, status, order } = category;
                             return (
                                 <Tr key={index}>
                                     <Td>
@@ -83,6 +84,7 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                                         />
                                     </Td>
                                     <Td>{name}</Td>
+                                    <Td>{order}</Td>
                                     <Td>
                                         <Switch
                                             colorScheme='green'

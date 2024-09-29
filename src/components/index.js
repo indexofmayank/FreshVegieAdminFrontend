@@ -44,6 +44,7 @@ import CreateOrderForm from './CreateOrderForm';
 import CreateNewDealOfTheDay from './CreateNewDealOfTheDay';
 import DealOfTheDayTable from './DealOfTheDayTable';
 import UpdateDealOfTheDayModal from './UpdateDealOfTheDayModal';
+import InventoryTablePagination from './InventoryTablePagination';
 
 export {
   SidebarWithHeader,
@@ -91,5 +92,6 @@ export {
   CreateOrderForm,
   CreateNewDealOfTheDay,
   DealOfTheDayTable,
-  UpdateDealOfTheDayModal
+  UpdateDealOfTheDayModal,
+  InventoryTablePagination
 };

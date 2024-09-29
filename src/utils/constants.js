@@ -45,7 +45,7 @@ export const paymentStatusList = [
   {name: 'Pending', value: 'pending'},
   {name: 'Completed', value: 'completed'},
   {name: 'Failed', value: 'failed'},
-  {name: 'Cancelled', value: 'cancelled'},
+  {name: 'Canceled', value: 'canceled'},
   {name: 'Refunded', value: 'refuned'},
   {name: 'Processing', value: 'processing'},
   {name : 'Disputed', value: 'disputed'}

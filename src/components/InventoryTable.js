@@ -7,12 +7,15 @@ import {
   toast,
   position
 } from '@chakra-ui/react';
-import { useInventoryContext, fetchProductByNameForInventory} from '../context/inventory_context';
 import { SearchBoxForInventory } from '../components/';
+import { useInventoryContext } from "../context/inventory_context";
+import {InventoryTablePagination} from '../components';
 
-const InventoryTable = ({ products, categoriesByName }) => {
+
+const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSelectedCategory, pagination, setPagination}) => {
+  const products =  inventory?.data || [];
+  const totalProducts = inventory?.totalProducts || null;
   const  categories = categoriesByName?.data;
-
   const {
     fetchProductByNameForInventory,
     inventoryProductName,
@@ -23,7 +26,6 @@ const InventoryTable = ({ products, categoriesByName }) => {
   const { fetchInventory, updateInventory } = useInventoryContext();
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [updatedProducts, setUpdatedProducts] = useState({});
   const [bulkUpdateLoading, setBulkUpdateLoading] = useState(null);
 
@@ -35,9 +37,13 @@ const InventoryTable = ({ products, categoriesByName }) => {
     setSearchQuery(query);
   };
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+  const handleCategoryChange =  async(event) => {
+    const categoryId = event.target.value;
+    console.log(categoryId);
+    setSelectedCategory(categoryId);
+    await fetchInventory('', '', categoryId, '');
   };
+
 
   //for bulk update
   const handleInputChange = (e, index, field) => {
@@ -208,6 +214,7 @@ const InventoryTable = ({ products, categoriesByName }) => {
             </Tbody>
           </Table>
         )}
+      <InventoryTablePagination pagination={pagination} setPagination={setPagination} totalProducts={totalProducts}/>
       </SimpleGrid>
     </>
   );

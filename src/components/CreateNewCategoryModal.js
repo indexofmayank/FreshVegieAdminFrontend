@@ -36,7 +36,8 @@ function CreateNewCategoryModal() {
         new_category: {
             name,
             image,
-            status
+            status,
+            order
         },
         createNewCategory,
         updateNewCategoryDetails
@@ -95,6 +96,7 @@ function CreateNewCategoryModal() {
         const category = {
             name,
             status,
+            order,
             image: imageList
         };
         const responseCreate = await createNewCategory(category);
@@ -157,7 +159,17 @@ function CreateNewCategoryModal() {
                                 </Stack>
                             </RadioGroup>
                         </FormControl>
-
+                        <FormControl>
+                            <FormLabel>Order</FormLabel>
+                            <Input
+                                placeholder='order'
+                                type='number'
+                                name='order'
+                                focusBorderColor='brown.500'
+                                value={order}
+                                onChange={updateNewCategoryDetails}
+                            />
+                        </FormControl>
                         <FormControl mt={4}>
                             <FormLabel>Images</FormLabel>
                             <Center
