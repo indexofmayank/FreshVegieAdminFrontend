@@ -29,7 +29,6 @@ export const LinkItems = [
 
 export const orderStatusList = [
   {name: 'Verifying Payment', value: 'verifying payment'},
-  {name: 'Received', value: 'received'},
   {name: 'Accepted', value: 'accepted'},
   {name: 'Processing', value: 'processing'},
   {name: 'Packed', value: 'packed'},
