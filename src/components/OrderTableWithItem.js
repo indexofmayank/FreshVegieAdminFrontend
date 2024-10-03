@@ -47,7 +47,6 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   const totalWeight = quantityWiseOrder?.data?.total_quantity || null;
   const orderStatus = singleOrderStatus?.data?.status || null;
 
-  console.log(orderStatus);
 
   const [amount, setAmount] = useState(orderWithItems?.items_grand_total || 0);
   const [paymentStatus, setPaymentStatus] = useState(paymentInfo?.status || '');
