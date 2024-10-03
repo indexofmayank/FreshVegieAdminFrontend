@@ -97,6 +97,7 @@ function DashboardCards() {
             p='5'
             borderRadius='lg'
             justifyContent='center'
+            onClick={() => {console.log(index)}}
           >
             <Box>
               <Text fontSize='1xl' color='gray.500'>

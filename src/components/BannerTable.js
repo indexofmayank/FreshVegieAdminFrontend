@@ -74,18 +74,18 @@ function BannerTable({ banners }) {
                                     <Td>
                                         <Image
                                             src={image}
-                                            boxSize='100px'
-                                            objectFit='cover'
+                                            boxSize='60px'
+                                            objectFit='content'
                                             borderRadius='lg'
                                         />
                                     </Td>
                                     <Td>{name}</Td>
                                     <Td>
-                                       <Switch
+                                        <Switch
                                             isChecked={status}
                                             isReadOnly={true}
                                             colorScheme='brown'
-                                       />
+                                        />
                                     </Td>
                                     <Td>
                                         <Menu>

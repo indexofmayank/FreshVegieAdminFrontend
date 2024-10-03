@@ -67,10 +67,10 @@ function DealOfTheDayTable({ dealOfTheDay }) {
 
                                 <Td>
                                     <Image
-                                    src={image}
-                                    boxSize='100px'
-                                    objectFit='cover'
-                                    borderRadius='lg'
+                                        src={image}
+                                        boxSize='60px'
+                                        objectFit='content'
+                                        borderRadius='lg'
                                     />
                                 </Td>
                                 <Td>
@@ -80,7 +80,7 @@ function DealOfTheDayTable({ dealOfTheDay }) {
                                         </MenuButton>
                                         <MenuList>
                                             <MenuItem>
-                                                <UpdateDealOfTheDayModal id={_id} name={name} image={image}/>
+                                                <UpdateDealOfTheDayModal id={_id} name={name} image={image} />
                                             </MenuItem>
                                         </MenuList>
                                     </Menu>

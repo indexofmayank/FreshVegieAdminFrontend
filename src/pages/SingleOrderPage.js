@@ -117,7 +117,7 @@ function SingleOrderPage() {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-      setCleanedOrderStatus(capitalizedStr);
+      setCleanedOrderStatus(status);
       return;
     }
 
@@ -165,7 +165,7 @@ function SingleOrderPage() {
         <Select
           variant='filled'
           focusBorderColor='brown.500'
-          value={() => cleandOrderStatus}
+          value={cleandOrderStatus}
           onChange={handleChange}
         >
           {statusList.map((status, index) => {

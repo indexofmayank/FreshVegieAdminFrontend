@@ -78,8 +78,8 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                                     <Td>
                                         <Image
                                             src={image}
-                                            boxSize='100px'
-                                            objectFit='cover'
+                                            boxSize='60px'
+                                            objectFit='content'
                                             borderRadius='lg'
                                         />
                                     </Td>
@@ -112,7 +112,7 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                     </Tbody>
                 </Table>
             )}
-            <Pagination pagination={pagination} setPagination={setPagination}/>
+            <Pagination pagination={pagination} setPagination={setPagination} />
         </SimpleGrid>
     );
 };

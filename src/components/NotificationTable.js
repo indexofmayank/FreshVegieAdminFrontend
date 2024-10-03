@@ -65,8 +65,8 @@ function NotificationTable({ notifications }) {
                                     <Td>
                                         <Image
                                             src={banner}
-                                            boxSize='100px'
-                                            objectFit='cover'
+                                            boxSize='60px'
+                                            objectFit='content'
                                             borderRadius='lg'
                                         />
                                     </Td>
