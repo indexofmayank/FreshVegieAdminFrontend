@@ -10,8 +10,10 @@ import {
   FaGlobe,
   FaAlignJustify,
   FaRocketchat,
-  FaIdeal
+  FaIdeal,
+  FaRoad
 } from 'react-icons/fa';
+
 
 export const LinkItems = [
   { name: 'Home', url: '/', icon: <FaHome /> },
@@ -24,7 +26,8 @@ export const LinkItems = [
   {name: 'GeoFancing', url: '/geoFancing', icon: <FaGlobe />},
   {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />},
   {name: 'Notification', url: '/notification', icon: <FaRocketchat />},
-  {name: 'Deal of the day', url: '/dealoftheday', icon: <FaIdeal />}
+  {name: 'Deal of the day', url: '/dealoftheday', icon: <FaIdeal />},
+  {name: 'Delivery instructions', url: '/deliveryinstruction', icon: <FaRoad />}
 ];
 
 export const orderStatusList = [

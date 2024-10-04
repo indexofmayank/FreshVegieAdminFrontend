@@ -15,6 +15,7 @@ import SingleUserPage from './SingleUserPage';
 import NotificationPage from './NotificationPage';
 import CreateNewOrderPage from './CreateNewOrderPage';
 import DealOfTheDayPage from './DealOfTheDayPage';
+import DeliveryPage from './DeliveryPage';
 
 export {
   Dashboard,
@@ -33,5 +34,6 @@ export {
   SingleUserPage,
   NotificationPage,
   CreateNewOrderPage,
-  DealOfTheDayPage
+  DealOfTheDayPage,
+  DeliveryPage
 };

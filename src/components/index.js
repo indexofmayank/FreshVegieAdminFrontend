@@ -45,6 +45,10 @@ import CreateNewDealOfTheDay from './CreateNewDealOfTheDay';
 import DealOfTheDayTable from './DealOfTheDayTable';
 import UpdateDealOfTheDayModal from './UpdateDealOfTheDayModal';
 import InventoryTablePagination from './InventoryTablePagination';
+import CreateNewDeliveryInstruction from './CreateNewDeliveryInstruction';
+import DeliveryInstructionsTable from './DeliveryInstructionsTable';
+import UpdateDeliveryInstruction from './UpdateDeliveryInstruction';
+import DeliveryInstructionsPagination from './DeliveryInstructionsPagination';
 
 export {
   SidebarWithHeader,
@@ -93,5 +97,9 @@ export {
   CreateNewDealOfTheDay,
   DealOfTheDayTable,
   UpdateDealOfTheDayModal,
-  InventoryTablePagination
+  InventoryTablePagination,
+  CreateNewDeliveryInstruction,
+  DeliveryInstructionsTable,
+  UpdateDeliveryInstruction,
+  DeliveryInstructionsPagination
 };

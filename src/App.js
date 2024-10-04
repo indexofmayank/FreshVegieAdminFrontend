@@ -17,7 +17,8 @@ import {
   SingleUserPage,
   NotificationPage,
   CreateNewOrderPage,
-  DealOfTheDayPage
+  DealOfTheDayPage,
+  DeliveryPage
 } from './pages';
 
 
@@ -72,6 +73,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/dealoftheday'>
           <DealOfTheDayPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/deliveryinstruction'>
+          <DeliveryPage />
         </PrivateRoute>
       </Switch>
     </Router>
