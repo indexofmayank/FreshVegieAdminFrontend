@@ -53,7 +53,6 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
 
     const [orderStatic, setOrderStatic] = useState([]);
     const [filteredTotalSale, setFilteredTotalSale] = useState(totalSales);
-    // const [selectedDate, setSelectedDate] = useState([new Date(), new Date()])
     useEffect(() => {
         setOrderStatic(prevState => [...prevState, orderStatus]);
     }, [orderStatus]);

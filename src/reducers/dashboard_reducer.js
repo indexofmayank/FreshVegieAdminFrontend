@@ -7,13 +7,29 @@ import {
     GET_TOTALDELVIEREDORDERED_SUCCESS,
     GET_TOTALPENDINGORDER_BEGIN,
     GET_TOTALPENDINGORDER_ERROR,
-    GET_TOTALPENDINGORDER_SUCCESS
+    GET_TOTALPENDINGORDER_SUCCESS,
+    GET_ALLORDERFORDASHBOARD_BEGIN,
+    GET_ALLORDERFORDASHBOARD_ERROR,
+    GET_ALLORDERFORDASHOARD_SUCCESS
+
 } from '../actions';
 
 
 const dashboard_reducer = (state, action) => {
     if(action.type === GET_TOTALSALESFOR_DAHSBOARD_BEGIN) {
         return {...state, totalSales_loading: true, totalSales_error: false}
+    }
+
+    if(action.type === GET_ALLORDERFORDASHBOARD_BEGIN) {
+        return {...state, allOrdersForDashboardTable_loading: true, allOrdersForDashboardTable_error: false }
+    }
+
+    if(action.type === GET_ALLORDERFORDASHBOARD_ERROR) {
+        return {...state, allOrdersForDashboardTable_loading: false, allOrdersForDashboardTable_error: true }
+    }
+
+    if(action.type === GET_ALLORDERFORDASHOARD_SUCCESS) {
+        return {...state, allOrdersForDashboardTable_loading: false, allOrdersForDashbaordTable: action.payload}
     }
 
     if(action.type === GET_TOTALSALESFOR_DASHBOARD_ERROR) {

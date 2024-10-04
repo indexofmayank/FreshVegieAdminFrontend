@@ -130,11 +130,12 @@ export const OrderProvider = ({ children }) => {
   const { currentUser } = useUserContext();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchOrdersForTable = async (label='') => {
+  const fetchOrdersForTable = async (page='', limit='', status='', label='') => {
     try {
+      console.log(label)
       dispatch({type:GET_ORDERFORTABEL_BEGIN });
-      const response = await axios.get(`${getOrderForTable_url}?label=${label}`);
-      const {data} = response.data;
+      const response = await axios.get(`${getOrderForTable_url}?label=${label}&page=${page}&limit=${limit}`);
+      const {data} = response;
       console.log(data);
       dispatch({type: GET_ORDERFORTABEL_SUCCESS, payload: data});
     } catch (error) {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helpers';
 import { BiChevronDown } from 'react-icons/bi';
+import { FaRegEdit } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { useUserContext } from '../context/user_context';
 import {
@@ -19,17 +20,25 @@ import {
   Image,
   SimpleGrid,
   VStack,
-  Text,
   Spinner,
   HStack,
   useToast,
+  Flex,
+  Box,
+  Text,
+  Select,
+  Icon
 } from '@chakra-ui/react';
 import { useOrderContext } from '../context/order_context';
-function OrdersTable({ orders }) {
+import { useHistory } from 'react-router-dom'; // Import useHistory
+
+function OrdersTable({ orders, totalItem, page, totalPage, limit, itemFetchFunction, label }) {
   const toast = useToast();
+  const history = useHistory(); // Initialize history object
   const { currentUser } = useUserContext();
   const { fetchOrders, deleteOrder } = useOrderContext();
   const [loading, setLoading] = useState(false);
+  const [paginationLimit, setPaginationLimit] = useState(limit);
 
   const handleDelete = async (id) => {
     setLoading(true);
@@ -54,6 +63,7 @@ function OrdersTable({ orders }) {
       });
     }
   };
+
 
 
   return (
@@ -93,7 +103,10 @@ function OrdersTable({ orders }) {
                 _id: id,
               } = order;
               return (
-                <Tr key={index}>
+                <Tr key={index} onClick={() => {
+                  console.log(id)
+                  history.push(`/orders/${id}`);
+                }}>
                   <Td>{order_no}</Td>
                   <Td>{timestampFormatted}</Td>
                   <Td>{customerName}</Td>
@@ -113,7 +126,7 @@ function OrdersTable({ orders }) {
                   </Td>
                   <Td>{amount}</Td>
                   <Td>
-                    <Menu>
+                    {/* <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                         Actions
                       </MenuButton>
@@ -122,7 +135,15 @@ function OrdersTable({ orders }) {
                           <MenuItem>View</MenuItem>
                         </Link>
                       </MenuList>
-                    </Menu>
+                    </Menu> */}
+                    <Box
+                      as="button"
+                      _hover={{ color: 'teal.500', transform: 'scale(1.2)' }}
+                      transition="all 0.3s"
+                      aria-label="Settings"
+                    >
+                      <Icon as={FaRegEdit} boxSize={8} />
+                    </Box>
                   </Td>
                 </Tr>
               );
@@ -130,6 +151,49 @@ function OrdersTable({ orders }) {
           </Tbody>
         </Table>
       )}
+
+      <Flex justifyContent="space-between" alignItems="center" mt={4}>
+        <Button
+          variant='link'
+          colorScheme='blue'
+          disabled={page === 1}
+          onClick={async () => { await itemFetchFunction(page - 1, '', '', label) }}
+        >
+          Previous
+        </Button>
+        <Box>
+          <Text fontSize="sm" color="gray.600" mb={2}>
+            Showing results with limit: {paginationLimit}
+          </Text>
+          <Select
+            value={paginationLimit}
+            onChange={async (e) => {
+              const value = e.target.value;
+              setPaginationLimit(value);
+              await itemFetchFunction('', value, '', label);
+            }}
+            size="sm"
+            width="120px"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </Select>
+          <Text fontSize="sm" color="gray.600" mt={2}>
+            Total items: {totalItem}
+          </Text>
+        </Box>
+        <Button
+          variant='link'
+          colorScheme='blue'
+          disabled={page === totalPage}
+          onClick={async () => { await itemFetchFunction(page + 1, '', '', label) }}
+        >
+          Next
+        </Button>
+      </Flex>
+
     </SimpleGrid>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import reducer from '../reducers/dashboard_reducer';
-import {getDashBoardTotalSales, getTotalDeliveredOrderNumber_url, getTotalPendingOrderNumber_url} from '../utils/constants';
+import {getDashBoardTotalSales, getTotalDeliveredOrderNumber_url, getTotalPendingOrderNumber_url, getOrdersForDashboardCard_url} from '../utils/constants';
 
 import {
     GET_TOTALSALESFOR_DAHSBOARD_BEGIN,
@@ -12,7 +12,10 @@ import {
     GET_TOTALDELVIEREDORDERED_SUCCESS,
     GET_TOTALPENDINGORDER_BEGIN,
     GET_TOTALPENDINGORDER_ERROR,
-    GET_TOTALPENDINGORDER_SUCCESS
+    GET_TOTALPENDINGORDER_SUCCESS,
+    GET_ALLORDERFORDASHBOARD_BEGIN,
+    GET_ALLORDERFORDASHBOARD_ERROR,
+    GET_ALLORDERFORDASHOARD_SUCCESS
 } from '../actions';
 
 const initailState = {
@@ -24,7 +27,10 @@ const initailState = {
     totalDeliveredOrder: {},
     totalPendingOrder_loading: false,
     totalPendingOrder_error: false,
-    totalPendingOrder: {}
+    totalPendingOrder: {},
+    allOrdersForDashboardTable_loading: false,
+    allOrdersForDashboardTable_error: false,
+    allOrdersForDashbaordTable: {}
 };
 
 const DashboardContext = React.createContext();
@@ -65,13 +71,25 @@ export const DashboardProvider = ({children}) => {
         }
     }
 
+    const fetchOrderDashboardTable = async(page='', limit='', status='', label) => {
+        try {
+            dispatch({type: GET_ALLORDERFORDASHBOARD_BEGIN});
+            const response = await axios.get(`${getOrdersForDashboardCard_url}?page=${page}&limit=${limit}&status=${status}`);
+            const {data} = response;
+            dispatch({type: GET_ALLORDERFORDASHOARD_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_ALLORDERFORDASHBOARD_ERROR});
+        }
+    } 
+
     return (
         <DashboardContext.Provider
             value={{
                 ...state,
                 fetchTotalOrderCount,
                 fetchTotalDeliveredOrder,
-                fetchTotalPendingOrder
+                fetchTotalPendingOrder,
+                fetchOrderDashboardTable
             }}
         >
             {children}

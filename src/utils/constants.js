@@ -129,4 +129,5 @@ export const getDashBoardTotalSales = `${domain}/api/dashboard/totalsales/`;
 export const getTotalDeliveredOrderNumber_url = `${domain}/api/orderstatus/totaldelivered/`;
 export const getTotalPendingOrderNumber_url = `${domain}/api/orderstatus/totalpending/`;
 export const getUserAllAddress_url = `${domain}/api/user/address/`;
+export const getOrdersForDashboardCard_url = `${domain}/api/orders/dashboardcard/orders/`
 

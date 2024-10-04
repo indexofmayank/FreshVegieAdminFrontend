@@ -53,7 +53,7 @@ function OrdersPage() {
   const [filter, setFilter] = useState('All');
   const handleCardClick = async (label) => {
     setTableLabel(label);
-    await fetchOrdersForTable(label);
+    await fetchOrdersForTable('', '', '', label);
   };
 
   const handleDownload = async () => {
@@ -132,6 +132,8 @@ function OrdersPage() {
     );
   }
 
+  const resultedOrders = orderForTable?.data || [];
+
   return (
     <SidebarWithHeader>
       <HStack mb={5} spacing={4}>
@@ -169,7 +171,15 @@ function OrdersPage() {
           setSelectedDate={setSelectedDate}
         />
       ) : (
-        <OrdersTable orders={orderForTable} />
+        <OrdersTable 
+        orders={resultedOrders} 
+        totalItem={orderForTable?.totalOrders || null}
+        page={orderForTable?.page || null}
+        totalPage={orderForTable?.totalPages || null}
+        limit = {orderForTable?.limit || null}
+        itemFetchFunction={fetchOrdersForTable}
+        label={tabelLabel}
+        />
       )}
     </SidebarWithHeader>
   );

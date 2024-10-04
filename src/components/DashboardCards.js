@@ -37,7 +37,11 @@ function DashboardCards() {
     totalPendingOrder_loading,
     totalPendingOrder_error,
     totalPendingOrder,
-    fetchTotalPendingOrder
+    fetchTotalPendingOrder,
+    fetchOrderDashboardTable,
+    allOrdersForDashboardTable_loading,
+    allOrdersForDashboardTable_error,
+    allOrdersForDashbaordTable
   } = useDashboardContext();
 
 
@@ -97,7 +101,17 @@ function DashboardCards() {
             p='5'
             borderRadius='lg'
             justifyContent='center'
-            onClick={() => {console.log(index)}}
+            onClick={ async() => {
+              if(parseInt(index) === 0) {
+                await fetchOrderDashboardTable('', '', 'total_order');
+              }
+              if(parseInt(index) === 1) {
+                await fetchOrderDashboardTable('', '', 'pending');
+              }
+              if(parseInt(index) === 2) {
+                await fetchOrderDashboardTable('', '', 'delivered');
+              }
+            }}
           >
             <Box>
               <Text fontSize='1xl' color='gray.500'>
