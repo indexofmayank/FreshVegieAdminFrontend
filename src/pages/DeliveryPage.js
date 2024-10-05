@@ -12,7 +12,7 @@ function DeliveryPage() {
 
     return (
         <SidebarWithHeader>
-            <HStack mb={5}>
+            {/* <HStack mb={5}>
                 <CreateNewDeliveryInstruction />
                 <Button
                     colorScheme="brown"
@@ -21,7 +21,7 @@ function DeliveryPage() {
                 >
                     Refresh
                 </Button>
-            </HStack>
+            </HStack> */}
             <DeliveryInstructionsTable />
         </SidebarWithHeader>
     );

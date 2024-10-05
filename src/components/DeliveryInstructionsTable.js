@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef} from "react";
 import {
     Table,
     Thead,
@@ -7,7 +7,6 @@ import {
     Th,
     Td,
     Image,
-    Button,
     SimpleGrid,
     Spinner,
     useToast,
@@ -16,6 +15,24 @@ import {
     MenuItem,
     MenuList,
     MenuButton,
+    Button,
+    Input,
+    FormControl,
+    FormLabel,
+    FormHelperText,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+    Textarea,
+    Center,
+    VStack,
+    Checkbox,
+    Select,
     Switch
 } from '@chakra-ui/react';
 import { BiChevronDown } from 'react-icons/bi';
@@ -23,9 +40,57 @@ import {UpdateDeliveryInstruction, DeliveryInstructionsPagination} from '../comp
 
 
 function DeliveryInstructionsTable({ instructions = [] }) {
+    const initialRef = useRef();
     return (
-        <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
-            <Table variant='simple'>
+        <SimpleGrid  bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
+                        <FormControl mt={4}>
+                            <FormLabel>Minimum cart amount</FormLabel>
+                            <Input
+                                type='number'
+                                placeholder='Minimum cart amount'
+                                name='minimumcart_amount'
+                                focusBorderColor='brown.500'
+                                // value={}
+                                onChange={() => { }}
+                            />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Delivery charges</FormLabel>
+                            <Input
+                                type='number'
+                                placeholder='Delivery charges'
+                                name='delivery_charges'
+                                focusBorderColor='brown.500'
+                                // value={}
+                                onChange={() => { }}
+                            />
+                        </FormControl>
+                        <FormControl mt={4}>
+                            <FormLabel>Initial reward point</FormLabel>
+                            <Input
+                                ref={initialRef}
+                                type='number'
+                                placeholder='Initial reward point'
+                                name='initial_rewardpoint'
+                                focusBorderColor='brown.500'
+                                // value={name}
+                                onChange={() => { }}
+                            />
+                        </FormControl>
+                        <FormControl mt={6}>
+                        <Button mr={3} >
+                            Cancel
+                        </Button>
+                        <Button
+                            // isLoading={}
+                            // isLoadingText=''
+                            colorScheme='brown'
+                            // onClick={() => { }}
+                        >
+                            Save
+                        </Button>
+                        </FormControl>
+            {/* <Table variant='simple'>
                 <Thead>
                     <Tr>
                         <Th>Name</Th>
@@ -73,7 +138,7 @@ function DeliveryInstructionsTable({ instructions = [] }) {
                     })}
                 </Tbody>
             </Table>
-            <DeliveryInstructionsPagination />
+            <DeliveryInstructionsPagination /> */}
         </SimpleGrid>
     );
 }
