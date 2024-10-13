@@ -235,13 +235,15 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
             <Text>{userBillingdata.name}</Text>
             <Text>{userBillingdata.phone}</Text>
             <Text>{userBillingdata.email}</Text>
-            <Text>{userBillingdata.address}</Text>
-            <Text>{userBillingdata.locality}</Text>
-            <Text>{userBillingdata.landmark}</Text>
-            <Text>{userBillingdata.city}</Text>
-            <Text>{userBillingdata.pin_code}</Text>
-            <Text>{userBillingdata.state}</Text>
-            <Text>{userBillingdata.city}</Text>
+            <Text>{[
+              userBillingdata.address,
+              userBillingdata.locality,
+              userBillingdata.landmark,
+              userBillingdata.city,
+              userBillingdata.pin_code,
+              userBillingdata.state,
+              userBillingdata.city
+            ].join(', ')}</Text>
 
           </Box>
 

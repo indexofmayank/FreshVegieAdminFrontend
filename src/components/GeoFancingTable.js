@@ -70,7 +70,7 @@ function GeoFancingTable({ geoFancings }) {
           </Thead>
           <Tbody>
             {geoFancings.map((geoFancing, index) => {
-              const { name, image, status, id } = geoFancing;
+              const { name, image, status, _id } = geoFancing;
               return (
                 <Tr key={index}>
                   <Td>
@@ -95,9 +95,9 @@ function GeoFancingTable({ geoFancings }) {
                       </MenuButton>
                       <MenuList>
                         <MenuItem>
-                          <UpdateGeoFancingModal id={id} />
+                          <UpdateGeoFancingModal id={_id} />
                         </MenuItem>
-                        <MenuItem onClick={() => handleDelete(id)}>
+                        <MenuItem onClick={() => handleDelete(_id)}>
                           Delete
                         </MenuItem>
                       </MenuList>

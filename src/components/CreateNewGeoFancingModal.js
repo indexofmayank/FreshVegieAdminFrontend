@@ -73,6 +73,7 @@ function CreateNewGeoFancingModal() {
                 const dataUrl = canvas.toDataURL('image/png');
                 createNewGeoFancing({ name, status, polygon: polygonCoordinates, image: dataUrl });
                 toast({
+                    position: 'top',
                     title: 'Geofencing created.',
                     description: "A new geofencing has been created successfully.",
                     status: 'success',
@@ -83,6 +84,7 @@ function CreateNewGeoFancingModal() {
             } catch (error) {
                 console.error('Failed to capture screenshot:', error);
                 toast({
+                    position: 'top',
                     title: 'Error.',
                     description: "Failed to create geofencing. Please try again.",
                     status: 'error',
