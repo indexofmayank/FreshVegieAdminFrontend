@@ -35,9 +35,12 @@ import { OrderWeightPopover } from '../components/';
 import { formatPrice, getOrderStatusColor, FormattedDate } from '../utils/helpers';
 import { paymentStatusList } from '../utils/constants';
 import { useOrderContext } from "../context/order_context";
+import { useHistory } from 'react-router-dom'; // Import useHistory
+
 
 const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentInfo, userDeliveryInfo, customOrderId, quantityWiseOrder, singleOrderStatus }) => {
   // Safely access orderItems using optional chaining
+  const history = useHistory(); // Initialize history object
   const userBillingdata = userBillingInfo?.userBillingInfo?.[0] || [];
   const orderItems = orderWithItems?.orderItems || [];
   const paymentInfo = userPaymentInfo?.userPaymentDetail || {};
@@ -243,7 +246,8 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
               userBillingdata.pin_code,
               userBillingdata.state,
               userBillingdata.city
-            ].join(', ')}</Text>
+            ].filter(value => value)
+              .join(', ')}</Text>
 
           </Box>
 
@@ -327,7 +331,16 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
           </Box>
 
           <Box bg="white" shadow="md" p={4} borderRadius="md" >
-            <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder} />
+            <HStack justifyContent='space-between' mt={4}>
+              <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder} />
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  history.push('/mayank/5959')
+                }}
+              >Update</Button>
+
+            </HStack>
           </Box>
 
 

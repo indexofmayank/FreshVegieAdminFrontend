@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {
+    SidebarWithHeader,
+    ImagesList,
+    SingleProductInfo,
+    SingleProductReviews,
+  } from '../components';
+import { Stack } from '@chakra-ui/react';
+  
 
 function EditOrderPage() {
 
@@ -7,7 +15,11 @@ function EditOrderPage() {
 
     console.log(id)
     return (
-        <p>{id}</p>
+        <SidebarWithHeader>
+           <Stack>
+                <p>{id}</p>
+            </Stack> 
+        </SidebarWithHeader>
     )
 }
 
