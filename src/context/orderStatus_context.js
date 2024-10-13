@@ -15,7 +15,7 @@ import {
     GET_TOTALSALES_BEGIN,
     GET_TOTALSALES_ERROR,
     GET_TOTALSALES_SUCCESS
-} from '../actions';
+} from '../actions';  
 
 const initialState = {
     orderStatus_loading: false,

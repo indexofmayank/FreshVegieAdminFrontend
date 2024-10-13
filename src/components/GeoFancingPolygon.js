@@ -7,8 +7,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 19.079638510059272, // Example latitude
-  lng: 72.90870867662348,  // Example longitude
+  lat: 28.470498280215917, 
+  lng: 77.49400481605998, 
 };
 
 const GeoFancingPolygon = ({ onPolygonComplete }) => {
