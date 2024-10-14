@@ -134,4 +134,5 @@ export const getTotalPendingOrderNumber_url = `${domain}/api/orderstatus/totalpe
 export const getUserAllAddress_url = `${domain}/api/user/address/`;
 export const getOrdersForDashboardCard_url = `${domain}/api/orders/dashboardcard/orders/`
 export const getOrderForEditOrder_url = `${domain}/api/orders/orderforedit/`;
+export const getStaticDeliveryInstructionsInfo_url = `${domain}/api/deliveryInstructions/`;
 

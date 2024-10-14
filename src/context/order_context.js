@@ -23,7 +23,8 @@ import {
   getOrderForTable_url,
   getRecentOrderForTable_url,
   createOrder_url,
-  getOrderForEditOrder_url
+  getOrderForEditOrder_url,
+  getStaticDeliveryInstructionsInfo_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -223,6 +224,7 @@ export const OrderProvider = ({ children }) => {
     try {
       const response = await axios.get(`${get_userDeliveryInfo_url}${id}`);
       const {data} = response;
+      console.log(data);
       dispatch({type: GET_USERDELIVERYINFO_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_USERDELIVERYINFO_ERROR});
@@ -393,12 +395,17 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
-  const createNewOrder = async (orderItems, user, shippingInfo) => {
+  const createNewOrder = async (orderItems, user, shippingInfo, orderedFrom, discountPrice, itemPrice, paymentInfo, deliveryInfo ) => {
     try {
       const response = await axios.post(`${createOrder_url}`, {
         orderItems,
         shippingInfo,
-        user
+        user,
+        orderedFrom,
+        discountPrice,
+        itemPrice,
+        paymentInfo,
+        deliveryInfo
       });
       console.log(response);
       const {success, message} = response.data;
@@ -418,6 +425,17 @@ export const OrderProvider = ({ children }) => {
       dispatch({type: GET_ORDERFOREDIT_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_ORDERFOREDIT_ERROR});
+    }
+  }
+
+  const fetchStaticDeliveryInstructionsInfo = async() => {
+    try {
+      const response = await axios.get(getStaticDeliveryInstructionsInfo_url);
+      const {success, data} = response.data;
+      return {success, data};
+    } catch (error) {
+      const {message} = error.message;
+      return {success: false, message};
     }
   }
 
@@ -451,7 +469,8 @@ export const OrderProvider = ({ children }) => {
         fetchRecentOrderForTable,
         updateNewOrderAddressDetails,
         createNewOrder,
-        fetchOrderForEditOrder
+        fetchOrderForEditOrder,
+        fetchStaticDeliveryInstructionsInfo
       }}
     >
       {children}

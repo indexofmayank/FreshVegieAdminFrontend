@@ -25,6 +25,14 @@ import {
   ModalBody,
   useDisclosure,
   ModalCloseButton,
+  toast,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+
 } from '@chakra-ui/react';
 
 import { useProductContext } from '../context/product_context';
@@ -34,16 +42,19 @@ import { FaTrash } from "react-icons/fa";
 
 
 const CreateOrderForm = () => {
-  const [items, setItems] = useState([]); // Store items in the order
-  const [searchTerm, setSearchTerm] = useState(''); // For product search input
-  const [suggestions, setSuggestions] = useState([]); // Store product suggestions
-  const suggestionBoxRef = useRef(null); // Reference for the suggestion box
-  const [customerNameSuggestion, setCustomerNameSuggestion] = useState([]); // For customer name suggestions
-  const [customerSearchTerm, setCustomerSearchTerm] = useState(''); // For customer search input
+  const [items, setItems] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [suggestions, setSuggestions] = useState([]); 
+  const suggestionBoxRef = useRef(null); 
+  const [customerNameSuggestion, setCustomerNameSuggestion] = useState([]);
+  const [customerSearchTerm, setCustomerSearchTerm] = useState(''); 
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [grandTotal, setGrandTotal] = useState(null);
+  const [totalDiscount, setTotalDiscount] = useState(null);
   const [createOrderLoadingState, setCreateOrderLoadingState] = useState(false);
   const [selectedCustomerAddresses, setSelectedCustomerAddresses] = useState([]);
+  const [minimumCartAmount, setMinimumCartAmount] = useState(null);
+  const [deliveryCharges, setDeliveryCharges] = useState(null);
   const { productForCreateOrder, fetchProductForCreateOrder } = useProductContext();
   const { usernameForCreateOrder, fetchUserForCreateOrder, fetchUserById, fetchUserAddressById, userAddresses, fetchUserMetaDataForCreateOrder } = useUserContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -62,8 +73,18 @@ const CreateOrderForm = () => {
       state
     },
     updateNewOrderAddressDetails,
+    fetchStaticDeliveryInstructionsInfo,
     createNewOrder
   } = useOrderContext();
+
+  useEffect(() => {
+   const loadDeliveryData = async () => {
+    const response = await fetchStaticDeliveryInstructionsInfo()
+    setMinimumCartAmount(response?.data?.minimumcart_amount);
+    setDeliveryCharges(response?.data?.delivery_charges);
+   }
+   loadDeliveryData();
+  })
 
   // Fetch product suggestions when the search term changes
   useEffect(() => {
@@ -113,55 +134,107 @@ const CreateOrderForm = () => {
   }, []);
 
   const addItem = (item) => {
+    console.log(item);
     setItems((prevItems) => [...prevItems, {
-        name: item.name,
-        image: item.image,
-        item_price: item.price,
-        offer_price: item.offer_price,
-        quantity: item.quantity,
-        unit: item.information,
-        incrementvalue: item.increment_value,
-        maxquantity: item.product_detail_max,
-        minquantity: item.product_detail_min
+      id: item._id,
+      name: item.name,
+      image: item.image,
+      item_price: item.price,
+      offer_price: item.offer_price,
+      quantity: item.quantity,
+      unit: item.information,
+      incrementvalue: item.increment_value,
+      maxquantity: item.product_detail_max,
+      minquantity: item.product_detail_min
     }]);
     setSearchTerm('');
     setSuggestions([]);
-}
+  }
 
   const incrementCount = (index, incrementvalue, maxquantity, minquantity) => {
+    if (items[index].quantity === maxquantity) {
+      return toast({
+        position: 'top',
+        title: 'Limit reached',
+        description: `maximum limit ${maxquantity} at a time`,
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
     setItems((prevItems) =>
       prevItems.map((item, i) =>
-        i === index && item.quantity < maxquantity 
-          ? { ...item, quantity: parseFloat(item.quantity) + parseFloat(incrementvalue) } 
+        i === index && item.quantity < maxquantity
+          ? { ...item, quantity: parseFloat(item.quantity) + parseFloat(incrementvalue) }
           : item
       )
     );
   };
-  
+
   const decrementCount = (index, incrementvalue, maxquantity, minquantity) => {
+    if (items[index].quantity === minquantity) {
+      return toast({
+        position: 'top',
+        title: 'Limit reached',
+        description: `minimumm limit ${minquantity} at a time`,
+        status: 'warning',
+        isClosable: true
+      });
+    }
     setItems((prevItems) =>
       prevItems
         .map((item, i) =>
           i === index && item.quantity > minquantity ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(incrementvalue) } : item
         )
-        .filter((item) => item.quantity > 0) 
+        .filter((item) => item.quantity > 0)
     );
   };
 
   // Calculate grand total whenever items change
   useEffect(() => {
-    const total = items.reduce((acc, item) => {
-      const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
-      return acc + itemTotal;
-    }, 0);
-    setGrandTotal(total);
+
+    if(grandTotal < minimumCartAmount) {
+      const total = items.reduce((acc, item) => {
+        const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
+        return acc + itemTotal;
+      }, 0);
+      const finalAmount = total + deliveryCharges;
+      setGrandTotal(finalAmount);
+    } else {
+      const total = items.reduce((acc, item) => {
+        const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
+        return acc + itemTotal;
+      }, 0);
+      setGrandTotal(total);
+    }
+
   }, [items]);
+
+  useEffect(() => {
+    const total = items.reduce((acc, item) => {
+      const totalOfferPrice =  item.item_price * item.quantity - item.offer_price * item.quantity;
+      return acc + totalOfferPrice;
+    }, 0);
+    setTotalDiscount(total);
+  }, [items]);
+
+
 
   const handleCreateOrder = async () => {
     setCreateOrderLoadingState(true);
+    const orderedFrom = 'admin';
     let response = await fetchUserMetaDataForCreateOrder(selectedCustomerId);
-    console.log(response);
-    const user = {name: response?.[0].name, email: response?.[0].email, phone: response?.[0].phone, userId: selectedCustomerId};
+    const user = { name: response?.[0].name, email: response?.[0].email, phone: response?.[0].phone, userId: selectedCustomerId };
+    const discountPrice = totalDiscount;
+    const itemPrice = grandTotal;
+    const paymentInfo = {
+      amount: grandTotal,
+      usedelivery: true,
+      deliverycharges: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges),
+    }
+    const deliveryInfo = {
+      deliveryCost: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges)
+    }
     const shippingAddress = {
       billingAddress: {
         address_name: address_name,
@@ -189,11 +262,11 @@ const CreateOrderForm = () => {
       }
     };
     const orderItems = items.map((item) => {
-      const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity, _id} = item;
-    
+      const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity, id } = item;
+
       // Ensure image is a single string (get the first URL from the array or use a fallback)
       const imageString = Array.isArray(image) && image.length > 0 ? image[0] : '';
-    
+
       return {
         name: name,
         image: imageString, // Single image URL
@@ -205,14 +278,14 @@ const CreateOrderForm = () => {
         incrementvalue: incrementvalue,
         maxquantity: maxquantity,
         minquantity: minquantity,
-        id: _id
+        id: id
       };
     });
-    if(
+    if (
       !orderItems ||
       !user ||
       !shippingAddress
-    ) { 
+    ) {
       setCreateOrderLoadingState(false);
       return toast({
         position: 'top',
@@ -222,7 +295,27 @@ const CreateOrderForm = () => {
         isClosable: true
       });
     }
-    response = await createNewOrder(orderItems, user, shippingAddress);
+    response = await createNewOrder(orderItems, user, shippingAddress, orderedFrom, discountPrice, itemPrice, paymentInfo, deliveryInfo);
+    console.log(response);
+    if (response.success) {
+      setCreateOrderLoadingState(false);
+      return toast({
+        position: 'top',
+        description: response.message,
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } else {
+      return toast({
+        position: 'top',
+        description: response.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+
+    }
     setCreateOrderLoadingState(false);
     return toast({
       position: 'top',
@@ -268,7 +361,9 @@ const CreateOrderForm = () => {
                     p={2}
                     cursor="pointer"
                     _hover={{ bg: 'gray.100' }}
-                    onClick={() => addItem({ ...product, quantity: product.increment_value})}
+                    onClick={() => {
+                      addItem({ ...product, quantity: product.increment_value })
+                    }}
                   >
                     <HStack>
                       <Image src={product.image} boxSize="30px" />
@@ -281,29 +376,68 @@ const CreateOrderForm = () => {
           </Box>
 
           {/* Added products */}
-          {items.map((item, index) => {
-            const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity} = item;
-            return (
-              <HStack key={index} justifyContent="space-between" mb={2}>
-                <Image src={item.image} boxSize="50px" />
-                <Text>{item.name}</Text>
-                <HStack>
-                  <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
-                  <Text>{item.quantity}</Text>
-                  <Button onClick={() => incrementCount(index, incrementvalue, maxquantity, minquantity)}>+</Button>
-                </HStack>
-                {offer_price > 0 ? (<Text>{offer_price * quantity}</Text>) : (<Text>{item_price * quantity}</Text>)}
-                </HStack>
-            );
-          })}
+          <Table variant='simple'>
+            {items.length > 0 && (
+              <Thead>
+                <Tr>
+                  <Th>Image</Th>
+                  <Th>Name</Th>
+                  <Th>Actions</Th>
+                  <Th>Offer price</Th>
+                  <Th>Item price</Th>
+                  <Th>Item total</Th>
+                </Tr>
+              </Thead>
 
-          <Divider />
+            )}
+            {items.map((item, index) => {
+              const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity } = item;
+              return (
+                <Tbody>
+                  <Tr key={index}>
+                    <Td>
+                      <Image src={image} boxSize="50px" />
+                    </Td>
+                    <Td>
+                      <Text>{item.name}</Text>
+                    </Td>
+                    <Td>
+                      <HStack>
+                        <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
+                        <Text>{item.quantity}</Text>
+                        <Button onClick={() => incrementCount(index, incrementvalue, maxquantity, minquantity)}>+</Button>
+                      </HStack>
+                    </Td>
+                    <Td>
+                      {offer_price * quantity}
+                    </Td>
+                    <Td>
+                      {item_price * quantity}
+                    </Td>
+                    <Td>
+                      {offer_price * quantity}
+                    </Td>
+
+                  </Tr>
+                </Tbody>
+
+              );
+            })}
+          </Table>
 
           {/* Total Section */}
           <Box mt={4} p={4} border="1px solid lightgray" borderRadius="md" bg="gray.50">
-            <HStack justifyContent="space-between">
+            <HStack justifyContent="space-between" mt={2}>
               <Text>No. of items:</Text>
               <Text>{items.length}</Text>
+            </HStack>
+            <HStack justifyContent='space-between' mt={2}>
+              <Text>Total Discount:</Text>
+              <Text>{totalDiscount}</Text>
+            </HStack>
+            <HStack justifyContent='space-between' mt={2}>
+              <Text>Delivery fee:</Text>
+             {items.length === 0 ? (<Text>0</Text>) : grandTotal < minimumCartAmount ? (<Text>{deliveryCharges}</Text>): (<Text>free</Text>)}
             </HStack>
             <HStack justifyContent="space-between" mt={2}>
               <Text>Total:</Text>
@@ -360,7 +494,7 @@ const CreateOrderForm = () => {
           )}
           {selectedCustomerId && (
             <>
-              <Button 
+              <Button
                 onClick={async () => {
                   onOpen();
                   console.log(userAddresses?.[0]?.address); // Debugging line
@@ -376,56 +510,56 @@ const CreateOrderForm = () => {
                   <ModalCloseButton />
                   <ModalBody>
                     {userAddresses && userAddresses?.[0]?.address.map((data, index) => {
-                      const {address_name, name, phone, email, address, locality, city, pin_code, state, landmark} = data;
+                      const { address_name, name, phone, email, address, locality, city, pin_code, state, landmark } = data;
                       return (
                         <Box key={index} mb={4}>
-                        <Text fontWeight="bold">Address {index + 1}</Text>
-                        <Text>{address_name}</Text>
-                        <Text>{name}</Text>
-                        <Text>{phone}</Text>
-                        <Text>{email}</Text>
-                        <Text>{address}</Text>
-                        <Text>{locality}</Text>
-                        <Text>{landmark}</Text>
-                        <Text>{city}</Text>
-                        <Text>{pin_code}</Text>
-                        <Text>{state}</Text>
-                        <Button 
-                          onClick={(e) => {
-                            onClose();
-                            e.target.name='address_name';
-                            e.target.value=address_name
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='address';
-                            e.target.value=address
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='name';
-                            e.target.value=name;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='phone';
-                            e.target.value=phone;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='email';
-                            e.target.value=email;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='locality';
-                            e.target.value=locality;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='city';
-                            e.target.value=city;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='pin_code';
-                            e.target.value=pin_code
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='state';
-                            e.target.value=state;
-                            updateNewOrderAddressDetails(e);
-                            e.target.name='landmark';
-                            e.target.value=landmark;
-                            updateNewOrderAddressDetails(e);
-                          }}
-                        >Select</Button>
-                      </Box>
+                          <Text fontWeight="bold">Address {index + 1}</Text>
+                          <Text>{address_name}</Text>
+                          <Text>{name}</Text>
+                          <Text>{phone}</Text>
+                          <Text>{email}</Text>
+                          <Text>{address}</Text>
+                          <Text>{locality}</Text>
+                          <Text>{landmark}</Text>
+                          <Text>{city}</Text>
+                          <Text>{pin_code}</Text>
+                          <Text>{state}</Text>
+                          <Button
+                            onClick={(e) => {
+                              onClose();
+                              e.target.name = 'address_name';
+                              e.target.value = address_name
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'address';
+                              e.target.value = address
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'name';
+                              e.target.value = name;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'phone';
+                              e.target.value = phone;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'email';
+                              e.target.value = email;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'locality';
+                              e.target.value = locality;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'city';
+                              e.target.value = city;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'pin_code';
+                              e.target.value = pin_code
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'state';
+                              e.target.value = state;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'landmark';
+                              e.target.value = landmark;
+                              updateNewOrderAddressDetails(e);
+                            }}
+                          >Select</Button>
+                        </Box>
                       );
                     })}
                   </ModalBody>

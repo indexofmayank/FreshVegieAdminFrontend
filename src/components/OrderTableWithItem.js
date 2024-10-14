@@ -50,7 +50,6 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   const totalWeight = quantityWiseOrder?.data?.total_quantity || null;
   const orderStatus = singleOrderStatus?.data?.status || null;
 
-
   const [amount, setAmount] = useState(orderWithItems?.items_grand_total || 0);
   const [paymentStatus, setPaymentStatus] = useState(paymentInfo?.status || '');
   const [paidLoading, setPaidLoading] = useState(false);
@@ -354,7 +353,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
               </Badge>
             </HStack>
             <Text>Delivery Type: {deliveryInfo.deliveryType}</Text>
-            <Text>Delivery cost: ₹{paymentInfo.totalPrice}</Text>
+            <Text>Delivery cost: ₹{deliveryInfo.deliveryCost}</Text>
             <Text>Name: {deliveryInfo.name}</Text>
             <Text>Phone: {deliveryInfo.phone}</Text>
             <Text>Email: {deliveryInfo.email}</Text>
