@@ -160,6 +160,7 @@ const CreateOrderForm = () => {
   const handleCreateOrder = async () => {
     setCreateOrderLoadingState(true);
     let response = await fetchUserMetaDataForCreateOrder(selectedCustomerId);
+    console.log(response);
     const user = {name: response?.[0].name, email: response?.[0].email, phone: response?.[0].phone, userId: selectedCustomerId};
     const shippingAddress = {
       billingAddress: {
@@ -188,7 +189,7 @@ const CreateOrderForm = () => {
       }
     };
     const orderItems = items.map((item) => {
-      const { name, image, quantity, item_price, offer_price, _id } = item;
+      const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity, _id} = item;
     
       // Ensure image is a single string (get the first URL from the array or use a fallback)
       const imageString = Array.isArray(image) && image.length > 0 ? image[0] : '';
@@ -199,6 +200,11 @@ const CreateOrderForm = () => {
         quantity: quantity,
         item_price: item_price,
         offer_price: offer_price,
+        quantity: quantity,
+        unit: unit,
+        incrementvalue: incrementvalue,
+        maxquantity: maxquantity,
+        minquantity: minquantity,
         id: _id
       };
     });
@@ -288,7 +294,7 @@ const CreateOrderForm = () => {
                 </HStack>
                 {offer_price > 0 ? (<Text>{offer_price * quantity}</Text>) : (<Text>{item_price * quantity}</Text>)}
                 </HStack>
-            )
+            );
           })}
 
           <Divider />
