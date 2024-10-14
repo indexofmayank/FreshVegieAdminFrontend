@@ -142,7 +142,7 @@ function OrdersTable({ orders, totalItem, page, totalPage, limit, itemFetchFunct
                       transition="all 0.3s"
                       aria-label="Settings"
                     >
-                      <Icon as={FaRegEdit} boxSize={8} />
+                      <Icon as={FaRegEdit} boxSize={5} />
                     </Box>
                   </Td>
                 </Tr>

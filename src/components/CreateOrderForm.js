@@ -30,6 +30,8 @@ import {
 import { useProductContext } from '../context/product_context';
 import { useUserContext } from '../context/user_context';
 import { useOrderContext } from '../context/order_context';
+import { FaTrash } from "react-icons/fa";
+
 
 const CreateOrderForm = () => {
   const [items, setItems] = useState([]); // Store items in the order
@@ -111,26 +113,38 @@ const CreateOrderForm = () => {
   }, []);
 
   const addItem = (item) => {
-    setItems((prevItems) => [...prevItems, item]);
+    setItems((prevItems) => [...prevItems, {
+        name: item.name,
+        image: item.image,
+        item_price: item.price,
+        offer_price: item.offer_price,
+        quantity: item.quantity,
+        unit: item.information,
+        incrementvalue: item.increment_value,
+        maxquantity: item.product_detail_max,
+        minquantity: item.product_detail_min
+    }]);
     setSearchTerm('');
     setSuggestions([]);
-  };
+}
 
-  const incrementCount = (index) => {
+  const incrementCount = (index, incrementvalue, maxquantity, minquantity) => {
     setItems((prevItems) =>
       prevItems.map((item, i) =>
-        i === index ? { ...item, quantity: item.quantity + 1 } : item
+        i === index && item.quantity < maxquantity 
+          ? { ...item, quantity: parseFloat(item.quantity) + parseFloat(incrementvalue) } 
+          : item
       )
     );
   };
-
-  const decrementCount = (index) => {
+  
+  const decrementCount = (index, incrementvalue, maxquantity, minquantity) => {
     setItems((prevItems) =>
       prevItems
         .map((item, i) =>
-          i === index && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+          i === index && item.quantity > minquantity ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(incrementvalue) } : item
         )
-        .filter((item) => item.quantity > 0) // Remove item if count reaches 0
+        .filter((item) => item.quantity > 0) 
     );
   };
 
@@ -248,7 +262,7 @@ const CreateOrderForm = () => {
                     p={2}
                     cursor="pointer"
                     _hover={{ bg: 'gray.100' }}
-                    onClick={() => addItem({ ...product, quantity: 1 })}
+                    onClick={() => addItem({ ...product, quantity: product.increment_value})}
                   >
                     <HStack>
                       <Image src={product.image} boxSize="30px" />
@@ -262,18 +276,18 @@ const CreateOrderForm = () => {
 
           {/* Added products */}
           {items.map((item, index) => {
-            const { name, image, price, offer_price, quantity } = item;
+            const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity} = item;
             return (
               <HStack key={index} justifyContent="space-between" mb={2}>
                 <Image src={item.image} boxSize="50px" />
                 <Text>{item.name}</Text>
                 <HStack>
-                  <Button onClick={() => decrementCount(index)}>-</Button>
+                  <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
                   <Text>{item.quantity}</Text>
-                  <Button onClick={() => incrementCount(index)}>+</Button>
+                  <Button onClick={() => incrementCount(index, incrementvalue, maxquantity, minquantity)}>+</Button>
                 </HStack>
-                {offer_price ? (<Text>{offer_price * quantity}</Text>) : (<Text>{price * quantity}</Text>)}
-              </HStack>
+                {offer_price > 0 ? (<Text>{offer_price * quantity}</Text>) : (<Text>{item_price * quantity}</Text>)}
+                </HStack>
             )
           })}
 

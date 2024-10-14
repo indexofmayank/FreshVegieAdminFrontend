@@ -37,7 +37,10 @@ import {
   GET_RECENTORDERFORTABLE_BEGIN,
   GET_RECENTORDERFORTABLE_ERROR,
   GET_RECENTORDERFORTABLE_SUCCESS,
-  CREATE_NEW_ORDER
+  CREATE_NEW_ORDER,
+  GET_ORDERFOREDIT_BEGIN,
+  GET_ORDERFOREDIT_ERROR,
+  GET_ORDERFOREDIT_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -196,6 +199,18 @@ const order_reducer = (state, action) => {
 
   if(action.type === GET_RECENTORDERFORTABLE_SUCCESS) {
     return {...state, recentOrder_loading: false, recentOrder: action.payload}
+  }
+
+  if(action.type === GET_ORDERFOREDIT_BEGIN) {
+    return {...state, orderForEditOrder_loading: true, orderForEditOrder_error: false }
+  }
+
+  if(action.type === GET_ORDERFOREDIT_ERROR) {
+    return {...state, orderForEditOrder_loading: false, orderForEditOrder_error: true}
+  }
+
+  if(action.type === GET_ORDERFOREDIT_SUCCESS) {
+    return {...state, orderForEditOrder_loading: false, orderForEditOrder: action.payload}
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);

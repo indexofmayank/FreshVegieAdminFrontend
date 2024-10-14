@@ -22,7 +22,8 @@ import {
   getDeliveryPartnerDetailById_url,
   getOrderForTable_url,
   getRecentOrderForTable_url,
-  createOrder_url
+  createOrder_url,
+  getOrderForEditOrder_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -64,7 +65,10 @@ import {
   GET_RECENTORDERFORTABLE_BEGIN,
   GET_RECENTORDERFORTABLE_ERROR,
   GET_RECENTORDERFORTABLE_SUCCESS,
-  CREATE_NEW_ORDER
+  CREATE_NEW_ORDER,
+  GET_ORDERFOREDIT_BEGIN,
+  GET_ORDERFOREDIT_ERROR,
+  GET_ORDERFOREDIT_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -107,6 +111,9 @@ const initialState = {
   recentOrder_loading: false,
   recentOrder_error: false,
   recentOrder: [],
+  orderForEditOrder_loading: false,
+  orderForEditOrder_error: false,
+  orderForEditOrder: [],
   new_order_address: {
     address_name: '',
     name: '',
@@ -402,6 +409,18 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
+  const fetchOrderForEditOrder = async(id) => {
+      dispatch({type: GET_ORDERFOREDIT_BEGIN });
+    try {
+      const response = await axios.get(`${getOrderForEditOrder_url}${id}`);
+      const {data} = response.data;
+      console.log(response);
+      dispatch({type: GET_ORDERFOREDIT_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_ORDERFOREDIT_ERROR});
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, [currentUser]);
@@ -431,7 +450,8 @@ export const OrderProvider = ({ children }) => {
         fetchOrdersForTable,
         fetchRecentOrderForTable,
         updateNewOrderAddressDetails,
-        createNewOrder
+        createNewOrder,
+        fetchOrderForEditOrder
       }}
     >
       {children}

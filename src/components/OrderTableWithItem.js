@@ -336,7 +336,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  history.push('/mayank/5959')
+                  history.push(`/edit-order/${id}`);
                 }}
               >Update</Button>
 

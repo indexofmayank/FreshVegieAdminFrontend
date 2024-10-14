@@ -39,7 +39,7 @@ function App() {
         <PrivateRoute exact path='/orders/:id'>
           <SingleOrderPage />
         </PrivateRoute>
-        <PrivateRoute exact path='/mayank/:id'>
+        <PrivateRoute exact path='/edit-order/:id'>
           <EditOrderPage />
         </PrivateRoute>
         <PrivateRoute exact path='/products'>
