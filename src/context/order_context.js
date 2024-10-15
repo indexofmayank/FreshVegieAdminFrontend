@@ -148,11 +148,9 @@ export const OrderProvider = ({ children }) => {
 
   const fetchOrdersForTable = async (page='', limit='', status='', label='') => {
     try {
-      console.log(label)
       dispatch({type:GET_ORDERFORTABEL_BEGIN });
       const response = await axios.get(`${getOrderForTable_url}?label=${label}&page=${page}&limit=${limit}`);
       const {data} = response;
-      console.log(data);
       dispatch({type: GET_ORDERFORTABEL_SUCCESS, payload: data});
     } catch (error) {
       console.error(error);
@@ -232,7 +230,6 @@ export const OrderProvider = ({ children }) => {
     try {
       const response = await axios.get(`${get_userDeliveryInfo_url}${id}`);
       const {data} = response;
-      console.log(data);
       dispatch({type: GET_USERDELIVERYINFO_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_USERDELIVERYINFO_ERROR});
@@ -263,7 +260,6 @@ export const OrderProvider = ({ children }) => {
         phone,
         email
       });
-      console.log(response);
       const {success, data} = response.data;
       fetchOrders();
       fetchUserOrderDeliveryInfo(id);
@@ -372,7 +368,6 @@ export const OrderProvider = ({ children }) => {
     try {
       const response = await axios.get(getDeliveryPartnerName_url);
       const {data} = response.data;
-      console.log(data);
       dispatch({type: GET_DELIVERYPARTNERBYNAME_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_DELIVERYPARTNERBYNAME_ERROR});
@@ -395,7 +390,6 @@ export const OrderProvider = ({ children }) => {
     try {
       const response = await axios.get(`${getDeliveryPartnerDetailById_url}${id}`);
       const {data} = response.data;
-      console.log(data);
       return data;
     } catch (error) {
       const {success, message} = error;
@@ -415,7 +409,6 @@ export const OrderProvider = ({ children }) => {
         paymentInfo,
         deliveryInfo
       });
-      console.log(response);
       const {success, message} = response.data;
       return {success, message};
     } catch (error) {
@@ -429,7 +422,6 @@ export const OrderProvider = ({ children }) => {
     try {
       const response = await axios.get(`${getOrderForEditOrder_url}${id}`);
       const {data} = response.data;
-      console.log(response);
       dispatch({type: GET_ORDERFOREDIT_SUCCESS, payload: data});
     } catch (error) {
       dispatch({type: GET_ORDERFOREDIT_ERROR});
@@ -459,7 +451,6 @@ export const OrderProvider = ({ children }) => {
   }
 
   const updateOrderForAdmin = async (id, orderItems, paymentInfo, deliveryInfo, ) => {
-    console.log('we came here');
     try {
       const response = await axios.put(`${updateAdminOrder_url}${id}`, {
        orderItems,

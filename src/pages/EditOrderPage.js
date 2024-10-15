@@ -34,6 +34,7 @@ import {
     Th,
     Td,
     toast,
+    Checkbox,
 } from '@chakra-ui/react';
 import {
     SidebarWithHeader,
@@ -63,10 +64,13 @@ function EditOrderPage() {
     const [grandTotal, setGrandTotal] = useState(amount);
     const [updatedDeliveryCharges, setUpdatedDeliveryCharges] = useState(deliverycharges);
     const [fixedDeliveryCharges, setFixedDeliveryCharges] = useState(null);
+    const [refundableAmout, setRefundAmount] = useState(0);
     const [totalDiscount, setTotalDiscount] = useState(discount);
     const [minimumCartAmount, setMinimumCartAmount] = useState(null);
     const [updatingOrderLoading, setUpdatingOrderLoading] = useState(false);
     const [deliveryFeeText, setDeliveryFeeText] = useState(null);
+    const [isChecked, setIsChecked] = useState(true);
+
 
     const toast = useToast();
     const { id } = useParams();
@@ -75,11 +79,13 @@ function EditOrderPage() {
         const total = items.reduce((acc, item) => {
             return acc + (item.offer_price * item.quantity);
         }, 0);
-
         if (total < minimumCartAmount) {
             const finalAmount = total + fixedDeliveryCharges;
+            const refund = parseInt(amount) - parseInt(total) - parseInt(fixedDeliveryCharges)
             setDeliveryFeeText(fixedDeliveryCharges);
             setGrandTotal(finalAmount);
+            setRefundAmount(refund);
+
         } else {
             setGrandTotal(total);
             setDeliveryFeeText('free');
@@ -118,10 +124,10 @@ function EditOrderPage() {
 
 
     const decrementCount = (index, incrementvalue, maxquantity, minquantity) => {
-        setItems((prevItems) => 
+        setItems((prevItems) =>
             prevItems
-                .map((item, i) => 
-                    i === index ? {...item, quantity: parseFloat(item.quantity) - parseFloat(item.incrementvalue)} : item
+                .map((item, i) =>
+                    i === index ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(item.incrementvalue) } : item
                 )
                 .filter((item) => item.quantity > 0)
         );
@@ -138,6 +144,12 @@ function EditOrderPage() {
             isClosable: true
         });
     }
+
+    const handleCheckboxChange = (e) => {
+        console.log('Checkbox event triggered');  // To ensure the event is firing
+        setIsChecked(e.target.checked);
+        console.log('Checkbox value:', e.target.checked);  // To log the checkbox value
+    };
 
     return (
         <SidebarWithHeader>
@@ -214,6 +226,25 @@ function EditOrderPage() {
                                 <Text>Total:</Text>
                                 <Text>{`₹${grandTotal}`}</Text>
                             </HStack>
+                            {refundableAmout > 0 && (
+                                <>
+                                    <HStack justifyContent="space-between" mt={2}>
+                                        <Text>Refund :</Text>
+                                        <Text>{`₹${refundableAmout}`}</Text>
+                                    </HStack>
+
+                                    <FormControl mt={2}>
+                                        <Checkbox
+                                            defaultChecked
+                                            colorScheme='brown'
+                                            name='isRefuned'
+                                            onChange={(e) => { console.log(e.target.checked) }}
+                                        >
+                                            Initiate refund amount to wallet
+                                        </Checkbox>
+                                    </FormControl>
+                                </>
+                            )}
                         </Box>
 
                         <Button
@@ -221,7 +252,7 @@ function EditOrderPage() {
                             loadingText={`updating ${orderId || null}`}
                             colorScheme="blue"
                             mt={2}
-                            onClick={async() => {
+                            onClick={async () => {
                                 setUpdatingOrderLoading(true);
                                 const total = items.reduce((acc, item) => {
                                     return acc + (item.offer_price * item.quantity);
@@ -229,20 +260,20 @@ function EditOrderPage() {
                                 const paymentInfo = {
                                     amount: grandTotal,
                                     usedelivery: total > minimumCartAmount ? false : true,
-                                    deliverycharges: total > minimumCartAmount  ? 0 : fixedDeliveryCharges
+                                    deliverycharges: total > minimumCartAmount ? 0 : fixedDeliveryCharges
                                 }
                                 const deliveryInfo = {
                                     deliveryCost: total > minimumCartAmount ? 0 : fixedDeliveryCharges
                                 }
                                 const response = await updateOrderForAdmin(id, items, paymentInfo, deliveryInfo);
-                                if(response.success) {
+                                if (response.success) {
                                     setUpdatingOrderLoading(false);
                                     return toast({
                                         position: 'top',
                                         description: response.message,
                                         status: 'success',
                                         duration: 5000,
-                                        isClosable: true                            
+                                        isClosable: true
                                     })
                                 } else {
                                     return toast({
@@ -254,7 +285,7 @@ function EditOrderPage() {
                                     });
                                 }
 
-                                
+
                             }}
                         >Update {orderId}</Button>
 

@@ -70,7 +70,6 @@ function SingleOrderPage() {
     deliveryPartnerDetailById
   } = useOrderContext();
 
-  console.log(singleOrderStatus);
   const handleChange = async (e) => {
     const status = e.target.value;
     const response = await updateOrderStatus(status, id);
@@ -269,7 +268,6 @@ function SingleOrderPage() {
                 setAssignDeliveryDetailOpen(!isAssignDeliveryDetailOpen);
                 setShowLoadingSpinner(true)
                 const response = await deliveryPartnerDetailById(e.target.value);
-                console.log(response);
                 const type = '2'
                 const { name } = response;
                 const { phone } = response;

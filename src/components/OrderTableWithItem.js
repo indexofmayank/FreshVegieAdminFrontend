@@ -121,7 +121,6 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   };
 
   const handleMarkAsPaid = async () => {
-    console.log('Submitting amount:', amount);
     if (
       !amount
     ) {
@@ -157,7 +156,6 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
       });
     }
   }
-  console.log(paymentInfo);
 
   return (
     <Grid templateColumns="2fr 1fr" gap={6} p={4}>

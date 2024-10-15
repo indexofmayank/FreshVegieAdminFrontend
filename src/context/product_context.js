@@ -173,6 +173,8 @@ export const ProductProvider = ({ children }) => {
     if (name === 'shipping' || name === 'featured') {
       value = e.target.checked;
     }
+    console.log(name);
+    console.log(value);
     dispatch({ type: CREATE_NEW_PRODUCT, payload: { name, value } });
   };
 
