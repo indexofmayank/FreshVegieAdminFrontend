@@ -55,8 +55,13 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   const [paidLoading, setPaidLoading] = useState(false);
   const [cancelButtonLoading, setCancelButtonLoading] = useState(false);
   const [deliverButtonLoading, setDeliverButtonLoading] = useState(false);
+  const [orderItemsarr, setOrderItemsarr] = useState([]);
   const [showOrderStatusDisableButton, setOrderStatusDisableButton] = useState(false);
   const [showOrderStatusActiveButton, setOrderStatusActiveButton] = useState(false);
+  const [totalItemCount, setTotalItemCount] = useState(0);
+  const [totalTax, setTotalTax] = useState(0);
+  const [itemsGrandTotal, setItemsGrandTotal] = useState(0);
+  const [totalDiscount, setTotalDiscount] = useState(0);
   const toast = useToast();
   const firstPopover = useDisclosure();
   const secondPopover = useDisclosure();
@@ -79,8 +84,45 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
   }, []);
 
   useEffect(() => {
-    console.log(orderForCustomise);
+   
+    if(orderForCustomise.orderItems !== undefined){
+      // console.log(orderForCustomise);
+      console.log(orderForCustomise.orderItems);
+      setOrderItemsarr(orderForCustomise.orderItems)
+      
+    }
+   
   }, [orderForCustomise]);
+
+  useEffect(() => {
+    if (orderItemsarr.length > 0) {
+      let itemCount = 0;
+      let totalTaxAmount = 0;
+      let grandTotal = 0;
+      let totalDiscountAmount = 0;
+  
+      orderItemsarr.forEach(item => {
+        // Calculate total item count
+        itemCount += item.quantity;
+  
+        // Calculate total tax for each item
+        totalTaxAmount += item.tax * item.quantity;
+  
+        // Calculate grand total
+        grandTotal += item.offer_price * item.quantity;
+        totalDiscountAmount += (item.item_price - item.offer_price) * item.quantity;
+      });
+  
+      setTotalItemCount(itemCount);
+      setTotalTax(totalTaxAmount);
+      setItemsGrandTotal(grandTotal);
+      setTotalDiscount(totalDiscountAmount);
+    }
+  }, [orderItemsarr]);
+
+
+  console.log(userPaymentInfo);
+
 
   const handlePaymentStatus = async (e) => {
     const status = e.target.value;
@@ -177,9 +219,11 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
               </Tr>
             </Thead>
             <Tbody>
-              {orderItems.length > 0 ? (
-                orderItems.map((item, index) => {
-                  const { name, image, item_price, item_total, item_total_discount, item_total_tax, quantity } = item;
+              {orderItemsarr.length > 0 ? (
+                orderItemsarr.map((item, index) => {
+                  // console.log(item)
+                  // {item}
+                  const { name, image, item_price, offer_price, tax, item_total, item_total_discount, item_total_tax, quantity } = item;
                   return (
                     <Tr key={index}>
                       <Td>
@@ -196,10 +240,10 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
                         </Box>
                       </Td>
                       <Td>₹{item_price}</Td>
-                      <Td>₹{item_total_discount}</Td>
+                      <Td>₹{offer_price}</Td>
                       <Td>{quantity}</Td>
-                      <Td>₹{item_total_tax}</Td>
-                      <Td>₹{item_total}</Td>
+                      <Td>₹{tax}</Td>
+                      <Td>₹{quantity*offer_price}</Td>
                     </Tr>
                   );
                 })
@@ -212,28 +256,37 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
               )}
               <Td>Total</Td>
               <Td></Td>
-              <Td>{orderWithItems?.total_discount}</Td>
-              <Td>{orderWithItems?.total_item_count}</Td>
-              <Td>{orderWithItems?.total_tax}</Td>
-              <Td>{orderWithItems?.items_grand_total}</Td>
+              <Td></Td>
+              <Td>{totalItemCount}</Td>
+              <Td>{totalTax}</Td>
+              <Td>{itemsGrandTotal}</Td>
             </Tbody>
           </Table>
           {/* Additional Order Summary */}
           <Box mt={4}>
             <SimpleGrid columns={2} spacing={4}>
               <Text>Delivery Fee</Text>
-              <Text textAlign="right">Free</Text>
-              <Text>Additional Charges</Text>
-              <Text textAlign="right">₹0.00</Text>
-              <Text>Service Charges</Text>
-              <Text textAlign="right">₹0.00</Text>
+              <Text textAlign="right">{(paymentInfo.usedelivery ? paymentInfo.deliverycharges :'Free')}</Text>
+              {paymentInfo.useWallet ?
+              <>
+                 <Text>Wallet Amount Used</Text>
+                 <Text textAlign="right">₹{paymentInfo.walletAmount}</Text>
+              </>
+              :<></>}
+
+            {paymentInfo.useReferral ?
+              <>
+                  <Text>Referral Amount Used</Text>
+                  <Text textAlign="right">₹{paymentInfo.referralAmount}</Text>
+              </>
+              :<></>}
               <Text>Discounts</Text>
-              <Text textAlign="right">₹0.00</Text>
+              <Text textAlign="right">₹{totalDiscount}</Text>
               <Heading size="sm" mt={2}>
                 Grand Total
               </Heading>
               <Heading size="sm" mt={2} textAlign="right">
-                {orderWithItems?.grand_total}
+                {itemsGrandTotal+parseInt(paymentInfo.usedelivery ? paymentInfo.deliverycharges :0)}
               </Heading>
             </SimpleGrid>
           </Box>
@@ -267,7 +320,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
             <Heading size="sm" mb={2}>
               Payment Details
             </Heading>
-            <Text>Payment Mode: {paymentInfo.paymentType}</Text>
+            <Text>Payment Mode: {(paymentInfo.paymentType =='cod'?'Cash on Delivery':paymentInfo.paymentType)}</Text>
             <Text>Amount: ₹{paymentInfo.amount}</Text>
             <Text>Status: {paymentInfo.status}</Text>
             <HStack justifyContent="space-between" mt={4}>
@@ -344,7 +397,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
 
           <Box bg="white" shadow="md" p={4} borderRadius="md" >
             <HStack justifyContent='space-between' mt={4}>
-              <OrderWeightPopover totalWeight={totalWeight} weightWiseOrder={weightWiseOrder} />
+              <OrderWeightPopover totalWeight={totalItemCount} weightWiseOrder={weightWiseOrder} />
               <Button
                 colorScheme="red"
                 onClick={() => {

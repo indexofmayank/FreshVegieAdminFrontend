@@ -104,7 +104,6 @@ function OrdersTable({ orders, totalItem, page, totalPage, limit, itemFetchFunct
               } = order;
               return (
                 <Tr key={index} onClick={() => {
-                  console.log(id)
                   history.push(`/orders/${id}`);
                 }}>
                   <Td>{order_no}</Td>

@@ -68,7 +68,9 @@ export const OrderStatusProvider = ({children}) => {
         try {
             const response = await axios.get(`${getTotalOrderAvgValue_url}?period=${period}&startDate=${startDate}&endDate=${endDate}`);
             const {data} = response.data;
-            dispatch({type: GET_TOTALAVGCOUNT_SUCCESS, payload: data});
+            // console.log(data)
+            const formattedAvg = Number(data).toFixed(2);
+            dispatch({type: GET_TOTALAVGCOUNT_SUCCESS, payload: formattedAvg});
         } catch (error) {
             dispatch({type: GET_TOTALAVGCOUNT_ERROR});
         }
