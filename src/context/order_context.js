@@ -25,7 +25,8 @@ import {
   createOrder_url,
   getOrderForEditOrder_url,
   getStaticDeliveryInstructionsInfo_url,
-  getCustomiseOrderDetail_url
+  getCustomiseOrderDetail_url,
+  updateAdminOrder_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -457,6 +458,22 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
+  const updateOrderForAdmin = async (id, orderItems, paymentInfo, deliveryInfo, ) => {
+    console.log('we came here');
+    try {
+      const response = await axios.put(`${updateAdminOrder_url}${id}`, {
+       orderItems,
+       paymentInfo,
+       deliveryInfo
+      });
+      const {success, message} = response.data;
+      return {success, message};
+    } catch (error) {
+     const { message} = error;
+     return {success: true, message};
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, [currentUser]);
@@ -489,7 +506,8 @@ export const OrderProvider = ({ children }) => {
         createNewOrder,
         fetchOrderForEditOrder,
         fetchStaticDeliveryInstructionsInfo,
-        fetchOrderForCustomise
+        fetchOrderForCustomise,
+        updateOrderForAdmin
       }}
     >
       {children}
