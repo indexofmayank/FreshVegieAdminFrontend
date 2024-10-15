@@ -26,7 +26,9 @@ import {
   getOrderForEditOrder_url,
   getStaticDeliveryInstructionsInfo_url,
   getCustomiseOrderDetail_url,
-  updateAdminOrder_url
+  updateAdminOrder_url,
+  getUserBalanceFromWallet_url,
+  updateUserBalanceForWallet_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -461,7 +463,32 @@ export const OrderProvider = ({ children }) => {
       return {success, message};
     } catch (error) {
      const { message} = error;
-     return {success: true, message};
+     return {success: false, message};
+    }
+  }
+
+  const fetchUserBalanceFromWallet = async (id) => {
+    try {
+      const response = await axios.get(`${getUserBalanceFromWallet_url}${id}`);
+      const {success, balance} = response.data;
+      return {success, balance}
+    } catch (error) {
+      const {message} = error;
+      return {success: false, message}
+    }
+  }
+
+  const updateUserRefundAmountToWallet = async (id, amount) => {
+    try {
+      const response = await axios.post(`${updateUserBalanceForWallet_url}${id}`, {
+        amount,
+        description: 'refunded'
+      });
+      const {success} = response.data;
+      return {success};
+    } catch (error) {
+      const {message} = error;
+      return {success: false, message};
     }
   }
 
@@ -498,7 +525,9 @@ export const OrderProvider = ({ children }) => {
         fetchOrderForEditOrder,
         fetchStaticDeliveryInstructionsInfo,
         fetchOrderForCustomise,
-        updateOrderForAdmin
+        updateOrderForAdmin,
+        fetchUserBalanceFromWallet,
+        updateUserRefundAmountToWallet
       }}
     >
       {children}

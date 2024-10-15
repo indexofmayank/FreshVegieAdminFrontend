@@ -51,7 +51,9 @@ function EditOrderPage() {
         orderForEditOrder,
         fetchOrderForEditOrder,
         fetchStaticDeliveryInstructionsInfo,
-        updateOrderForAdmin
+        updateOrderForAdmin,
+        fetchUserBalanceFromWallet,
+        updateUserRefundAmountToWallet
     } = useOrderContext();
 
     const orderItems = orderForEditOrder?.[0]?.orderItems;
@@ -60,6 +62,7 @@ function EditOrderPage() {
     const isDeliveryUsed = orderForEditOrder?.[0]?.isDeliveryUsed || false;
     const deliverycharges = orderForEditOrder?.[0]?.deliverycharges || null;
     const discount = orderForEditOrder?.[0]?.discountPrice || null;
+    const userId = orderForEditOrder?.[0]?.userId || null;
     const [items, setItems] = useState([]);
     const [grandTotal, setGrandTotal] = useState(amount);
     const [updatedDeliveryCharges, setUpdatedDeliveryCharges] = useState(deliverycharges);
@@ -257,6 +260,38 @@ function EditOrderPage() {
                                 const total = items.reduce((acc, item) => {
                                     return acc + (item.offer_price * item.quantity);
                                 }, 0);
+
+                                const refundResponse = await fetchUserBalanceFromWallet(userId);
+
+                                if(refundResponse.success) {
+                                    const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout)
+                                    if(refundUpdateResponse.success) {
+                                        return toast({
+                                            position: 'top',
+                                            description: 'Amount refuned successfully',
+                                            status: 'info',
+                                            duration: 5000,
+                                            isClosable: true
+                                        })
+                                    } else {
+                                        return toast({
+                                            position: 'top',
+                                            description: 'Not able to refund amount',
+                                            status: 'error',
+                                            duration: 5000,
+                                            isClosable: true
+                                        })
+                                    }
+                                } else {
+                                    return toast({
+                                        position: 'top',
+                                        description: refundResponse.message,
+                                        status: 'error',
+                                        duration: 5000,
+                                        isClosable: true
+                                    });
+                                }
+
                                 const paymentInfo = {
                                     amount: grandTotal,
                                     usedelivery: total > minimumCartAmount ? false : true,
@@ -274,7 +309,7 @@ function EditOrderPage() {
                                         status: 'success',
                                         duration: 5000,
                                         isClosable: true
-                                    })
+                                    });
                                 } else {
                                     return toast({
                                         position: 'top',

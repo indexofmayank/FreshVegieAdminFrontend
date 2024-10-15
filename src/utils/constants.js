@@ -137,4 +137,6 @@ export const getOrderForEditOrder_url = `${domain}/api/orders/orderforedit/`;
 export const getStaticDeliveryInstructionsInfo_url = `${domain}/api/deliveryInstructions/`;
 export const getCustomiseOrderDetail_url = `${domain}/api/orders/orderforcustomise/`;
 export const updateAdminOrder_url = `${domain}/api/admin/editorder/`;
+export const getUserBalanceFromWallet_url = `${domain}/api/wallet/balance/`;
+export const updateUserBalanceForWallet_url = `${domain}/api/wallet/add/`;
 
