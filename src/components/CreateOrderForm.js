@@ -231,6 +231,7 @@ const CreateOrderForm = () => {
       amount: grandTotal,
       usedelivery: true,
       deliverycharges: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges),
+      payment_type: 'cod'
     }
     const deliveryInfo = {
       deliveryCost: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges)

@@ -24,7 +24,8 @@ import {
   getRecentOrderForTable_url,
   createOrder_url,
   getOrderForEditOrder_url,
-  getStaticDeliveryInstructionsInfo_url
+  getStaticDeliveryInstructionsInfo_url,
+  getCustomiseOrderDetail_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -69,7 +70,10 @@ import {
   CREATE_NEW_ORDER,
   GET_ORDERFOREDIT_BEGIN,
   GET_ORDERFOREDIT_ERROR,
-  GET_ORDERFOREDIT_SUCCESS
+  GET_ORDERFOREDIT_SUCCESS,
+  GET_ORDERFORCUSTOMISE_BEGIN,
+  GET_ORDERFORCUSTOMISE_ERROR,
+  GET_ORDERFORCUSTOMISE_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -115,6 +119,9 @@ const initialState = {
   orderForEditOrder_loading: false,
   orderForEditOrder_error: false,
   orderForEditOrder: [],
+  orderForCustomise_loading: false,
+  orderForCustomise_error: false,
+  orderForCustomise: {},
   new_order_address: {
     address_name: '',
     name: '',
@@ -439,6 +446,17 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
+  const fetchOrderForCustomise = async (id) => {
+    dispatch({type: GET_ORDERFORCUSTOMISE_BEGIN});
+    try {
+      const response = await axios.get(`${getCustomiseOrderDetail_url}${id}`);
+      const {data} = response.data;
+      dispatch({type: GET_ORDERFORCUSTOMISE_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_ORDERFORCUSTOMISE_ERROR});
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, [currentUser]);
@@ -470,7 +488,8 @@ export const OrderProvider = ({ children }) => {
         updateNewOrderAddressDetails,
         createNewOrder,
         fetchOrderForEditOrder,
-        fetchStaticDeliveryInstructionsInfo
+        fetchStaticDeliveryInstructionsInfo,
+        fetchOrderForCustomise
       }}
     >
       {children}

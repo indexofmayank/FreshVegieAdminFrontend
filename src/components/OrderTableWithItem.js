@@ -66,8 +66,22 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
     updateOrderStatusToCancelled,
     fetchSingleOrderStatus,
     udpateOrderStatusAsDelivered,
-    fetchUserOrderDeliveryInfo
+    fetchUserOrderDeliveryInfo,
+    orderForCustomise,
+    orderForCustomise_loading,
+    orderForCustomise_error,
+    fetchOrderForCustomise
   } = useOrderContext();
+
+
+  useEffect(() => {
+    fetchOrderForCustomise(id)
+  }, []);
+
+  useEffect(() => {
+    console.log(orderForCustomise);
+  }, [orderForCustomise]);
+
   const handlePaymentStatus = async (e) => {
     const status = e.target.value;
     if (!status) {
@@ -143,6 +157,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
       });
     }
   }
+  console.log(paymentInfo);
 
   return (
     <Grid templateColumns="2fr 1fr" gap={6} p={4}>

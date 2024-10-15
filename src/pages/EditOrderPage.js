@@ -33,7 +33,8 @@ import {
     Tr,
     Th,
     Td,
-  } from '@chakra-ui/react';
+    toast,
+} from '@chakra-ui/react';
 import {
     SidebarWithHeader,
 } from '../components';
@@ -51,8 +52,10 @@ function EditOrderPage() {
     } = useOrderContext();
 
     const orderItems = orderForEditOrder?.[0]?.orderItems;
-    const orderId = orderForEditOrder?.[0]?.orderId
+    const orderId = orderForEditOrder?.[0]?.orderId;
     const [items, setItems] = useState([]);
+    const [grandTotal, setGrandTotal] = useState(null);
+    const toast = useToast();
     const { id } = useParams();
 
     useEffect(() => {
@@ -65,7 +68,37 @@ function EditOrderPage() {
         }
     }, [orderItems]);
 
+    console.log(items);
 
+    const decrementCount = (index, incrementvalue, maxquantity, minquantity) => {
+        if (items[index].quantity === minquantity) {
+            return toast({
+                position: 'top',
+                title: 'Limit reacthed',
+                description: `minimum limit ${minquantity} at a time`,
+                status: 'warning',
+                isClosable: true
+            });
+        }
+        setItems((prevItems) =>
+            prevItems
+                .map((item, i) =>
+                    i === index && item.quantity > minquantity ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(incrementvalue) } : item
+                )
+                .filter((item) => item.quantity > 0)
+        );
+    };
+
+    const incrementCount = () => {
+        return toast({
+            position: 'top',
+            title: 'Limit reached',
+            description: `maximum limit 0 at a time`,
+            status: 'warning',
+            duration: 5000,
+            isClosable: true
+        });
+    }
 
     return (
         <SidebarWithHeader>
@@ -101,9 +134,9 @@ function EditOrderPage() {
                                             </Td>
                                             <Td>
                                                 <HStack>
-                                                    <Button onClick={() =>{}}>-</Button>
+                                                    <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
                                                     <Text>{item.quantity}</Text>
-                                                    <Button onClick={() =>{}}>+</Button>
+                                                    <Button onClick={() => incrementCount()}>+</Button>
                                                 </HStack>
                                             </Td>
                                             <Td>
@@ -123,6 +156,27 @@ function EditOrderPage() {
                             })}
 
                         </Table>
+
+                        {/* Total Section */}
+                        <Box mt={4} p={4} border="1px solid lightgray" borderRadius="md" bg="gray.50">
+                            <HStack justifyContent="space-between" mt={2}>
+                                <Text>No. of items:</Text>
+                                {/* <Text>{items.length}</Text> */}
+                            </HStack>
+                            <HStack justifyContent='space-between' mt={2}>
+                                <Text>Total Discount:</Text>
+                                {/* <Text>{totalDiscount}</Text> */}
+                            </HStack>
+                            <HStack justifyContent='space-between' mt={2}>
+                                <Text>Delivery fee:</Text>
+                                {/* {items.length === 0 ? (<Text>0</Text>) : grandTotal < minimumCartAmount ? (<Text>{deliveryCharges}</Text>) : (<Text>free</Text>)} */}
+                            </HStack>
+                            <HStack justifyContent="space-between" mt={2}>
+                                <Text>Total:</Text>
+                                {/* <Text>{`₹${grandTotal}`}</Text> */}
+                            </HStack>
+                        </Box>
+
 
                     </GridItem>
                 </Grid>
