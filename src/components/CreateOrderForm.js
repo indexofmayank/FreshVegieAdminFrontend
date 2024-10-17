@@ -23,6 +23,7 @@ const CreateOrderForm = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [grandTotal, setGrandTotal] = useState(null);
   const [totalDiscount, setTotalDiscount] = useState(null);
+  const [subtotal, setSubtotal] = useState(null);  
   const [createOrderLoadingState, setCreateOrderLoadingState] = useState(false);
   const [selectedCustomerAddresses, setSelectedCustomerAddresses] = useState([]);
   const [customerlist, setCustomerlist] = useState([]);
@@ -106,6 +107,7 @@ const CreateOrderForm = () => {
     // console.log(userId)
     // console.log(customerlist)
     setSelectedUser(userId);
+    setSelectedCustomerId(userId);
     const user = customerlist.find((user) => user._id == userId);
     // console.log(user)
     // console.log(user.address)
@@ -196,8 +198,13 @@ console.log(items)
   useEffect(() => {
     if (items.length === 0) {
       setGrandTotal(0);
+      setSubtotal(0)
       return;
     }
+
+    const subtotal = items.reduce((acc, item) => {
+      return acc + (item.item_price * item.quantity);
+    }, 0);
   
     const total = items.reduce((acc, item) => {
       const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
@@ -205,6 +212,7 @@ console.log(items)
     }, 0);
   
     setGrandTotal(total);  // Only the item total, without delivery charges
+    setSubtotal(subtotal)
   }, [items, minimumCartAmount, deliveryCharges]);
 
   const deliveryFee = grandTotal < minimumCartAmount && items.length > 0 ? deliveryCharges : 0;
@@ -272,13 +280,13 @@ useEffect(() => {
     };
     const orderItems = items.map((item) => {
       const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity, id } = item;
-
+      console.log(image)
       // Ensure image is a single string (get the first URL from the array or use a fallback)
       const imageString = Array.isArray(image) && image.length > 0 ? image[0] : '';
 
       return {
         name: name,
-        image: imageString, // Single image URL
+        image: image, // Single image URL
         quantity: quantity,
         item_price: item_price,
         offer_price: offer_price,
@@ -424,9 +432,13 @@ useEffect(() => {
               <Text>No. of items:</Text>
               <Text>{items.length}</Text>
             </HStack>
+            <HStack justifyContent="space-between" mt={2}>
+              <Text>Sub Total:</Text>
+              <Text>{`₹${subtotal}`}</Text>
+            </HStack>
             <HStack justifyContent='space-between' mt={2}>
               <Text>Total Discount:</Text>
-              <Text>{totalDiscount}</Text>
+              <Text>{`₹-${totalDiscount}`}</Text>
             </HStack>
             <HStack justifyContent="space-between" mt={2}>
               <Text>Delivery fee:</Text>
@@ -670,15 +682,18 @@ useEffect(() => {
           </SimpleGrid>
          
         </GridItem>
-        <GridItem colSpan={3}>
-        <Button
-            isLoading={createOrderLoadingState}
-            loadingText='Creating order'
-            colorScheme="blue"
-            mt={5}
-            onClick={handleCreateOrder}
-          >Create Order</Button>
-        </GridItem>
+       <GridItem colSpan={3}>
+    <Button
+        isLoading={createOrderLoadingState}
+        loadingText='Creating order'
+        colorScheme="blue"
+        mt={5}
+        onClick={handleCreateOrder}
+        isDisabled={!selectedUser || items.length === 0} // Disable if no user or no items in the cart
+    >
+        Create Order
+    </Button>
+</GridItem>
       
       </Grid>
     </VStack>
