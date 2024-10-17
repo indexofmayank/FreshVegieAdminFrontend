@@ -1,43 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Input,
-  Button,
-  VStack,
-  HStack,
-  Box,
-  Divider,
-  Image,
-  Text,
-  Grid,
-  GridItem,
-  Heading,
-  List,
-  ListItem,
-  FormControl,
-  FormLabel,
-  useToast,
-  SimpleGrid,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  useDisclosure,
-  ModalCloseButton,
-  toast,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-
+  Input,Button,VStack,HStack, Box, Divider, Image, Text, Grid, GridItem,Heading, List,ListItem, FormControl,FormLabel,useToast, SimpleGrid, useDisclosure, ModalCloseButton,toast, Table,Thead,Tbody,Tr, Th,Td,Select,option
 } from '@chakra-ui/react';
 
 import { useProductContext } from '../context/product_context';
 import { useUserContext } from '../context/user_context';
 import { useOrderContext } from '../context/order_context';
+import {useCustomerContext} from '../context/customer_context';
 import { FaTrash } from "react-icons/fa";
 
 
@@ -46,6 +15,9 @@ const CreateOrderForm = () => {
   const [searchTerm, setSearchTerm] = useState(''); 
   const [suggestions, setSuggestions] = useState([]); 
   const suggestionBoxRef = useRef(null); 
+  const {
+    customerwithaddress,
+} = useCustomerContext();
   const [customerNameSuggestion, setCustomerNameSuggestion] = useState([]);
   const [customerSearchTerm, setCustomerSearchTerm] = useState(''); 
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -53,9 +25,14 @@ const CreateOrderForm = () => {
   const [totalDiscount, setTotalDiscount] = useState(null);
   const [createOrderLoadingState, setCreateOrderLoadingState] = useState(false);
   const [selectedCustomerAddresses, setSelectedCustomerAddresses] = useState([]);
+  const [customerlist, setCustomerlist] = useState([]);
+  const [productlist, setProductlist] = useState([]);
+  const [uaddress, setUaddress] = useState([]);
   const [minimumCartAmount, setMinimumCartAmount] = useState(null);
   const [deliveryCharges, setDeliveryCharges] = useState(null);
-  const { productForCreateOrder, fetchProductForCreateOrder } = useProductContext();
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedproduct, setSelectedproduct] = useState('');
+  const { productForCreateOrder, fetchProductForCreateOrder,getAllProductForOrder,allproduct } = useProductContext();
   const { usernameForCreateOrder, fetchUserForCreateOrder, fetchUserById, fetchUserAddressById, userAddresses, fetchUserMetaDataForCreateOrder } = useUserContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -85,6 +62,10 @@ const CreateOrderForm = () => {
    }
    loadDeliveryData();
   })
+
+  // useEffect(() => {
+   
+  // }, [customerwithaddress]);
 
   // Fetch product suggestions when the search term changes
   useEffect(() => {
@@ -118,39 +99,61 @@ const CreateOrderForm = () => {
     }
   }, [userAddresses]);
 
-  // Close suggestion boxes when clicking outside
+
+  const onUserSelect = (event) => {
+    // const userId = event.target.value;
+    const userId = event.target.value;
+    // console.log(userId)
+    // console.log(customerlist)
+    setSelectedUser(userId);
+    const user = customerlist.find((user) => user._id == userId);
+    // console.log(user)
+    // console.log(user.address)
+    if (user) {
+      setUaddress(user.address);
+      setSelectedCustomerAddresses(user.address)
+    } else {
+      setSelectedCustomerAddresses([])
+      // setUaddress('');
+    }
+  };
+
+  const onProductSelect = (event) => {
+    // const userId = event.target.value;
+    const productId = event.target.value;
+    console.log(productId)
+    // // console.log(customerlist)
+    // setSelectedproduct(productId);
+    const product = productlist.find((product) => product._id == productId);
+    addItem(product)
+  };
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target)) {
-        setSuggestions([]);
-        setCustomerNameSuggestion([]);
-      }
-    };
+    if (customerwithaddress && customerwithaddress.length > 0) {
+      setCustomerlist(customerwithaddress);
+    }
+  }, [customerwithaddress]);
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
+  useEffect(() => {
+    if (allproduct && allproduct.data.length > 0) {
+      console.log("setting data")
+    setProductlist(allproduct.data)
+    }
+  }, [allproduct]);
   const addItem = (item) => {
-    console.log(item);
     setItems((prevItems) => [...prevItems, {
       id: item._id,
       name: item.name,
       image: item.image,
       item_price: item.price,
       offer_price: item.offer_price,
-      quantity: item.quantity,
+      quantity: item.product_detail_min,
       unit: item.information,
       incrementvalue: item.increment_value,
       maxquantity: item.product_detail_max,
       minquantity: item.product_detail_min
     }]);
-    setSearchTerm('');
-    setSuggestions([]);
   }
-
+console.log(items)
   const incrementCount = (index, incrementvalue, maxquantity, minquantity) => {
     if (items[index].quantity === maxquantity) {
       return toast({
@@ -190,33 +193,38 @@ const CreateOrderForm = () => {
     );
   };
 
-  // Calculate grand total whenever items change
   useEffect(() => {
-
-    if(grandTotal < minimumCartAmount) {
-      const total = items.reduce((acc, item) => {
-        const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
-        return acc + itemTotal;
-      }, 0);
-      const finalAmount = total + deliveryCharges;
-      setGrandTotal(finalAmount);
-    } else {
-      const total = items.reduce((acc, item) => {
-        const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
-        return acc + itemTotal;
-      }, 0);
-      setGrandTotal(total);
+    if (items.length === 0) {
+      setGrandTotal(0);
+      return;
     }
-
-  }, [items]);
-
-  useEffect(() => {
+  
     const total = items.reduce((acc, item) => {
-      const totalOfferPrice =  item.item_price * item.quantity - item.offer_price * item.quantity;
-      return acc + totalOfferPrice;
+      const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
+      return acc + itemTotal;
     }, 0);
-    setTotalDiscount(total);
-  }, [items]);
+  
+    setGrandTotal(total);  // Only the item total, without delivery charges
+  }, [items, minimumCartAmount, deliveryCharges]);
+
+  const deliveryFee = grandTotal < minimumCartAmount && items.length > 0 ? deliveryCharges : 0;
+
+// Calculate total discount whenever items change
+useEffect(() => {
+  const total = items.reduce((acc, item) => {
+    const totalOfferPrice = item.item_price * item.quantity - item.offer_price * item.quantity;
+    return acc + totalOfferPrice;
+  }, 0);
+  
+  setTotalDiscount(total);
+}, [items]);
+
+
+
+
+  const removeItem = (index) => {
+    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
+  };
 
 
 
@@ -337,45 +345,23 @@ const CreateOrderForm = () => {
             Create Order
           </Heading>
           <Box mb={4} position="relative">
-            <Input
-              placeholder="Search for products"
-              size="lg"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {suggestions.length > 0 && (
-              <List
-                ref={suggestionBoxRef}
-                position="absolute"
-                zIndex={1}
-                bg="white"
-                border="1px solid lightgray"
-                borderRadius="md"
-                mt={1}
-                w="100%"
-                maxH="200px"
-                overflowY="auto"
+          <Select
+                name='product'
+                focusBorderColor='brown.500'
+                value={selectedproduct} onChange={onProductSelect}
               >
-                {suggestions.map((product, index) => (
-                  <ListItem
-                    key={index}
-                    p={2}
-                    cursor="pointer"
-                    _hover={{ bg: 'gray.100' }}
-                    onClick={() => {
-                      addItem({ ...product, quantity: product.increment_value })
-                    }}
-                  >
-                    <HStack>
-                      <Image src={product.image} boxSize="30px" />
-                      <Text>{product.name}</Text>
-                    </HStack>
-                  </ListItem>
-                ))}
-              </List>
-            )}
+                 <option value="">Select a product</option>
+              {productlist.length > 0 ? (
+                productlist.map((product,index) =>{
+                //  console.log(users.name?users.name:'Na');
+                 return (
+                  // <></>
+                 <option key={product._id} value={product._id}>{(product.name?product.name:'Na')}</option>
+                 )
+               })
+              ):(<></>)}
+              </Select>
           </Box>
-
           {/* Added products */}
           <Table variant='simple'>
             {items.length > 0 && (
@@ -387,11 +373,13 @@ const CreateOrderForm = () => {
                   <Th>Offer price</Th>
                   <Th>Item price</Th>
                   <Th>Item total</Th>
+                  <Th>Action</Th>
                 </Tr>
               </Thead>
 
             )}
             {items.map((item, index) => {
+              console.log(item);
               const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity } = item;
               return (
                 <Tbody>
@@ -410,15 +398,19 @@ const CreateOrderForm = () => {
                       </HStack>
                     </Td>
                     <Td>
+                      {offer_price}
+                    </Td>
+                    <Td>
+                      {item_price}
+                    </Td>
+                    <Td>
                       {offer_price * quantity}
                     </Td>
                     <Td>
-                      {item_price * quantity}
+                    <Button colorScheme="red" onClick={() => removeItem(index)}>
+                      <FaTrash />
+                    </Button>
                     </Td>
-                    <Td>
-                      {offer_price * quantity}
-                    </Td>
-
                   </Tr>
                 </Tbody>
 
@@ -436,32 +428,96 @@ const CreateOrderForm = () => {
               <Text>Total Discount:</Text>
               <Text>{totalDiscount}</Text>
             </HStack>
-            <HStack justifyContent='space-between' mt={2}>
+            <HStack justifyContent="space-between" mt={2}>
               <Text>Delivery fee:</Text>
-             {items.length === 0 ? (<Text>0</Text>) : grandTotal < minimumCartAmount ? (<Text>{deliveryCharges}</Text>): (<Text>free</Text>)}
+              {deliveryFee > 0 ? <Text>{deliveryFee}</Text> : <Text>free</Text>}
             </HStack>
             <HStack justifyContent="space-between" mt={2}>
-              <Text>Total:</Text>
-              <Text>{`₹${grandTotal}`}</Text>
-            </HStack>
+            <Text>Total:</Text>
+            <Text>{`₹${grandTotal + deliveryFee}`}</Text>  {/* Add delivery fee to the grand total here */}
+          </HStack>
           </Box>
         </GridItem>
 
         {/* Customer and Address Section */}
         <GridItem colSpan={1}>
           <Heading size="md" mb={4}>
-            Add Customer
+            Select Customer
           </Heading>
-          <Input
-            placeholder="Enter Customer Name"
-            size="lg"
-            mb={4}
-            value={customerSearchTerm}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setCustomerSearchTerm(e.target.value);
-            }}
-          />
+          <Select
+                name='user'
+                focusBorderColor='brown.500'
+                value={selectedUser} onChange={onUserSelect}
+              >
+                 <option value="">Select a user</option>
+              {customerlist.length > 0 ? (
+                customerlist.map((users,index) =>{
+                //  console.log(users.name?users.name:'Na');
+                 return (
+                  // <></>
+                 <option key={users._id} value={users._id}>{(users.name?users.name:'Na')}</option>
+                 )
+               })
+              ):(<></>)}
+              </Select>
+          <Grid mt={5}>
+
+         
+           {uaddress && uaddress.map((data, index) => {
+                      const { address_name, name, phone, email, address, locality, city, pin_code, state, landmark } = data;
+                      return (
+                        <Box key={index} mb={4}>
+                          <Text fontWeight="bold">Address {index + 1}</Text>
+                          <Text>{address_name}</Text>
+                          <Text>{name}</Text>
+                          <Text>{phone}</Text>
+                          <Text>{email}</Text>
+                          <Text>{address}</Text>
+                          <Text>{locality}</Text>
+                          <Text>{landmark}</Text>
+                          <Text>{city},{pin_code},{state}</Text>
+                          <Button
+                            colorScheme="blue"
+                            mt={5}
+                            mb={5}
+                            onClick={(e) => {
+                              onClose();
+                              e.target.name = 'address_name';
+                              e.target.value = address_name
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'address';
+                              e.target.value = address
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'name';
+                              e.target.value = name;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'phone';
+                              e.target.value = phone;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'email';
+                              e.target.value = email;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'locality';
+                              e.target.value = locality;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'city';
+                              e.target.value = city;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'pin_code';
+                              e.target.value = pin_code
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'state';
+                              e.target.value = state;
+                              updateNewOrderAddressDetails(e);
+                              e.target.name = 'landmark';
+                              e.target.value = landmark;
+                              updateNewOrderAddressDetails(e);
+                            }}
+                          >Select user address </Button>
+                        </Box>
+                      );
+                    })}
+                   </Grid>
           {customerNameSuggestion.length > 0 && (
             <List
               position="absolute"
@@ -496,83 +552,14 @@ const CreateOrderForm = () => {
           {selectedCustomerId && (
             <>
               <Button
+                colorScheme="blue"
                 onClick={async () => {
                   onOpen();
                   console.log(userAddresses?.[0]?.address); // Debugging line
                 }}
               >
-                Select Address
+                Click to select customer Address
               </Button>
-
-              <Modal isOpen={isOpen} onClose={onClose} overflowY>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalHeader>{customerSearchTerm}'s Address</ModalHeader>
-                  <ModalCloseButton />
-                  <ModalBody>
-                    {userAddresses && userAddresses?.[0]?.address.map((data, index) => {
-                      const { address_name, name, phone, email, address, locality, city, pin_code, state, landmark } = data;
-                      return (
-                        <Box key={index} mb={4}>
-                          <Text fontWeight="bold">Address {index + 1}</Text>
-                          <Text>{address_name}</Text>
-                          <Text>{name}</Text>
-                          <Text>{phone}</Text>
-                          <Text>{email}</Text>
-                          <Text>{address}</Text>
-                          <Text>{locality}</Text>
-                          <Text>{landmark}</Text>
-                          <Text>{city}</Text>
-                          <Text>{pin_code}</Text>
-                          <Text>{state}</Text>
-                          <Button
-                            onClick={(e) => {
-                              onClose();
-                              e.target.name = 'address_name';
-                              e.target.value = address_name
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'address';
-                              e.target.value = address
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'name';
-                              e.target.value = name;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'phone';
-                              e.target.value = phone;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'email';
-                              e.target.value = email;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'locality';
-                              e.target.value = locality;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'city';
-                              e.target.value = city;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'pin_code';
-                              e.target.value = pin_code
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'state';
-                              e.target.value = state;
-                              updateNewOrderAddressDetails(e);
-                              e.target.name = 'landmark';
-                              e.target.value = landmark;
-                              updateNewOrderAddressDetails(e);
-                            }}
-                          >Select</Button>
-                        </Box>
-                      );
-                    })}
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <Button colorScheme='blue' mr={3} onClick={onClose}>
-                      Close
-                    </Button>
-                    <Button variant='ghost'>Secondary Action</Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
             </>
           )}
           <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto' mt={4}>
@@ -681,7 +668,10 @@ const CreateOrderForm = () => {
               />
             </FormControl>
           </SimpleGrid>
-          <Button
+         
+        </GridItem>
+        <GridItem colSpan={3}>
+        <Button
             isLoading={createOrderLoadingState}
             loadingText='Creating order'
             colorScheme="blue"
@@ -689,6 +679,7 @@ const CreateOrderForm = () => {
             onClick={handleCreateOrder}
           >Create Order</Button>
         </GridItem>
+      
       </Grid>
     </VStack>
   );

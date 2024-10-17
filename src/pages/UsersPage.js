@@ -11,6 +11,7 @@ function UsersPage () {
 
     const {
         customers,
+        customerwithaddress,
         customer_loading: loading,
         customer_error: error,
         fetchCustomers,
@@ -19,6 +20,8 @@ function UsersPage () {
     const handleRefresh = async () => {
         await fetchCustomers();
     };
+    console.log(customerwithaddress);
+    console.log(customers);
 
     if (loading) {
         return (

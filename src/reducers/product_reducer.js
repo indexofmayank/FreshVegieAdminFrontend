@@ -16,7 +16,10 @@ import {
   GET_PRODUCTBYNAMEDROPDOWN_BEGIN,
   GET_PRODUCTBYNAMEDROPDOWN_ERROR,
   GET_PRODUCTBYNAMEDROPDOWN_SUCCESS,
-  RESET_NEW_PRODUCT 
+  RESET_NEW_PRODUCT ,
+  GET_ALLPRODUCTS_BEGIN,
+  GET_ALLPRODUCTS_ERROR,
+  GET_ALLPRODUCTS_SUCCESS,
 } from '../actions';
 
 const product_reducer = (state, action) => {
@@ -136,6 +139,28 @@ const product_reducer = (state, action) => {
       productByName: action.payload
     }
   }
+  
+  if(action.type === GET_ALLPRODUCTS_BEGIN) {
+    return {...state,
+      allproduct_loading: true,
+      allproduct_error: false
+    }
+  }
+
+  if(action.type === GET_ALLPRODUCTS_ERROR) {
+    return {...state,
+      allproduct_loading: false,
+      allproduct_error: true
+    }
+  }
+  if(action.type ===GET_ALLPRODUCTS_SUCCESS) {
+    return {
+      ...state,
+      allproduct_loading: false,
+      allproduct: action.payload
+    }
+  }
+
   if (action.type === RESET_NEW_PRODUCT) {
     return {
       ...state,
