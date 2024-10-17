@@ -9,7 +9,6 @@ import { useOrderContext } from '../context/order_context';
 import {useCustomerContext} from '../context/customer_context';
 import { FaTrash } from "react-icons/fa";
 
-
 const CreateOrderForm = () => {
   const [items, setItems] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(''); 
@@ -33,6 +32,7 @@ const CreateOrderForm = () => {
   const [deliveryCharges, setDeliveryCharges] = useState(null);
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedproduct, setSelectedproduct] = useState('');
+  const [showaddAddressbox, setShowaddAddressbox] = useState(false);
   const { productForCreateOrder, fetchProductForCreateOrder,getAllProductForOrder,allproduct } = useProductContext();
   const { usernameForCreateOrder, fetchUserForCreateOrder, fetchUserById, fetchUserAddressById, userAddresses, fetchUserMetaDataForCreateOrder } = useUserContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -108,15 +108,26 @@ const CreateOrderForm = () => {
     // console.log(customerlist)
     setSelectedUser(userId);
     setSelectedCustomerId(userId);
+    // updateNewOrderAddressDetails(null)
     const user = customerlist.find((user) => user._id == userId);
     // console.log(user)
     // console.log(user.address)
-    if (user) {
+    if (user.address.length> 0) {
       setUaddress(user.address);
       setSelectedCustomerAddresses(user.address)
+      setShowaddAddressbox(false)
     } else {
+      toast({
+        position: 'top',
+        title: 'Address Error',
+        description: `No Address is found for ${user.name} .`,
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      });
       setSelectedCustomerAddresses([])
-      // setUaddress('');
+      setUaddress([]);
+      setShowaddAddressbox(true)
     }
   };
 
@@ -137,11 +148,20 @@ const CreateOrderForm = () => {
 
   useEffect(() => {
     if (allproduct && allproduct.data.length > 0) {
-      console.log("setting data")
+      // console.log("setting data")
     setProductlist(allproduct.data)
     }
   }, [allproduct]);
+
+
+
   const addItem = (item) => {
+
+   const existingItemIndex = items.findIndex(existingItem => existingItem.id === item._id);
+console.log(item);
+  
+  if (existingItemIndex === -1 && item.stock > 0 && item.product_status) {
+
     setItems((prevItems) => [...prevItems, {
       id: item._id,
       name: item.name,
@@ -154,7 +174,38 @@ const CreateOrderForm = () => {
       maxquantity: item.product_detail_max,
       minquantity: item.product_detail_min
     }]);
-  }
+} else if (existingItemIndex !== -1) {
+  // Optionally, you can show a toast if the item is already in the cart
+  toast({
+    position: 'top',
+    title: 'Product is already in the cart',
+    description: `${item.name} is already added to the cart.`,
+    status: 'warning',
+    duration: 5000,
+    isClosable: true,
+  });
+} else if (item.stock === 0) {
+  // Optionally, you can show a toast if the stock is zero
+  toast({
+    position: 'top',
+    title: 'Out of Stock',
+    description: `${item.name} is currently out of stock.`,
+    status: 'warning',
+    duration: 5000,
+    isClosable: true,
+  });
+} else if (!item.status) {
+  // Optionally, you can show a toast if the item's status is false
+  toast({
+    position: 'top',
+    title: 'Item Unavailable',
+    description: `${item.name} is currently unavailable.`,
+    status: 'warning',
+    duration: 5000,
+    isClosable: true,
+  });
+}
+}
 console.log(items)
   const incrementCount = (index, incrementvalue, maxquantity, minquantity) => {
     if (items[index].quantity === maxquantity) {
@@ -246,11 +297,11 @@ useEffect(() => {
     const paymentInfo = {
       amount: grandTotal,
       usedelivery: true,
-      deliverycharges: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges),
+      deliverycharges: grandTotal > minimumCartAmount ? parseInt(0) : parseInt(deliveryCharges),
       payment_type: 'cod'
     }
     const deliveryInfo = {
-      deliveryCost: grandTotal > 100 ? parseInt(0) : parseInt(deliveryCharges)
+      deliveryCost: grandTotal > minimumCartAmount ? parseInt(0) : parseInt(deliveryCharges)
     }
     const shippingAddress = {
       billingAddress: {
@@ -316,6 +367,10 @@ useEffect(() => {
     console.log(response);
     if (response.success) {
       setCreateOrderLoadingState(false);
+      setItems([]);
+      setUaddress([]);
+      setSelectedUser('');
+      setShowaddAddressbox(false);
       return toast({
         position: 'top',
         description: response.message,
@@ -323,7 +378,9 @@ useEffect(() => {
         duration: 5000,
         isClosable: true
       });
+    
     } else {
+      setCreateOrderLoadingState(false);
       return toast({
         position: 'top',
         description: response.message,
@@ -494,6 +551,7 @@ useEffect(() => {
                             mb={5}
                             onClick={(e) => {
                               onClose();
+                              setShowaddAddressbox(true);
                               e.target.name = 'address_name';
                               e.target.value = address_name
                               updateNewOrderAddressDetails(e);
@@ -530,57 +588,14 @@ useEffect(() => {
                       );
                     })}
                    </Grid>
-          {customerNameSuggestion.length > 0 && (
-            <List
-              position="absolute"
-              zIndex={1}
-              bg="white"
-              border="1px solid lightgray"
-              borderRadius="md"
-              mt={1}
-              w="100%"
-              maxH="200px"
-              overflowY="auto"
-            >
-              {customerNameSuggestion.map((customer, index) => {
-                const { name, _id } = customer;
-                return (
-                  <ListItem
-                    key={index}
-                    p={2}
-                    _hover={{ bg: 'gray.100' }}
-                    onClick={() => {
-                      setCustomerSearchTerm(name);
-                      setCustomerNameSuggestion([]); // Clear the customer name suggestions
-                      setSelectedCustomerId(_id);
-                    }}
-                  >
-                    <Text>{name}</Text>
-                  </ListItem>
-                )
-              })}
-            </List>
-          )}
-          {selectedCustomerId && (
-            <>
-              <Button
-                colorScheme="blue"
-                onClick={async () => {
-                  onOpen();
-                  console.log(userAddresses?.[0]?.address); // Debugging line
-                }}
-              >
-                Click to select customer Address
-              </Button>
-            </>
-          )}
+            {(showaddAddressbox ?
           <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto' mt={4}>
             <Heading size="md" mb={4} mt={4}>
               Add Address
             </Heading>
 
             <FormControl>
-              <FormLabel>Address name</FormLabel>
+              <FormLabel>Address name *</FormLabel>
               <Input
                 placeholder='Address name'
                 name='address_name'
@@ -589,58 +604,9 @@ useEffect(() => {
                 onChange={updateNewOrderAddressDetails}
               />
             </FormControl>
+           
             <FormControl>
-              <FormLabel>Address</FormLabel>
-              <Input
-                placeholder='Address'
-                name='address'
-                focusBorderColor='brown.500'
-                value={address}
-                onChange={updateNewOrderAddressDetails}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>City</FormLabel>
-              <Input
-                placeholder='City'
-                name='city'
-                focusBorderColor='brown.500'
-                value={city}
-                onChange={updateNewOrderAddressDetails}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Email</FormLabel>
-              <Input
-                placeholder='Email'
-                name='email'
-                focusBorderColor='brown.500'
-                value={email}
-                onChange={updateNewOrderAddressDetails}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Landmark</FormLabel>
-              <Input
-                placeholder='Landmark'
-                name='landmark'
-                focusBorderColor='brown.500'
-                value={landmark}
-                onChange={updateNewOrderAddressDetails}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Locality</FormLabel>
-              <Input
-                placeholder='Locality'
-                name='locality'
-                focusBorderColor='brown.500'
-                value={locality}
-                onChange={updateNewOrderAddressDetails}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name *</FormLabel>
               <Input
                 placeholder='Name'
                 name='name'
@@ -650,7 +616,7 @@ useEffect(() => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Phone</FormLabel>
+              <FormLabel>Phone*</FormLabel>
               <Input
                 placeholder='Phone'
                 name='phone'
@@ -660,7 +626,58 @@ useEffect(() => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Pin code</FormLabel>
+              <FormLabel>Email(Optional)</FormLabel>
+              <Input
+                placeholder='Email'
+                name='email'
+                focusBorderColor='brown.500'
+                value={email}
+                onChange={updateNewOrderAddressDetails}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Address*</FormLabel>
+              <Input
+                placeholder='Address'
+                name='address'
+                focusBorderColor='brown.500'
+                value={address}
+                onChange={updateNewOrderAddressDetails}
+              />
+            </FormControl>
+          
+            <FormControl>
+              <FormLabel>Landmark (Optional)</FormLabel>
+              <Input
+                placeholder='Landmark'
+                name='landmark'
+                focusBorderColor='brown.500'
+                value={landmark}
+                onChange={updateNewOrderAddressDetails}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Locality (Optional)</FormLabel>
+              <Input
+                placeholder='Locality'
+                name='locality'
+                focusBorderColor='brown.500'
+                value={locality}
+                onChange={updateNewOrderAddressDetails}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>City*</FormLabel>
+              <Input
+                placeholder='City'
+                name='city'
+                focusBorderColor='brown.500'
+                value={city}
+                onChange={updateNewOrderAddressDetails}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Pin code *</FormLabel>
               <Input
                 placeholder='Pin code'
                 name='pin_code'
@@ -670,7 +687,7 @@ useEffect(() => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>State</FormLabel>
+              <FormLabel>State*</FormLabel>
               <Input
                 placeholder='State'
                 name='state'
@@ -680,7 +697,7 @@ useEffect(() => {
               />
             </FormControl>
           </SimpleGrid>
-         
+         :<></>)}
         </GridItem>
        <GridItem colSpan={3}>
     <Button
