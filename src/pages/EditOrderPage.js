@@ -50,7 +50,7 @@ function EditOrderPage() {
         orderForEditOrder_error,
         orderForEditOrder,
         fetchOrderForEditOrder,
-        fetchStaticDeliveryInstructionsInfo,
+        // fetchStaticDeliveryInstructionsInfo,
         updateOrderForAdmin,
         fetchUserBalanceFromWallet,
         updateUserRefundAmountToWallet
@@ -82,17 +82,21 @@ function EditOrderPage() {
         const total = items.reduce((acc, item) => {
             return acc + (item.offer_price * item.quantity);
         }, 0);
-        if (total < minimumCartAmount) {
-            const finalAmount = total + fixedDeliveryCharges;
-            const refund = parseInt(amount) - parseInt(total) - parseInt(fixedDeliveryCharges)
-            setDeliveryFeeText(fixedDeliveryCharges);
+        // if (total < minimumCartAmount) {
+            const finalAmount = total + deliverycharges;
+            const refund = amount - total
+            console.log(refund);
+            console.log(total);
+            console.log(amount);
+            console.log(finalAmount);
+            // setDeliveryFeeText(deliverycharges);
             setGrandTotal(finalAmount);
             setRefundAmount(refund);
 
-        } else {
-            setGrandTotal(total);
-            setDeliveryFeeText('free');
-        }
+        // } else {
+            // setGrandTotal(total);
+            // setDeliveryFeeText('free');
+        // }
     }, [items, fixedDeliveryCharges, minimumCartAmount]);
 
     useEffect(() => {
@@ -105,14 +109,16 @@ function EditOrderPage() {
 
 
 
-    useEffect(() => {
-        const loadDeliveryData = async () => {
-            const response = await fetchStaticDeliveryInstructionsInfo()
-            setMinimumCartAmount(response?.data?.minimumcart_amount);
-            setFixedDeliveryCharges(response?.data?.delivery_charges);
-        }
-        loadDeliveryData();
-    });
+
+
+    // useEffect(() => {
+    //     const loadDeliveryData = async () => {
+    //         const response = await fetchStaticDeliveryInstructionsInfo()
+    //         setMinimumCartAmount(response?.data?.minimumcart_amount);
+    //         setFixedDeliveryCharges(response?.data?.delivery_charges);
+    //     }
+    //     loadDeliveryData();
+    // });
 
     useEffect(() => {
         fetchOrderForEditOrder(id)
@@ -124,20 +130,49 @@ function EditOrderPage() {
         }
     }, [orderItems]);
 
+    console.log(orderItems);
 
-
-    const decrementCount = (index, incrementvalue, maxquantity, minquantity) => {
-        setItems((prevItems) =>
-            prevItems
-                .map((item, i) =>
-                    i === index ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(item.incrementvalue) } : item
+    // const decrementCount = (index,currentquantity, incrementvalue, maxquantity, minquantity) => {
+    //     // if (currentquantity - incrementvalue === 0) {
+    //     //     console.log("unable to decreasse quantity")
+    //     //     // dispatch({ type: 'REMOVE_FROM_CART', payload: { id } });
+    //     // }else{
+    //         setItems((prevItems) =>
+    //         prevItems
+    //             .map((item, i) =>
+    //                 i === index ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(item.incrementvalue) } : item
+    //             )
+    //             .filter((item) => item.quantity > 0)
+    //     );
+    //     // }
+        
+    // };
+    const decrementCount = (index, currentQuantity,minquantity,maxquantity,incrementvalue) => {
+        // console.log(index, currentQuantity,minquantity,maxquantity,incrementValue)
+        console.log(currentQuantity - incrementvalue,minquantity);
+        if (currentQuantity - incrementvalue < minquantity) {
+            // Show a warning if attempting to reduce below the minimum quantity
+            return toast({
+                position: 'top',
+                title: 'Cannot decrease quantity',
+                description: 'Quantity cannot be less than 1.',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            // Update item quantity
+            setItems((prevItems) =>
+                prevItems.map((item, i) =>
+                    i === index ? { ...item, quantity: parseFloat(currentQuantity) - parseFloat(incrementvalue) } : item
                 )
-                .filter((item) => item.quantity > 0)
-        );
+            );
+        }
     };
+    
 
-    const incrementCount = () => {
-
+    const incrementCount = (index, currentQuantity,minquantity,maxquantity,incrementvalue) => {
+        if (currentQuantity + incrementvalue > maxquantity) {
         return toast({
             position: 'top',
             title: 'Limit reached',
@@ -146,7 +181,71 @@ function EditOrderPage() {
             duration: 5000,
             isClosable: true
         });
+    } else {
+        // Update item quantity
+        setItems((prevItems) =>
+            prevItems.map((item, i) =>
+                i === index ? { ...item, quantity: parseFloat(currentQuantity) + parseFloat(incrementvalue) } : item
+            )
+        );
     }
+    }
+
+    // const calculateTotals = () => {
+    //     const total = items.reduce((acc, item) => acc + (item.offer_price * item.quantity), 0);
+    //     setGrandTotal(total);
+    //     // setRefundAmount(amount - total);
+    // };
+
+    const handleUpdateOrder = async () => {
+        setUpdatingOrderLoading(true);
+
+        // Calculate totals before updating the order
+        // calculateTotals();
+
+        try {
+            const refundResponse = await fetchUserBalanceFromWallet(userId);
+            if (refundResponse.success) {
+                const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout);
+                if (refundUpdateResponse.success) {
+                    toast({
+                        position: 'top',
+                        description: 'Amount refunded successfully',
+                        status: 'info',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                }
+            } else {
+                throw new Error(refundResponse.message);
+            }
+
+            const paymentInfo = { amount: grandTotal };
+            const response = await updateOrderForAdmin(id, items, paymentInfo);
+            if (response.success) {
+                toast({
+                    position: 'top',
+                    description: response.message,
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            } else {
+                throw new Error(response.message);
+            }
+        } catch (error) {
+            toast({
+                position: 'top',
+                description: error.message || 'Unable to update order',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        } finally {
+            setUpdatingOrderLoading(false);
+        }
+    };
+
 
     const handleCheckboxChange = (e) => {
         console.log('Checkbox event triggered');  // To ensure the event is firing
@@ -176,6 +275,7 @@ function EditOrderPage() {
                                 </Thead>
                             )}
                             {items.map((item, index) => {
+                                // console.log( item.quantity,item.minquantity,item.maxquantity, item.incrementvalue);
                                 const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity } = item;
                                 return (
                                     <Tbody>
@@ -188,9 +288,12 @@ function EditOrderPage() {
                                             </Td>
                                             <Td>
                                                 <HStack>
-                                                    <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
+                                                <Button 
+                                                        onClick={() => decrementCount(index, item.quantity,item.minquantity,item.maxquantity, item.incrementvalue)} 
+                                                        isDisabled={item.quantity <= item.minquantity}
+                                                    >-</Button>
                                                     <Text>{item.quantity}</Text>
-                                                    <Button onClick={() => incrementCount()}>+</Button>
+                                                    <Button onClick={() => incrementCount(index, item.quantity,item.minquantity,item.maxquantity, item.incrementvalue)} isDisabled={item.quantity >= item.quantity}>+</Button>
                                                 </HStack>
                                             </Td>
                                             <Td>
@@ -223,7 +326,7 @@ function EditOrderPage() {
                             </HStack>
                             <HStack justifyContent='space-between' mt={2}>
                                 <Text>Delivery fee:</Text>
-                                <Text>{deliveryFeeText}</Text>
+                                <Text>{(isDeliveryUsed?deliverycharges:'Free')}</Text>
                             </HStack>
                             <HStack justifyContent="space-between" mt={2}>
                                 <Text>Total:</Text>
@@ -252,77 +355,13 @@ function EditOrderPage() {
 
                         <Button
                             isLoading={updatingOrderLoading}
-                            loadingText={`updating ${orderId || null}`}
+                            loadingText={`Updating ${orderId || null}`}
                             colorScheme="blue"
                             mt={2}
-                            onClick={async () => {
-                                setUpdatingOrderLoading(true);
-                                const total = items.reduce((acc, item) => {
-                                    return acc + (item.offer_price * item.quantity);
-                                }, 0);
-
-                                const refundResponse = await fetchUserBalanceFromWallet(userId);
-
-                                if(refundResponse.success) {
-                                    const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout)
-                                    if(refundUpdateResponse.success) {
-                                        return toast({
-                                            position: 'top',
-                                            description: 'Amount refuned successfully',
-                                            status: 'info',
-                                            duration: 5000,
-                                            isClosable: true
-                                        })
-                                    } else {
-                                        return toast({
-                                            position: 'top',
-                                            description: 'Not able to refund amount',
-                                            status: 'error',
-                                            duration: 5000,
-                                            isClosable: true
-                                        })
-                                    }
-                                } else {
-                                    return toast({
-                                        position: 'top',
-                                        description: refundResponse.message,
-                                        status: 'error',
-                                        duration: 5000,
-                                        isClosable: true
-                                    });
-                                }
-
-                                const paymentInfo = {
-                                    amount: grandTotal,
-                                    usedelivery: total > minimumCartAmount ? false : true,
-                                    deliverycharges: total > minimumCartAmount ? 0 : fixedDeliveryCharges
-                                }
-                                const deliveryInfo = {
-                                    deliveryCost: total > minimumCartAmount ? 0 : fixedDeliveryCharges
-                                }
-                                const response = await updateOrderForAdmin(id, items, paymentInfo, deliveryInfo);
-                                if (response.success) {
-                                    setUpdatingOrderLoading(false);
-                                    return toast({
-                                        position: 'top',
-                                        description: response.message,
-                                        status: 'success',
-                                        duration: 5000,
-                                        isClosable: true
-                                    });
-                                } else {
-                                    return toast({
-                                        position: 'top',
-                                        description: response.message || 'Not able to udpate',
-                                        status: 'error',
-                                        duration: 5000,
-                                        isClosable: true
-                                    });
-                                }
-
-
-                            }}
-                        >Update {orderId}</Button>
+                            onClick={handleUpdateOrder} // Call the refactored function here
+                        >
+                            Update {orderId}
+                        </Button>
 
                     </GridItem>
                 </Grid>
