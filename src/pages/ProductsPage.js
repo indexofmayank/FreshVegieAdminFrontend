@@ -1,14 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ProductsTable,
   SidebarWithHeader,
   CreateNewProductModal,
 } from '../components';
-import { HStack, VStack, Spinner, Heading, Button } from '@chakra-ui/react';
+import { HStack, VStack, Spinner, Heading, Button, FormControl, FormLabel, Input, List, ListItem, Box, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useProductContext } from '../context/product_context';
 import FilterComponent from '../components/FilterComponent';
 import SearchBox from '../components/SearchBox';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 function ProductsPage() {
   const {
@@ -16,14 +17,19 @@ function ProductsPage() {
     products_loading: loading,
     products_error: error,
     fetchProducts,
+    fetchProductByNameForSearch
   } = useProductContext();
 
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [suggestionList, setSuggestionList] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 5,
     totalPage: 0,
     totalItems: 0,
-    })
+  })
 
   useEffect(() => {
     setPagination({
@@ -32,17 +38,23 @@ function ProductsPage() {
       totalPage: products.totalPage || 0,
       totalItems: products.totalProducts || 0,
     });
-  }, [ ]);
+  }, []);
+
+  // useEffect(() => {
+  //   fetchProducts(pagination.page, pagination.limit);
+  // }, []);
+
 
   useEffect(() => {
-    fetchProducts(pagination.page, pagination.limit);
-  }, []);
+    console.log(suggestionList);
+  }, [suggestionList]);
 
 
 
   const handleRefresh = async () => {
     await fetchProducts(pagination.page, pagination.limit);
   };
+
 
   if (loading) {
     return (
@@ -98,14 +110,51 @@ function ProductsPage() {
         >
           Refresh
         </Button>
+        <FormControl mt={4} >
+          <InputGroup>
+          <Input
+            placeholder='Search for product'
+            name='Search Query'
+            focusBorderColor='brown.500'
+            value={searchQuery}
+            onChange={async (event) => {
+              setSearchQuery(event.target.value);
+              const response = await fetchProductByNameForSearch(event.target.value);
+              const { data } = response;
+              setSuggestionList(data);
+            }}
+          />
+          <InputRightElement>
+            <IconButton
+                aria-label='Open dropdown'
+                // icon={isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
+                size='sm'
+                variant='ghost'
+                onClick={() => {console.log('clicked')}}
+            />
+          </InputRightElement>
+          {isDropdownOpen && (
+            <Box
+            maxHeight="200px"
+            overflowY="auto"
+            borderWidth="1px"
+            borderRadius="md"
+            mt="2"
+            zIndex="10"
+            bg="white"
+            position="absolute"
+            width="100%"
+            >
+
+            </Box>
+          )}
+          </InputGroup>
+        </FormControl>
       </HStack>
-      <HStack>
-      {/* <SearchBox /> */}
-      {/* <FilterComponent /> */}
-      </HStack>
-      <ProductsTable 
-        products={products.data} 
-        pagination={pagination} 
+
+      <ProductsTable
+        products={products.data}
+        pagination={pagination}
         setPagination={setPagination}
       />
     </SidebarWithHeader>

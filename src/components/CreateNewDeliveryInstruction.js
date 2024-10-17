@@ -26,9 +26,27 @@ import {
     Stack
 } from '@chakra-ui/react';
 
+import {getStaticDeliveryInstructionsInfo_url} from '../utils/constants';
+import axios from 'axios';
+
 function CreateNewDeliveryInstruction() {
 
+
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [deliveryInstructionsData, setDeliveryInstructionsData] = useState({
+        minimumcart_amount: null,
+        delivery_charges: null,
+        initial_rewardpoint: null
+    });
+
+    useEffect(() => {
+        
+        const loadData = async() => {
+            const response = await axios.get(getStaticDeliveryInstructionsInfo_url);
+            console.log(response);
+        }
+        loadData();
+    }, []);
 
     const initialRef = useRef();
 

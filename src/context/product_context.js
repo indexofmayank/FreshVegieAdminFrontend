@@ -11,7 +11,8 @@ import {
   singleProductForUpdate_url,
   getProductForCreateOrder_url,
   getProductDropdown_url,
-  getAllProductForOrder_url
+  getAllProductForOrder_url,
+  getProductDropdownForSearch_url
 } from '../utils/constants';
 import {
   CREATE_NEW_PRODUCT,
@@ -104,10 +105,10 @@ export const ProductContext = React.createContext();
 export const ProductProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchProducts = async (newPage, limit) => {
+  const fetchProducts = async (newPage, limit, name='') => {
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
-      const response = await axios.get(`${productsTable_url}?page=${newPage}&limit=${limit}`);
+      const response = await axios.get(`${productsTable_url}?page=${newPage}&limit=${limit}&name=${name}`);
       const { data } = response;
       dispatch({ type: GET_PRODUCTS_SUCCESS, payload: data });
     } catch (error) {
@@ -258,6 +259,19 @@ export const ProductProvider = ({ children }) => {
     console.log("Resetting new product");
     dispatch({ type: RESET_NEW_PRODUCT });
   };
+
+  const fetchProductByNameForSearch = async (name='') => {
+    console.log(name);
+    try {
+      const response = await axios.get(`${getProductDropdownForSearch_url}?name=${name}`);
+      const {success, data} = response.data;
+      console.log(data);
+      return {success, data};
+    } catch (error) {
+      const {success, message} = error.message;
+      return {success, message};
+    }
+  }
   
 
   useEffect(() => {
@@ -281,7 +295,8 @@ export const ProductProvider = ({ children }) => {
         fetchProductForCreateOrder,
         fetchProductByNameForDropdown,
         resetNewProduct,
-        getAllProductForOrder
+        getAllProductForOrder,
+        fetchProductByNameForSearch
       }}
     >
       {children}
