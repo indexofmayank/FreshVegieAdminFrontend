@@ -19,7 +19,8 @@ import {
   CreateNewOrderPage,
   DealOfTheDayPage,
   DeliveryPage,
-  EditOrderPage
+  EditOrderPage,
+  BulkimageuploadPage
 } from './pages';
 
 
@@ -80,6 +81,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/deliveryinstruction'>
           <DeliveryPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/imageupload'>
+          <BulkimageuploadPage />
         </PrivateRoute>
       </Switch>
     </Router>

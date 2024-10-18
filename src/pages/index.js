@@ -17,7 +17,7 @@ import CreateNewOrderPage from './CreateNewOrderPage';
 import DealOfTheDayPage from './DealOfTheDayPage';
 import DeliveryPage from './DeliveryPage';
 import EditOrderPage from './EditOrderPage';
-
+import BulkimageuploadPage from './BulkimageuploadPage';
 export {
   Dashboard,
   LoginPage,
@@ -37,5 +37,6 @@ export {
   CreateNewOrderPage,
   DealOfTheDayPage,
   DeliveryPage,
-  EditOrderPage
+  EditOrderPage,
+  BulkimageuploadPage
 };

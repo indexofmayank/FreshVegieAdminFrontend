@@ -27,7 +27,8 @@ export const LinkItems = [
   {name: 'Inventory', url: '/inventory', icon: <FaAlignJustify />},
   {name: 'Notification', url: '/notification', icon: <FaRocketchat />},
   {name: 'Deal of the day', url: '/dealoftheday', icon: <FaIdeal />},
-  {name: 'Delivery instructions', url: '/deliveryinstruction', icon: <FaRoad />}
+  {name: 'Delivery instructions', url: '/deliveryinstruction', icon: <FaRoad />},
+  {name: 'Product Asset', url: '/imageuplod', icon: <FaRoad />}
 ];
 
 export const orderStatusList = [
