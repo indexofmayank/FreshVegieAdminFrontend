@@ -518,6 +518,7 @@ function UpdateProductModal({ id }) {
                         <option value="gram">G</option>
                         <option value="pkt">pkt</option>
                         <option value="pcs">pcs</option>
+                        <option value="unit">unit</option>
                         </Select>
                       </FormControl>
                     </SimpleGrid>
