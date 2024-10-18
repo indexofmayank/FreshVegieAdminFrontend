@@ -24,6 +24,7 @@ function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [suggestionList, setSuggestionList] = useState([]);
+  const [productlist, setProductlist] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 5,
@@ -38,6 +39,7 @@ function ProductsPage() {
       totalPage: products.totalPage || 0,
       totalItems: products.totalProducts || 0,
     });
+    setProductlist(products.data)
   }, []);
 
   // useEffect(() => {
@@ -47,6 +49,10 @@ function ProductsPage() {
 
   useEffect(() => {
     console.log(suggestionList);
+    if(suggestionList.length>0){
+      setProductlist(suggestionList);
+    }
+   
   }, [suggestionList]);
 
 
@@ -97,7 +103,7 @@ function ProductsPage() {
       </SidebarWithHeader>
     );
   }
-  // console.log(products); 
+  console.log(products); 
   return (
     <SidebarWithHeader>
       <HStack mb={5}>
@@ -153,7 +159,7 @@ function ProductsPage() {
       </HStack>
 
       <ProductsTable
-        products={products.data}
+        products={productlist}
         pagination={pagination}
         setPagination={setPagination}
       />

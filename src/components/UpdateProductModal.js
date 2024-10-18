@@ -513,9 +513,11 @@ function UpdateProductModal({ id }) {
                       </FormControl>
                       <FormControl>
                         <FormLabel>Unit</FormLabel>
-                        <Select placeholder="KG" name='product_weight_type' value={product_weight_type} onChange={updateExistingProductDetails}>
-                          <option value="kg">KG</option>
-                          <option value="g">G</option>
+                        <Select placeholder="Please select" name='product_weight_type' value={product_weight_type} onChange={updateExistingProductDetails}>
+                        <option value="kg">KG</option>
+                        <option value="gram">G</option>
+                        <option value="pkt">pkt</option>
+                        <option value="pcs">pcs</option>
                         </Select>
                       </FormControl>
                     </SimpleGrid>
