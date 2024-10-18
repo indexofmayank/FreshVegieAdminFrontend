@@ -116,7 +116,7 @@ function BulkUploadProduct() {
   return (
     <>
       <Button 
-        colorScheme="teal"
+        colorScheme="brown"
         leftIcon={<FaArrowUp />}
         onClick={onOpen}
       >
