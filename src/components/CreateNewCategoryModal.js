@@ -159,7 +159,7 @@ function CreateNewCategoryModal() {
                                 </Stack>
                             </RadioGroup>
                         </FormControl>
-                        <FormControl>
+                        <FormControl mt={4}>
                             <FormLabel>Order</FormLabel>
                             <Input
                                 placeholder='order'

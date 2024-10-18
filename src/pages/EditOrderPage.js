@@ -59,6 +59,7 @@ function EditOrderPage() {
     const orderItems = orderForEditOrder?.[0]?.orderItems;
     const orderId = orderForEditOrder?.[0]?.orderId;
     const amount = orderForEditOrder?.[0]?.amount || null;
+    const paymentInfo = orderForEditOrder?.[0]?.paymentInfo || {};
     const isDeliveryUsed = orderForEditOrder?.[0]?.isDeliveryUsed || false;
     const deliverycharges = orderForEditOrder?.[0]?.deliverycharges || null;
     const discount = orderForEditOrder?.[0]?.discountPrice || null;
@@ -130,7 +131,7 @@ function EditOrderPage() {
         }
     }, [orderItems]);
 
-    console.log(orderItems);
+    console.log(paymentInfo);
 
     // const decrementCount = (index,currentquantity, incrementvalue, maxquantity, minquantity) => {
     //     // if (currentquantity - incrementvalue === 0) {
@@ -204,34 +205,49 @@ function EditOrderPage() {
         // calculateTotals();
 
         try {
-            const refundResponse = await fetchUserBalanceFromWallet(userId);
-            if (refundResponse.success) {
+            const updatedPaymentInfo = {
+
+                amount: grandTotal,
+                deliverycharges: paymentInfo.deliverycharges,
+                payment_type: paymentInfo.payment_type,
+                referralAmount: paymentInfo.referralAmount,
+                status: paymentInfo.status,
+                useReferral: paymentInfo.useReferral,
+                useWallet: paymentInfo.useWallet,
+                usedelivery: paymentInfo.usedelivery,
+                walletAmount: paymentInfo.walletAmount,
+                referralAmount: refundableAmout,
+                refundStatus: refundableAmout > 0 ? 'completed' : null
+            };
+            const discountPrice = totalDiscount;
+            const response = await updateOrderForAdmin(id, items, updatedPaymentInfo, discountPrice, grandTotal);
+            if (response.success) {
                 const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout);
+                console.log(refundUpdateResponse);
                 if (refundUpdateResponse.success) {
                     toast({
                         position: 'top',
                         description: 'Amount refunded successfully',
-                        status: 'info',
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                    toast({
+                        position: 'top',
+                        description: response.message,
+                        status: 'success',
                         duration: 5000,
                         isClosable: true,
                     });
                 }
             } else {
-                throw new Error(refundResponse.message);
-            }
-
-            const paymentInfo = { amount: grandTotal };
-            const response = await updateOrderForAdmin(id, items, paymentInfo);
-            if (response.success) {
                 toast({
                     position: 'top',
-                    description: response.message,
-                    status: 'success',
+                    description: 'Not able to update order',
+                    status: 'error',
                     duration: 5000,
-                    isClosable: true,
+                    isClosable: true
                 });
-            } else {
-                throw new Error(response.message);
             }
         } catch (error) {
             toast({

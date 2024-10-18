@@ -92,6 +92,7 @@ function DeliveryInstructionsTable({ instructions = [] }) {
             toast({
                 position: 'top',
                 description: 'Update successfully',
+                status: 'success',
                 duration: 5000,
                 isClosable: true
             });

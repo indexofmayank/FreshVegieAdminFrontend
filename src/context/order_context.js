@@ -452,12 +452,13 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
-  const updateOrderForAdmin = async (id, orderItems, paymentInfo, deliveryInfo, ) => {
+  const updateOrderForAdmin = async (id, orderItems, paymentInfo, discountPrice, grandTotal) => {
     try {
       const response = await axios.put(`${updateAdminOrder_url}${id}`, {
        orderItems,
        paymentInfo,
-       deliveryInfo
+       discountPrice,
+       grandTotal
       });
       const {success, message} = response.data;
       return {success, message};
@@ -470,6 +471,7 @@ export const OrderProvider = ({ children }) => {
   const fetchUserBalanceFromWallet = async (id) => {
     try {
       const response = await axios.get(`${getUserBalanceFromWallet_url}${id}`);
+      console.log(response);
       const {success, balance} = response.data;
       return {success, balance}
     } catch (error) {
