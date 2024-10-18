@@ -49,6 +49,7 @@ import CreateNewDeliveryInstruction from './CreateNewDeliveryInstruction';
 import DeliveryInstructionsTable from './DeliveryInstructionsTable';
 import UpdateDeliveryInstruction from './UpdateDeliveryInstruction';
 import DeliveryInstructionsPagination from './DeliveryInstructionsPagination';
+import BlukUploadProduct from './BulkUploadProduct';
 
 export {
   SidebarWithHeader,
@@ -101,5 +102,6 @@ export {
   CreateNewDeliveryInstruction,
   DeliveryInstructionsTable,
   UpdateDeliveryInstruction,
-  DeliveryInstructionsPagination
+  DeliveryInstructionsPagination,
+  BlukUploadProduct
 };

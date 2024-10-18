@@ -3,13 +3,14 @@ import {
   ProductsTable,
   SidebarWithHeader,
   CreateNewProductModal,
+  BlukUploadProduct
 } from '../components';
 import { HStack, VStack, Spinner, Heading, Button, FormControl, FormLabel, Input, List, ListItem, Box, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useProductContext } from '../context/product_context';
 import FilterComponent from '../components/FilterComponent';
 import SearchBox from '../components/SearchBox';
-import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaAngleDown, FaArrowUp } from 'react-icons/fa';
 
 function ProductsPage() {
   const {
@@ -54,7 +55,6 @@ function ProductsPage() {
     }
    
   }, [suggestionList]);
-
 
 
   const handleRefresh = async () => {
@@ -108,6 +108,7 @@ function ProductsPage() {
     <SidebarWithHeader>
       <HStack mb={5}>
         <CreateNewProductModal />
+        <BlukUploadProduct />
         <Button
           colorScheme='brown'
           variant='outline'

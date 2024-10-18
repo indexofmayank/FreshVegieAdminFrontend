@@ -145,4 +145,5 @@ export const updateUserBalanceForWallet_url = `${domain}/api/wallet/add/`;
 export const getProductDropdownForSearch_url = `${domain}/api/products/dropdown/forsearch/`;
 export const getDeliveryInstructions_url = `${domain}/api/deliveryInstructions/`;
 export const updateDeliveryInstruction_url = `${domain}/api/deliveryInstructions/updated/`;
+export const bulkUploadProduct_url = `${domain}/api/demo/`;
 
