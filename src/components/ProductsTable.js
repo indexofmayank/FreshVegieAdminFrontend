@@ -55,7 +55,7 @@ function ProductsTable({ products, pagination, setPagination }) {
       });
     }
   };
- console.log(products);
+//  console.log(products);
 
   return (
     <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
@@ -84,9 +84,9 @@ function ProductsTable({ products, pagination, setPagination }) {
                   <Td>
                     <Image
                       src={image}
-                      boxSize='60px'
+                      boxSize='40px'
                       objectFit='content'
-                      borderRadius='lg'
+                      borderRadius='sm'
                     />
                   </Td>
                   <Td>
