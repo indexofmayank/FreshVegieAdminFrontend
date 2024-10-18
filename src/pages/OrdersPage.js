@@ -56,9 +56,11 @@ function OrdersPage() {
     setTableLabel(label);
     await fetchOrdersForTable('', '', '', label);
   };
-
+  console.log(filter);
   const handleDownload = async () => {
-    if(selectedDate.length > 0) {
+    console.log(selectedDate);
+   
+    if(filter=='Custom') {
       try {
         const response = await axios.get(`${getCsvDownload_url}?period='custom'&startDate=${selectedDate[0]}&endDate=${selectedDate[1]}`, {
           responseType: 'blob',
@@ -151,13 +153,15 @@ function OrdersPage() {
         >
           Refresh
         </Button>
+        {tabelLabel === null ? (
         <Tooltip label="Download Orders CSV" aria-label="Download Orders CSV Tooltip">
-          <FaDownload 
-            size={30}
-            style={{ cursor: 'pointer' }}
-            onClick={handleDownload}
-          />
-        </Tooltip>
+        <FaDownload 
+          size={30}
+          style={{ cursor: 'pointer' }}
+          onClick={handleDownload}
+        />
+      </Tooltip>
+        ):<></>}
       </HStack>
       {tabelLabel === null ? (
         <OrderStatus

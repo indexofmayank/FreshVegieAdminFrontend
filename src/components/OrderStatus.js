@@ -61,7 +61,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
         <Box p={6}>
             <HStack justifyContent='space-between' >
                 <Box mb={4}>
-                    {['All', 'Day', 'Week', 'Month', 'Year'].map((period) => (
+                    {['All', 'Day', 'Week', 'Month', 'Year', 'Custom'].map((period) => (
                         <Button
                             key={period}
                             colorScheme={filter === period ? 'yellow' : 'gray'}
@@ -78,6 +78,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
                         </Button>
                     ))}
                 </Box>
+                {(filter =='Custom' ?
                 <Box>
                     <FormControl>
                         {/* <FormLabel htmlFor="date-pickerone">Select Date</FormLabel> */}
@@ -91,7 +92,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
                         />
                     </FormControl>
                 </Box>
-
+            :<></>)}
             </HStack>
             {/* Order Cards */}
             <SimpleGrid columns={{ sm: 1, md: 3, lg: 4 }} spacing={4} mb={6}>

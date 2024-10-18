@@ -403,7 +403,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
                 onClick={() => {
                   history.push(`/edit-order/${id}`);
                 }}
-              >Update</Button>
+              >Update Order</Button>
 
             </HStack>
           </Box>

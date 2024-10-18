@@ -134,7 +134,7 @@ const CreateOrderForm = () => {
   const onProductSelect = (event) => {
     // const userId = event.target.value;
     const productId = event.target.value;
-    console.log(productId)
+    // console.log(productId)
     // // console.log(customerlist)
     // setSelectedproduct(productId);
     const product = productlist.find((product) => product._id == productId);
@@ -158,7 +158,7 @@ const CreateOrderForm = () => {
   const addItem = (item) => {
 
    const existingItemIndex = items.findIndex(existingItem => existingItem.id === item._id);
-console.log(item);
+// console.log(item);
   
   if (existingItemIndex === -1 && item.stock > 0 && item.product_status) {
 
@@ -206,7 +206,7 @@ console.log(item);
   });
 }
 }
-console.log(items)
+// console.log(items)
   const incrementCount = (index, incrementvalue, maxquantity, minquantity) => {
     if (items[index].quantity === maxquantity) {
       return toast({
@@ -296,10 +296,11 @@ useEffect(() => {
     const itemPrice = grandTotal;
     const paymentInfo = {
       amount: grandTotal,
-      usedelivery: true,
+      usedelivery: grandTotal > minimumCartAmount ? false : true,
       deliverycharges: grandTotal > minimumCartAmount ? parseInt(0) : parseInt(deliveryCharges),
       payment_type: 'cod'
     }
+    // console.log(paymentInfo)
     const deliveryInfo = {
       deliveryCost: grandTotal > minimumCartAmount ? parseInt(0) : parseInt(deliveryCharges)
     }
@@ -331,7 +332,7 @@ useEffect(() => {
     };
     const orderItems = items.map((item) => {
       const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity, id } = item;
-      console.log(image)
+      // console.log(image)
       // Ensure image is a single string (get the first URL from the array or use a fallback)
       const imageString = Array.isArray(image) && image.length > 0 ? image[0] : '';
 
@@ -364,7 +365,7 @@ useEffect(() => {
       });
     }
     response = await createNewOrder(orderItems, user, shippingAddress, orderedFrom, discountPrice, itemPrice, paymentInfo, deliveryInfo);
-    console.log(response);
+    // console.log(response);
     if (response.success) {
       setCreateOrderLoadingState(false);
       setItems([]);
@@ -444,7 +445,7 @@ useEffect(() => {
 
             )}
             {items.map((item, index) => {
-              console.log(item);
+              // console.log(item);
               const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity } = item;
               return (
                 <Tbody>
@@ -706,7 +707,7 @@ useEffect(() => {
         colorScheme="blue"
         mt={5}
         onClick={handleCreateOrder}
-        isDisabled={!selectedUser || items.length === 0} // Disable if no user or no items in the cart
+        isDisabled={!selectedUser || items.length === 0 || !showaddAddressbox} // Disable if no user or no items in the cart
     >
         Create Order
     </Button>

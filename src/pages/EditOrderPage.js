@@ -74,6 +74,7 @@ function EditOrderPage() {
     const [updatingOrderLoading, setUpdatingOrderLoading] = useState(false);
     const [deliveryFeeText, setDeliveryFeeText] = useState(null);
     const [isChecked, setIsChecked] = useState(true);
+    const [isRefundInitiated, setIsRefundInitiated] = useState(false);
 
 
     const toast = useToast();
@@ -86,10 +87,10 @@ function EditOrderPage() {
         // if (total < minimumCartAmount) {
             const finalAmount = total + deliverycharges;
             const refund = amount - total
-            console.log(refund);
-            console.log(total);
-            console.log(amount);
-            console.log(finalAmount);
+            // console.log(refund);
+            // console.log(total);
+            // console.log(amount);
+            // console.log(finalAmount);
             // setDeliveryFeeText(deliverycharges);
             setGrandTotal(finalAmount);
             setRefundAmount(refund);
@@ -131,7 +132,7 @@ function EditOrderPage() {
         }
     }, [orderItems]);
 
-    console.log(paymentInfo);
+    // console.log(orderId);
 
     // const decrementCount = (index,currentquantity, incrementvalue, maxquantity, minquantity) => {
     //     // if (currentquantity - incrementvalue === 0) {
@@ -216,13 +217,14 @@ function EditOrderPage() {
                 useWallet: paymentInfo.useWallet,
                 usedelivery: paymentInfo.usedelivery,
                 walletAmount: paymentInfo.walletAmount,
-                referralAmount: refundableAmout,
-                refundStatus: refundableAmout > 0 ? 'completed' : null
+                referralAmount: paymentInfo.referralAmount,
+                refundAmount: refundableAmout,
+                refundStatus: isRefundInitiated && refundableAmout > 0 && paymentInfo.payment_type === "online" ? 'completed' : null,
             };
             const discountPrice = totalDiscount;
             const response = await updateOrderForAdmin(id, items, updatedPaymentInfo, discountPrice, grandTotal);
-            if (response.success) {
-                const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout);
+            if (response.success && isRefundInitiated && refundableAmout > 0 && paymentInfo.payment_type === "online") {
+                const refundUpdateResponse = await updateUserRefundAmountToWallet(userId, refundableAmout,orderId);
                 console.log(refundUpdateResponse);
                 if (refundUpdateResponse.success) {
                     toast({
@@ -240,15 +242,26 @@ function EditOrderPage() {
                         isClosable: true,
                     });
                 }
+
+            }
+            if (response.success) {
+                toast({
+                    position: 'top',
+                    description: response.message,
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                });
             } else {
                 toast({
                     position: 'top',
                     description: 'Not able to update order',
                     status: 'error',
                     duration: 5000,
-                    isClosable: true
+                    isClosable: true,
                 });
             }
+             
         } catch (error) {
             toast({
                 position: 'top',
@@ -262,13 +275,10 @@ function EditOrderPage() {
         }
     };
 
-
     const handleCheckboxChange = (e) => {
-        console.log('Checkbox event triggered');  // To ensure the event is firing
-        setIsChecked(e.target.checked);
-        console.log('Checkbox value:', e.target.checked);  // To log the checkbox value
+        setIsRefundInitiated(e.target.checked);
     };
-
+   
     return (
         <SidebarWithHeader>
             <VStack spacing={4} align='stretch'>
@@ -348,7 +358,7 @@ function EditOrderPage() {
                                 <Text>Total:</Text>
                                 <Text>{`₹${grandTotal}`}</Text>
                             </HStack>
-                            {refundableAmout > 0 && (
+                            {paymentInfo.payment_type =='online' && refundableAmout > 0 && (
                                 <>
                                     <HStack justifyContent="space-between" mt={2}>
                                         <Text>Refund :</Text>
@@ -356,11 +366,18 @@ function EditOrderPage() {
                                     </HStack>
 
                                     <FormControl mt={2}>
-                                        <Checkbox
+                                        {/* <Checkbox
                                             defaultChecked
                                             colorScheme='brown'
                                             name='isRefuned'
                                             onChange={(e) => { console.log(e.target.checked) }}
+                                        >
+                                            Initiate refund amount to wallet
+                                        </Checkbox> */}
+                                        <Checkbox
+                                            isChecked={isRefundInitiated}
+                                            colorScheme='brown'
+                                            onChange={handleCheckboxChange}
                                         >
                                             Initiate refund amount to wallet
                                         </Checkbox>

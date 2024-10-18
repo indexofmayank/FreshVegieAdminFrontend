@@ -480,11 +480,12 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
-  const updateUserRefundAmountToWallet = async (id, amount) => {
+  const updateUserRefundAmountToWallet = async (id, amount, orderid) => {
+    console.log(orderid);
     try {
       const response = await axios.post(`${updateUserBalanceForWallet_url}${id}`, {
         amount,
-        description: 'refunded'
+        description: 'refund initiated for '+`${orderid}`
       });
       const {success} = response.data;
       return {success};
