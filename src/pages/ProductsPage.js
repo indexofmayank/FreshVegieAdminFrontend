@@ -106,7 +106,7 @@ function ProductsPage() {
   console.log(products); 
   return (
     <SidebarWithHeader>
-      <HStack mb={5}>
+      <HStack mb={5} spacing={4}>
         <CreateNewProductModal />
         <BlukUploadProduct />
         <Button
@@ -114,6 +114,7 @@ function ProductsPage() {
           variant='outline'
           leftIcon={<MdOutlineRefresh />}
           onClick={handleRefresh}
+          // spacing={4}
         >
           Refresh
         </Button>

@@ -119,8 +119,10 @@ function BulkUploadProduct() {
         colorScheme="brown"
         leftIcon={<FaArrowUp />}
         onClick={onOpen}
+        px={4}
+        style={{padding:'20px 30px'}}
       >
-        Upload CSV
+        Bulk Upload CSV
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
