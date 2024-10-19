@@ -50,6 +50,9 @@ import DeliveryInstructionsTable from './DeliveryInstructionsTable';
 import UpdateDeliveryInstruction from './UpdateDeliveryInstruction';
 import DeliveryInstructionsPagination from './DeliveryInstructionsPagination';
 import BlukUploadProduct from './BulkUploadProduct';
+import CreateAssestModal from './CreateAssestModal';
+import AssestImageTable from './AssestImageTable';
+
 
 export {
   SidebarWithHeader,
@@ -103,5 +106,7 @@ export {
   DeliveryInstructionsTable,
   UpdateDeliveryInstruction,
   DeliveryInstructionsPagination,
-  BlukUploadProduct
+  BlukUploadProduct,
+  CreateAssestModal,
+  AssestImageTable
 };

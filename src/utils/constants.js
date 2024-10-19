@@ -11,7 +11,8 @@ import {
   FaAlignJustify,
   FaRocketchat,
   FaIdeal,
-  FaRoad
+  FaRoad,
+  FaAtom
 } from 'react-icons/fa';
 
 
@@ -28,7 +29,7 @@ export const LinkItems = [
   {name: 'Notification', url: '/notification', icon: <FaRocketchat />},
   {name: 'Deal of the day', url: '/dealoftheday', icon: <FaIdeal />},
   {name: 'Delivery instructions', url: '/deliveryinstruction', icon: <FaRoad />},
-  {name: 'Product Asset', url: '/imageuplod', icon: <FaRoad />}
+  {name: 'Assets', url: '/assets', icon: <FaAtom />}
 ];
 
 export const orderStatusList = [
