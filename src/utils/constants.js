@@ -147,4 +147,5 @@ export const getProductDropdownForSearch_url = `${domain}/api/products/dropdown/
 export const getDeliveryInstructions_url = `${domain}/api/deliveryInstructions/`;
 export const updateDeliveryInstruction_url = `${domain}/api/deliveryInstructions/updated/`;
 export const bulkUploadProduct_url = `${domain}/api/demo/`;
+export const zipAssetUpload_url = `${domain}/api/asset/`;
 

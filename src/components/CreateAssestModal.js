@@ -1,10 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
     Button,
-    Input,
     FormControl,
-    FormLabel,
-    FormHelperText,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -14,50 +11,68 @@ import {
     ModalCloseButton,
     useDisclosure,
     useToast,
-    Textarea,
-    Center,
-    HStack,
-    Image,
-    VStack,
-    Checkbox,
-    Select,
-    Radio,
-    RadioGroup,
-    Stack,
     Box,
     Text,
     Divider
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
+import {zipAssetUpload_url} from '../utils/constants'
 
 function CreateAssestModal() {
-
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
     const toast = useToast();
     const [loading, setLoading] = useState(false);
-    const [file, setFile] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [zipFile, setZipFile] = useState(null);
+    const [isSaveButtonLoading, setSaveButtonLoading] = useState(false);
+    const [isSaveButtonDisable, setSaveButtonDisable] = useState(true);
 
-    const onDrop = useCallback((acceptedFiles) => {
-        if(acceptedFiles.length > 0) {
-            const selectedFile = acceptedFiles[0];
-            setFile(selectedFile);
+    useEffect(() => {
+        setSaveButtonDisable(false);
+    }, [zipFile]);
+
+    // Dropzone for image files
+    const onDropImage = useCallback((acceptedFiles) => {
+        if (acceptedFiles.length > 0) {
+            const selectedImage = acceptedFiles[0];
+            setImageFile(selectedImage);
             toast({
                 position: 'top',
-                title: "File selected.",
-                description: `File ${selectedFile.name} is ready for upload.`,
+                title: "Image selected.",
+                description: `Image ${selectedImage.name} is ready for upload.`,
                 status: "success",
                 duration: 3000,
                 isClosable: true,
             });
         }
-
     }, [toast]);
-
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
+    
+    const { getRootProps: getImageRootProps, getInputProps: getImageInputProps, isDragActive: isImageDragActive } = useDropzone({
+        onDrop: onDropImage,
         accept: 'image/jpeg, image/png',
+    });
+    
+    // Dropzone for zip files
+    const onDropZip = useCallback((acceptedFiles) => {
+        if (acceptedFiles.length > 0) {
+            const selectedZip = acceptedFiles[0];
+            setZipFile(selectedZip);
+            toast({
+                position: 'top',
+                title: "ZIP file selected.",
+                description: `File ${selectedZip.name} is ready for upload.`,
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+    }, [toast]);
+    
+    const { getRootProps: getZipRootProps, getInputProps: getZipInputProps, isDragActive: isZipDragActive } = useDropzone({
+        onDrop: onDropZip,
+        accept: '.zip',
     });
 
 
@@ -73,69 +88,52 @@ function CreateAssestModal() {
                     <ModalHeader>Create new asset</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
-                        <FormControl>
-                            <FormLabel>Name</FormLabel>
-                                <Input
-                                    ref={initialRef}
-                                    placeholder='Name'
-                                    name='zip_name'
-                                    focusBorderColor='brown.500'
-                                    // value={}
-                                    onChange={() => console.log('did')}
-                                />
-                        </FormControl>
+                        {/* Dropzone for ZIP files */}
                         <FormControl mt={4}>
                             <Box
-                                {...getRootProps()}
+                                {...getZipRootProps()}
                                 border="2px dashed"
                                 borderColor="gray.300"
                                 p={6}
                                 rounded="md"
                                 textAlign="center"
-                                bg={isDragActive ? "gray.100" : "white"}
+                                bg={isZipDragActive ? "gray.100" : "white"}
                                 cursor="pointer"
                                 transition="background-color 0.2s"
                             >
-                                <input {...getInputProps()} />
-                                {isDragActive ? (
-                                    <Text>Drop the file here...</Text>
+                                <input {...getZipInputProps()} />
+                                {isZipDragActive ? (
+                                    <Text>Drop the ZIP file here...</Text>
+                                ) : zipFile ? (
+                                    <Text>Selected ZIP file: {zipFile.name}</Text>
                                 ) : (
-                                    <Text>Drag and drop zip file here, or click to select one</Text>
+                                    <Text>Drag and drop a ZIP file here, or click to select one</Text>
                                 )}
                             </Box>
                         </FormControl>
                         <Divider mt={3}/>
-                        <Text  size='xl' mt={3}>OR</Text>
+                        <Text size='xl' mt={3}>OR</Text>
                         <Divider mt={3}/>
-                        <FormControl>
-                            <FormLabel>Name</FormLabel>
-                            <Input
-                                ref={initialRef}
-                                placeholder='name'
-                                name='name'
-                                focusBorderColor='brown.500'
-                                // value={}
-                                onChange={() => console.log('did')}
-                            />
-                        </FormControl>
+                        {/* Dropzone for Image files */}
                         <FormControl mt={4}>
                             <Box
-                                {...getRootProps()}
-                                border='2px dashed'
+                                {...getImageRootProps()}
+                                border="2px dashed"
+                                borderColor="gray.300"
                                 p={6}
                                 rounded="md"
                                 textAlign="center"
-                                bg={isDragActive ? "gray.100" : "white"}
+                                bg={isImageDragActive ? "gray.100" : "white"}
                                 cursor="pointer"
                                 transition="background-color 0.2s"
                             >
-                                <input {...getInputProps()} />
-                                {isDragActive ? (
-                                    <Text>Drop the file here...</Text>
-                                ):file ? (
-                                    <Text>Selected file: {file.name}</Text>
-                                ) :(
-                                    <Text>Drag and drop the jpeg/png here or click to select one</Text>
+                                <input {...getImageInputProps()} />
+                                {isImageDragActive ? (
+                                    <Text>Drop the image here...</Text>
+                                ) : imageFile ? (
+                                    <Text>Selected image: {imageFile.name}</Text>
+                                ) : (
+                                    <Text>Drag and drop a JPEG/PNG image here, or click to select one</Text>
                                 )}
                             </Box>
                         </FormControl>
@@ -145,7 +143,20 @@ function CreateAssestModal() {
                             Cancel
                         </Button>
                         <Button
+                            isLoading={isSaveButtonLoading}
+                            disabled={isSaveButtonDisable}
                             colorScheme='brown'
+                            onClick={async () => {
+                                console.log('we come here');
+                                const zipData = new FormData();
+                                zipData.append("file", zipFile);
+                                const response = await axios.post(zipAssetUpload_url, zipData, {
+                                    header: {
+                                        'Content-Type': 'multipart/form-data',
+                                    }
+                                });
+                                console.log(response);
+                            }}
                         >
                             Save
                         </Button>
