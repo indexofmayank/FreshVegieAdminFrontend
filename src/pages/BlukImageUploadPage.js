@@ -22,8 +22,21 @@ function BlukImageUploadPage() {
     const [assetList, setAssetList] = useState([]);
     const [assetSearchQuery, setAssetSearchQuery] = useState('');
 
+    useEffect(() => {
+        async function loaddata(){
+        const response = await axios.get(`${zipAssetUpload_url}`, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        const {success, data} = response.data;
+        setAssetList(data)
+    }
+        loaddata()
+       
+    }, []);
 
-
+// console.log(assetList)
     return (
         <SidebarWithHeader>
             <HStack mb={5}>
@@ -54,7 +67,7 @@ function BlukImageUploadPage() {
                     />
                 </InputGroup>
             </HStack>
-            <AssestImageTable />
+            <AssestImageTable  assetList={assetList}/>
         </SidebarWithHeader>
     );
 }

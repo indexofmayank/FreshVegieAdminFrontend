@@ -151,4 +151,4 @@ export const zipAssetUpload_url = `${domain}/api/asset/`;
 export const getWalletLogs_url = `${domain}/api/wallet/balance/logs/`;
 export const getWalletBalance_url = `${domain}/api/wallet/balance/`;
 export const addAmountToWallet_url = `${domain}/api/wallet/addamountadmin/`;
-
+export const imageAssetUpload_url = `${domain}/api/asset/image/`;

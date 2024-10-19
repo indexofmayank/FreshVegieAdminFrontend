@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
-import {zipAssetUpload_url} from '../utils/constants'
+import {zipAssetUpload_url,imageAssetUpload_url} from '../utils/constants'
 
 function CreateAssestModal() {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,8 +78,8 @@ function CreateAssestModal() {
 
     return (
         <>
-            <Button colorScheme='brown' onClick={onOpen}>
-                Create New Asset
+            <Button colorScheme='brown' onClick={onOpen}  style={{padding:'20px 50px'}}>
+                Upload bulk images for product CSV
             </Button>
 
             <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
@@ -147,15 +147,140 @@ function CreateAssestModal() {
                             disabled={isSaveButtonDisable}
                             colorScheme='brown'
                             onClick={async () => {
-                                console.log('we come here');
-                                const zipData = new FormData();
-                                zipData.append("file", zipFile);
-                                const response = await axios.post(zipAssetUpload_url, zipData, {
-                                    header: {
-                                        'Content-Type': 'multipart/form-data',
+                                // console.log('we come here');
+                               
+                                console.log(zipFile)
+                                console.log(imageFile)
+                                if(zipFile){
+                                    const zipData = new FormData();
+                                    zipData.append("file", zipFile);
+                                    // console.log('calling zipdata');
+                                    try {
+                                    const response = await axios.post(zipAssetUpload_url, zipData, {
+                                        header: {
+                                            'Content-Type': 'multipart/form-data',
+                                        }
+                                    });
+                                    if(response.data.success){
+                                        setZipFile(null)
+                                        toast({
+                                            position: 'top',
+                                            // title: "",
+                                            description: response.data.message,
+                                            status: "success",
+                                            duration: 3000,
+                                            isClosable: true,
+                                        });
                                     }
-                                });
-                                console.log(response);
+                                        console.log(response);
+                                        return response.data;
+                                    } catch (error) {
+                                        // Check if the error is from the server (response exists)
+                                        if (error.response) {
+                                            // console.error('Error response from server:', error.response);
+                                            // console.log(error.response.data.message)
+                                            // alert(`Error: ${error.response.data.message}`);
+                                            toast({
+                                                position: 'top',
+                                                // title: "",
+                                                description: error.response.data.message,
+                                                status: "error",
+                                                duration: 3000,
+                                                isClosable: true,
+                                            });
+                                        } else if (error.request) {
+                                            // The request was made, but no response was received
+                                            // console.error('No response received:', error.request);
+                                            toast({
+                                                position: 'top',
+                                                // title: "",
+                                                description: "No response received",
+                                                status: "error",
+                                                duration: 3000,
+                                                isClosable: true,
+                                            });
+                                            // alert('Error: No response from server');
+                                        } else {
+                                            // Something else happened while making the request
+                                            // console.error('Unexpected error:', error.message);
+                                            toast({
+                                                position: 'top',
+                                                // title: "",
+                                                description: error.message,
+                                                status: "error",
+                                                duration: 3000,
+                                                isClosable: true,
+                                            });
+                                            // alert(`Error: ${error.message}`);
+                                        }
+                                        return null;
+                                    }
+                                }else{
+                                    // console.log('calling imagedata');
+                                    const imageData = new FormData();
+                                    imageData.append("file", imageFile);
+                                    try {
+                                    const response = await axios.post(imageAssetUpload_url, imageData, {
+                                        header: {
+                                            'Content-Type': 'multipart/form-data',
+                                        }
+                                    });
+                                    if(response.data.success){
+                                        setImageFile(null)
+                                    toast({
+                                        position: 'top',
+                                        // title: "",
+                                        description: response.data.message,
+                                        status: "success",
+                                        duration: 3000,
+                                        isClosable: true,
+                                    });
+                                }
+                                    console.log(response);
+                                    return response.data;
+                                } catch (error) {
+                                    // Check if the error is from the server (response exists)
+                                    if (error.response) {
+                                        // console.error('Error response from server:', error.response);
+                                        // console.log(error.response.data.message)
+                                        // alert(`Error: ${error.response.data.message}`);
+                                        toast({
+                                            position: 'top',
+                                            // title: "",
+                                            description: error.response.data.message,
+                                            status: "error",
+                                            duration: 3000,
+                                            isClosable: true,
+                                        });
+                                    } else if (error.request) {
+                                        // The request was made, but no response was received
+                                        // console.error('No response received:', error.request);
+                                        toast({
+                                            position: 'top',
+                                            // title: "",
+                                            description: "No response received",
+                                            status: "error",
+                                            duration: 3000,
+                                            isClosable: true,
+                                        });
+                                        // alert('Error: No response from server');
+                                    } else {
+                                        // Something else happened while making the request
+                                        // console.error('Unexpected error:', error.message);
+                                        toast({
+                                            position: 'top',
+                                            // title: "",
+                                            description: error.message,
+                                            status: "error",
+                                            duration: 3000,
+                                            isClosable: true,
+                                        });
+                                        // alert(`Error: ${error.message}`);
+                                    }
+                                    return null;
+                                }
+                                }
+                               
                             }}
                         >
                             Save
