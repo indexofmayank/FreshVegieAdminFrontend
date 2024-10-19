@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useReducer} from "react";
 import axios from "axios";
 import reducer from '../reducers/user_detail_reducer';
-import {get_orderLogs_url, get_userOrderHistory_url, get_userTransaction_url, get_userCardInfo_url, getUserAllAddress_url} from '../utils/constants';
+import {get_orderLogs_url, get_userOrderHistory_url, get_userTransaction_url, get_userCardInfo_url, getUserAllAddress_url, getWalletLogs_url, getWalletBalance_url, addAmountToWallet_url} from '../utils/constants';
 import {
     GET_USERLOGS_BEGIN,
     GET_USERLOGS_ERROR,
@@ -18,8 +18,12 @@ import {
     GET_ALLUSERADDRESS_BEGIN,
     GET_ALLUSERADDRESS_ERROR,
     GET_ALLUSERADDRESS_SUCCESS,
-    
-  
+    GET_WALLETLOG_BEGIN,
+    GET_WALLETLOG_ERROR,
+    GET_WALLETLOG_SUCCESS,
+    GET_WALLETBALANCE_BEGIN,
+    GET_WALLETBALANCE_ERROR,
+    GET_WALLETBALANCE_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -37,8 +41,13 @@ const initialState = {
     userDetailCardInfo: {},
     userAllAddress_loading: false,
     userAllAddress_error: false,
-    userAllAddress: {}
-  
+    userAllAddress: {},
+    walletLogs_loading: false,
+    walletLogs_error: false,
+    walletLogs: {},
+    walletBalance_laoding:false,
+    walletBalance_error: false,
+    walletBalance: {}
 };
 
 
@@ -104,6 +113,44 @@ export const UserDetailProvider = ({children}) => {
           dispatch({type: GET_ALLUSERADDRESS_ERROR});
         }
       }
+
+    const fetchUserWalletLogs = async(id, page='') => {
+        try {
+            dispatch({type: GET_WALLETLOG_BEGIN});
+            const respone = await axios.get(`${getWalletLogs_url}${id}?page=${page}`);
+            const {data} = respone;
+            console.log(data);
+            dispatch({type: GET_WALLETLOG_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_WALLETLOG_ERROR});
+        }
+    }
+
+    const fetchUserBalance = async (id) => {
+        dispatch({type: GET_WALLETBALANCE_BEGIN});
+        try {
+            const response = await axios.get(`${getWalletBalance_url}${id}`);
+            const {data} = response;
+            console.log(data);
+            dispatch({type: GET_WALLETBALANCE_SUCCESS, payload: data });
+        } catch (error) {
+            dispatch({type: GET_WALLETBALANCE_ERROR});
+        }
+    }
+
+    const addAmountToWallet = async (id, amount, description) => {
+        try {
+            const response = await axios.post(`${addAmountToWallet_url}${id}`, {
+                amount, description
+            });
+            const {success} = response.data;
+            console.log(success);
+            return {success};
+        } catch (error) {
+            const {message} = error.message;
+            return {success: false, message};
+        }
+    }
     
 
     return (
@@ -114,7 +161,10 @@ export const UserDetailProvider = ({children}) => {
             fetchUserOrderHistroy,
             getUserTransaction,
             fetchUserSingleCardInfo,
-            fetchUserAllAddress
+            fetchUserAllAddress,
+            fetchUserWalletLogs,
+            fetchUserBalance,
+            addAmountToWallet
         }}
     >
         {children}

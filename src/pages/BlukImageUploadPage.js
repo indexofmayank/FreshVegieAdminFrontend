@@ -49,7 +49,7 @@ function BlukImageUploadPage() {
                                 }
                             });
                             const {success, data} = response.data;
-                            console.log(data);
+                            setAssetList(data);
                         }}
                     />
                 </InputGroup>

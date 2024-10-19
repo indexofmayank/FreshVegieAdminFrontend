@@ -13,8 +13,13 @@ import {
     GET_USERDETAILCARDINFO_SUCCESS,
     GET_ALLUSERADDRESS_BEGIN,
     GET_ALLUSERADDRESS_ERROR,
-    GET_ALLUSERADDRESS_SUCCESS
-
+    GET_ALLUSERADDRESS_SUCCESS,
+    GET_WALLETLOG_BEGIN,
+    GET_WALLETLOG_ERROR,
+    GET_WALLETLOG_SUCCESS,
+    GET_WALLETBALANCE_BEGIN,
+    GET_WALLETBALANCE_ERROR,
+    GET_WALLETBALANCE_SUCCESS
 } from '../actions';
 
 const userDetail_reducer = (state, action) => {
@@ -77,6 +82,30 @@ const userDetail_reducer = (state, action) => {
 
     if(action.type === GET_ALLUSERADDRESS_SUCCESS) {
         return {...state, userAllAddress_loading: false, userAllAddress: action.payload}
+    }
+
+    if(action.type === GET_WALLETLOG_BEGIN) {
+        return {...state, walletLogs_loading: true, walletLogs_error: false}
+    }
+
+    if(action.type === GET_WALLETLOG_ERROR) {
+        return {...state, walletLogs_loading: false, walletLogs_error: true}
+    }
+
+    if(action.type === GET_WALLETLOG_SUCCESS) {
+        return {...state, walletLogs_loading: false, walletLogs: action.payload}
+    }
+
+    if(action.type === GET_WALLETBALANCE_BEGIN) {
+        return {...state, walletBalance_laoding: true, walletBalance_error: false}
+    }
+
+    if(action.type === GET_WALLETBALANCE_ERROR) {
+        return {...state, walletBalance_laoding: false, walletBalance_error: true}
+    }
+
+    if(action.type === GET_WALLETBALANCE_SUCCESS) {
+        return {...state, walletBalance_laoding: false, walletBalance: action.payload}
     }
 
 

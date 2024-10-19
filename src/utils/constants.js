@@ -148,4 +148,7 @@ export const getDeliveryInstructions_url = `${domain}/api/deliveryInstructions/`
 export const updateDeliveryInstruction_url = `${domain}/api/deliveryInstructions/updated/`;
 export const bulkUploadProduct_url = `${domain}/api/demo/`;
 export const zipAssetUpload_url = `${domain}/api/asset/`;
+export const getWalletLogs_url = `${domain}/api/wallet/balance/logs/`;
+export const getWalletBalance_url = `${domain}/api/wallet/balance/`;
+export const addAmountToWallet_url = `${domain}/api/wallet/addamountadmin/`;
 

@@ -37,7 +37,13 @@ function SingleUserPage () {
         userAllAddress_loading,
         userAllAddress_error,
         userAllAddress,
-        fetchUserAllAddress
+        fetchUserAllAddress,
+        walletLogs_loading,
+        walletLogs_error,
+        walletLogs,
+        fetchUserWalletLogs,
+        walletBalance,
+        fetchUserBalance,
     } = useUserDetailProviderContext();
 
     useEffect(() => {
@@ -46,9 +52,12 @@ function SingleUserPage () {
         getUserTransaction(id);
         fetchUserSingleCardInfo(id);
         fetchUserAllAddress(id);
+        fetchUserWalletLogs(id);
+        fetchUserBalance(id)
     }, [id]);
 
-    
+
+
     return (
         <SidebarWithHeader>
             <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
@@ -59,6 +68,8 @@ function SingleUserPage () {
                 userOrderLogs={userOrderLogs} 
                 userDetailCardInfo={userDetailCardInfo}
                 userAllAddress={userAllAddress}
+                walletLogs={walletLogs}
+                walletBalance={walletBalance}
                 id={id}
                 />
                 </VStack>
