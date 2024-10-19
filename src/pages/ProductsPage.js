@@ -108,7 +108,7 @@ function ProductsPage() {
     <SidebarWithHeader>
       <HStack mb={5}>
         <CreateNewProductModal />
-        <BlukUploadProduct />
+        {/* <BlukUploadProduct /> */}
         <Button
           colorScheme='brown'
           variant='outline'
