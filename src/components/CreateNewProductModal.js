@@ -206,7 +206,7 @@ function CreateNewProductModal() {
 
   return (
     <>
-      <Button colorScheme='brown' onClick={onOpen}>
+      <Button colorScheme='brown' onClick={onOpen}  style={{padding:'20px 35px'}}>
         Create New Product
       </Button>
 
