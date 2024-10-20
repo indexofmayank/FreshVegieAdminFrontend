@@ -3,7 +3,8 @@ import axios from "axios";
 import reducer from '../reducers/notification_reducer';
 import {
     getAllNotification_url, getProductByNameForInventory, getAllProductName_url,
-    getAllCategoryName_url, getAllUserName_url, getSingleNotification_url
+    getAllCategoryName_url, getAllUserName_url, getSingleNotification_url,
+    getSelectedUserFcmToken_url, getFilteredUserNameForNotification_url
 } from '../utils/constants';
 import {
     GET_NOTIFICATIONS_BEGIN,
@@ -99,7 +100,6 @@ export const NotificationProvider = ({ children }) => {
 
 
     const createNewNotification = async (notification) => {
-        console.log(notification);
         try {
             const response = await axios.post(getAllNotification_url, notification);
             const { success, data } = response.data;
@@ -135,15 +135,27 @@ export const NotificationProvider = ({ children }) => {
         }
     }
 
-    const fetchUserNameForNotification = async () => {
+    const fetchUserNameForNotification = async (filter='') => {
         dispatch({ type: GET_USERNAMEFORNOTIFICATION_BEGIN });
         try {
-            const response = await axios.get(getAllUserName_url);
-            const { data } = response.data;
+            const response = await axios.get(`${getFilteredUserNameForNotification_url}?filter=${filter}`);
+            const { data } = response;
             dispatch({ type: GET_USERNAMEFORNOTIFICATION_SUCCESS, payload: data });
         } catch (error) {
             console.error(error);
             dispatch({ type: GET_USERNAMEFORNOTIFICATION_ERROR });
+        }
+    }
+
+    const fetchUserFcmTokenByUserIds = async (requireIds) => {
+        try {
+            const response = await axios.post(getSelectedUserFcmToken_url, {
+                requireIds
+            });
+            return response;
+        } catch (error) {
+            const {message} = error.message;
+            return {success: true, message};
         }
     }
 
@@ -161,7 +173,8 @@ export const NotificationProvider = ({ children }) => {
                 fetchProductNameForNotification,
                 fetchCategoryNameForNotification,
                 fetchUserNameForNotification,
-                fetchSingleNotification
+                fetchSingleNotification,
+                fetchUserFcmTokenByUserIds
             }}
         >
             {children}

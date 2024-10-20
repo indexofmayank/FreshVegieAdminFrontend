@@ -37,6 +37,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import { useNotificationContext } from '../context/notification_context';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import {getFilteredUserNameForNotification_url} from '../utils/constants';
 
 
 function CreateNewNotificationModal() {
@@ -96,6 +97,7 @@ function CreateNewNotificationModal() {
     const [isUsernameDropdownOpen, setUsernameDropdownOpen] = useState(false);
     const [selectedCustomers, setSelectedCustomers] = useState([]);
     const [handleSubmitLoading, setHandleSubmitLoading] = useState(false);
+    const [selectedCustomFilter, setSelectedCustomFilter] = useState(null);
     const toast = useToast();
 
     const handleSubmit = async () => {
@@ -196,7 +198,6 @@ function CreateNewNotificationModal() {
                 value: _id
             }
         });
-        console.log(selectedCustomers);
 
         // setUsernameDropdownOpen(false);
 
@@ -221,6 +222,13 @@ function CreateNewNotificationModal() {
     }
 
 
+    useEffect(() => {
+        const loadData = async () => {
+            const filter = customFilters
+            await fetchUserNameForNotification(filter)
+        }
+        loadData();
+    }, [customFilters]);
 
     return (
         <>
@@ -452,15 +460,15 @@ function CreateNewNotificationModal() {
                             <FormControl>
                                 <FormLabel>Custom Filter</FormLabel>
                                 <Select
-                                    placeholder='custom Filters'
+                                    placeholder='Select Filter'
                                     name='customFilters'
                                     focusBorderColor='brown.500'
                                     value={customFilters}
                                     onChange={udpateNewNotificationDetails}
                                 >
-                                    <option key='1' value='abandoned_cart'>Abandoned cart</option>
-                                    <option key='2' value='new_user'>New user</option>
-                                    <option key='3' value='active_user'>Active user</option>
+                                    {/* <option key='1' value='abandoned_cart'>Abandoned cart</option> */}
+                                    <option key='2' value='zeroOrders'>New user</option>
+                                    <option key='3' value='moreThanOneOrder'>Active user</option>
                                     <option key='4' value='all'>All</option>
                                 </Select>
                             </FormControl>
@@ -493,7 +501,7 @@ function CreateNewNotificationModal() {
                                         name='customer'
                                         focusBorderColor='brown.500'
                                         value={
-                                            userName.find(user => user._id === customers)?.name || ''
+                                            userName?.users.find(user => user._id === customers)?.name || ''
                                         }
                                         readOnly
                                         onClick={() => setUsernameDropdownOpen(!isUsernameDropdownOpen)}
@@ -546,7 +554,7 @@ function CreateNewNotificationModal() {
                                         width="100%"
                                     >
                                         <List spacing={3}>
-                                            {userName.map((user, index) => {
+                                            {userName?.users.map((user, index) => {
                                                 const { _id, name } = user;
                                                 return (
                                                     <ListItem

@@ -153,3 +153,5 @@ export const getWalletBalance_url = `${domain}/api/wallet/balance/`;
 export const addAmountToWallet_url = `${domain}/api/wallet/addamountadmin/`;
 export const imageAssetUpload_url = `${domain}/api/asset/image/`;
 export const getAllUserFcmToken_url = `${domain}/api/notification/user/fcmtoken/`;
+export const getSelectedUserFcmToken_url = `${domain}/api/notification/fcmtokens/`;
+export const getFilteredUserNameForNotification_url = `${domain}/api/notification/user/name/`;

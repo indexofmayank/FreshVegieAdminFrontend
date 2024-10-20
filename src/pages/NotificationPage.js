@@ -31,17 +31,14 @@ function NotificationPage() {
     }
 
     useEffect(() => {
-        // getAllUserFcmToken_url
         const loadData = async () => {
             const response = await axios.get(getAllUserFcmToken_url);
             const {data} = response.data;
             setAllUserToken(data);
-            console.log(response);
         }
         loadData();
     }, [setAllUserToken]);
 
-    console.log(allUserToken)
 
     if (loading) {
         return (
