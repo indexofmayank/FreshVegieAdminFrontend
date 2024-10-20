@@ -7,9 +7,13 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import { CreateNewNotificationModal } from '../components/';
 import { NotificationTable } from '../components/';
 import { useNotificationContext } from '../context/notification_context';
+import axios from "axios";
+import {getAllUserFcmToken_url} from '../utils/constants';
 
 
 function NotificationPage() {
+
+    const [allUserToken, setAllUserToken] = useState([]);
 
     const {
         notificatin_loading: loading,
@@ -25,6 +29,19 @@ function NotificationPage() {
     const handleRefresh = async () => {
         await fetchNotifications();
     }
+
+    useEffect(() => {
+        // getAllUserFcmToken_url
+        const loadData = async () => {
+            const response = await axios.get(getAllUserFcmToken_url);
+            const {data} = response.data;
+            setAllUserToken(data);
+            console.log(response);
+        }
+        loadData();
+    }, [setAllUserToken]);
+
+    console.log(allUserToken)
 
     if (loading) {
         return (

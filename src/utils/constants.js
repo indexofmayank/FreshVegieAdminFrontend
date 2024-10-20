@@ -152,3 +152,4 @@ export const getWalletLogs_url = `${domain}/api/wallet/balance/logs/`;
 export const getWalletBalance_url = `${domain}/api/wallet/balance/`;
 export const addAmountToWallet_url = `${domain}/api/wallet/addamountadmin/`;
 export const imageAssetUpload_url = `${domain}/api/asset/image/`;
+export const getAllUserFcmToken_url = `${domain}/api/notification/user/fcmtoken/`;
