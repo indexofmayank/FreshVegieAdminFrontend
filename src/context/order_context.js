@@ -254,13 +254,15 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
-  const updateDeliveryInfo = async (id, type, name, email, phone) => {
+  const updateDeliveryInfo = async (id, type, name, email, phone, _id) => {
+    console.log(_id);
     try {
       const response = await axios.put(`${updateDeliveryPartnerDetails_url}${id}`, {
         type,
         name,
         phone,
-        email
+        email,
+        _id
       });
       const {success, data} = response.data;
       fetchOrders();

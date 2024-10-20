@@ -57,6 +57,7 @@ function UserDetailTab({ userOrderHistory, userTransactions, userOrderLogs, user
             <Tab>Logs</Tab>
             <Tab>Transactions</Tab>
             <Tab>Wallet</Tab>
+            <Tab>Loyality</Tab>
           </TabList>
 
           <TabPanels>

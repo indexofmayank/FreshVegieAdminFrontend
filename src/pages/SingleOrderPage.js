@@ -268,11 +268,13 @@ function SingleOrderPage() {
                 setAssignDeliveryDetailOpen(!isAssignDeliveryDetailOpen);
                 setShowLoadingSpinner(true)
                 const response = await deliveryPartnerDetailById(e.target.value);
+                console.log(response);
                 const type = '2'
                 const { name } = response;
                 const { phone } = response;
                 const { email } = response;
-                const secondResponse = await updateDeliveryInfo(id, type, name, email, phone);
+                const {_id} = response;
+                const secondResponse = await updateDeliveryInfo(id, type, name, email, phone, _id);
                 setShowLoadingSpinner(false);
                 if (secondResponse.success) {
                   return toast({
