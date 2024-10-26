@@ -221,7 +221,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems.map((item, i) =>
         i === index && item.quantity < maxquantity
-          ? { ...item, quantity: parseInt(item.quantity) + parseInt(incrementvalue) }
+          ? { ...item, quantity: (parseFloat(item.quantity) + parseFloat(incrementvalue)).toFixed(2) }
           : item
       )
     );
@@ -240,7 +240,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems
         .map((item, i) =>
-          i === index && item.quantity > minquantity ? { ...item, quantity: parseInt(item.quantity) - parseInt(incrementvalue) } : item
+          i === index && item.quantity > minquantity ? { ...item, quantity: (parseFloat(item.quantity) - parseFloat(incrementvalue)).toFixed(2) } : item
         )
         .filter((item) => item.quantity > 0)
     );
@@ -255,15 +255,15 @@ const CreateOrderForm = () => {
 
     const subtotal = items.reduce((acc, item) => {
       return acc + (item.item_price * item.quantity);
-    }, 0);
+    }, 0).toFixed(2);
   
     const total = items.reduce((acc, item) => {
       const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
       return acc + itemTotal;
-    }, 0);
+    }, 0).toFixed(2);
   
-    setGrandTotal(total.toFixed(2));  // Only the item total, without delivery charges
-    setSubtotal(subtotal.toFixed(2))
+    setGrandTotal(parseFloat(total));
+    setSubtotal(parseFloat(subtotal));
   }, [items, minimumCartAmount, deliveryCharges]);
 
   const deliveryFee = grandTotal < minimumCartAmount && items.length > 0 ? deliveryCharges : 0;
@@ -271,14 +271,16 @@ const CreateOrderForm = () => {
 // Calculate total discount whenever items change
 useEffect(() => {
   const total = items.reduce((acc, item) => {
-    const totalOfferPrice = item.item_price * item.quantity - item.offer_price * item.quantity;
-    return acc + totalOfferPrice;
-  }, 0);
+    const totalOfferPrice = (item.item_price * item.quantity - item.offer_price * item.quantity).toFixed(2);
+    return acc + parseFloat(totalOfferPrice);
+  }, 0).toFixed(2);
   
-  setTotalDiscount(total);
+  setTotalDiscount(parseFloat(total));
 }, [items]);
 
-
+const formattedGrandTotal = parseFloat(grandTotal || 0);
+const formattedDeliveryFee = parseFloat(deliveryFee || 0);
+const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
 
 
   const removeItem = (index) => {
@@ -464,13 +466,13 @@ useEffect(() => {
                       </HStack>
                     </Td>
                     <Td style={{width:'15%',textAlign:'center'}}>
-                      {offer_price}
+                      {offer_price.toFixed(2)}
                     </Td>
                     <Td style={{width:'5%',textAlign:'center'}}>
-                      {item_price}
+                      {item_price.toFixed(2)}
                     </Td>
                     <Td style={{width:'15%',textAlign:'center'}}>
-                      {offer_price * quantity}
+                      {(offer_price * quantity).toFixed(2)}
                     </Td>
                     <Td style={{width:'5%'}}>
                     <Button colorScheme="red" onClick={() => removeItem(index)}>
@@ -504,7 +506,7 @@ useEffect(() => {
             </HStack>
             <HStack justifyContent="space-between" mt={2}>
             <Text>Total:</Text>
-            <Text>{`₹${grandTotal + deliveryFee}`}</Text>  {/* Add delivery fee to the grand total here */}
+            <Text>{`₹${finalTotal}`}</Text>  {/* Add delivery fee to the grand total here */}
           </HStack>
           </Box>
           <GridItem colSpan={3}>
