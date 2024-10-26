@@ -72,7 +72,7 @@ function ProductsTable({ products, pagination, setPagination }) {
               <Th>Category</Th>
               <Th>Stock</Th>
               <Th>Status</Th>
-              <Th></Th>
+              <Th>Action</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -81,7 +81,7 @@ function ProductsTable({ products, pagination, setPagination }) {
               product;
               return (
                 <Tr key={index}>
-                  <Td>
+                  <Td style={{width:'10%'}}>
                     <Image
                       src={image}
                       boxSize='40px'
@@ -89,9 +89,9 @@ function ProductsTable({ products, pagination, setPagination }) {
                       borderRadius='sm'
                     />
                   </Td>
-                  <Td>
+                  <Td style={{width:'40%'}}>
                     <VStack alignItems='flex-start' spacing={1}>
-                      <Text as='b'>{name.substring(0, 21)}...</Text>
+                      <Text as='b'>{name.substring(0, 50)}</Text>
                       <Text fontSize='sm' color='green.500'>
                         {formatPrice(price)}
                       </Text>
@@ -105,17 +105,17 @@ function ProductsTable({ products, pagination, setPagination }) {
                       </Text>
                     </VStack>
                   </Td> */}
-                  <Td>
+                  <Td style={{width:'13%'}}>
                     {category}
                   </Td>
-                  <Td>{stock}</Td>
-                  <Td>
+                  <Td style={{width:'12%'}}>{stock}</Td>
+                  <Td style={{width:'12%'}}>
                     <Switch
                       colorScheme='green'
                       isChecked={product_status}
                     />
                   </Td>
-                  <Td>
+                  <Td style={{width:'13%'}}>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                         Actions

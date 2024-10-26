@@ -221,7 +221,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems.map((item, i) =>
         i === index && item.quantity < maxquantity
-          ? { ...item, quantity: parseFloat(item.quantity) + parseFloat(incrementvalue) }
+          ? { ...item, quantity: parseInt(item.quantity) + parseInt(incrementvalue) }
           : item
       )
     );
@@ -240,7 +240,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems
         .map((item, i) =>
-          i === index && item.quantity > minquantity ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(incrementvalue) } : item
+          i === index && item.quantity > minquantity ? { ...item, quantity: parseInt(item.quantity) - parseInt(incrementvalue) } : item
         )
         .filter((item) => item.quantity > 0)
     );
@@ -262,8 +262,8 @@ const CreateOrderForm = () => {
       return acc + itemTotal;
     }, 0);
   
-    setGrandTotal(total);  // Only the item total, without delivery charges
-    setSubtotal(subtotal)
+    setGrandTotal(total.toFixed(2));  // Only the item total, without delivery charges
+    setSubtotal(subtotal.toFixed(2))
   }, [items, minimumCartAmount, deliveryCharges]);
 
   const deliveryFee = grandTotal < minimumCartAmount && items.length > 0 ? deliveryCharges : 0;
@@ -429,13 +429,13 @@ useEffect(() => {
               </Select>
           </Box>
           {/* Added products */}
-          <Table variant='simple'>
+          <Table style={{width:'100%'}} variant='striped' colorScheme='whiteAlpha' size='md'>
             {items.length > 0 && (
               <Thead>
                 <Tr>
                   <Th>Image</Th>
                   <Th>Name</Th>
-                  <Th>Actions</Th>
+                  <Th style={{textAlign:'center'}}>quantity</Th>
                   <Th>Offer price</Th>
                   <Th>Item price</Th>
                   <Th>Item total</Th>
@@ -450,29 +450,29 @@ useEffect(() => {
               return (
                 <Tbody>
                   <Tr key={index}>
-                    <Td>
+                    <Td style={{width:'10%'}}>
                       <Image src={image} boxSize="50px" />
                     </Td>
-                    <Td>
+                    <Td style={{width:'35%'}}>
                       <Text>{item.name}</Text>
                     </Td>
-                    <Td>
+                    <Td style={{width:'5%',textAlign:'center'}}>
                       <HStack>
                         <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
                         <Text>{item.quantity}</Text>
                         <Button onClick={() => incrementCount(index, incrementvalue, maxquantity, minquantity)}>+</Button>
                       </HStack>
                     </Td>
-                    <Td>
+                    <Td style={{width:'15%',textAlign:'center'}}>
                       {offer_price}
                     </Td>
-                    <Td>
+                    <Td style={{width:'5%',textAlign:'center'}}>
                       {item_price}
                     </Td>
-                    <Td>
+                    <Td style={{width:'15%',textAlign:'center'}}>
                       {offer_price * quantity}
                     </Td>
-                    <Td>
+                    <Td style={{width:'5%'}}>
                     <Button colorScheme="red" onClick={() => removeItem(index)}>
                       <FaTrash />
                     </Button>
@@ -507,6 +507,18 @@ useEffect(() => {
             <Text>{`₹${grandTotal + deliveryFee}`}</Text>  {/* Add delivery fee to the grand total here */}
           </HStack>
           </Box>
+          <GridItem colSpan={3}>
+    <Button
+        isLoading={createOrderLoadingState}
+        loadingText='Creating order'
+        colorScheme="blue"
+        mt={5}
+        onClick={handleCreateOrder}
+        isDisabled={!selectedUser || items.length === 0 || !showaddAddressbox} // Disable if no user or no items in the cart
+    >
+        Create Order
+    </Button>
+</GridItem>
         </GridItem>
 
         {/* Customer and Address Section */}
@@ -700,18 +712,7 @@ useEffect(() => {
           </SimpleGrid>
          :<></>)}
         </GridItem>
-       <GridItem colSpan={3}>
-    <Button
-        isLoading={createOrderLoadingState}
-        loadingText='Creating order'
-        colorScheme="blue"
-        mt={5}
-        onClick={handleCreateOrder}
-        isDisabled={!selectedUser || items.length === 0 || !showaddAddressbox} // Disable if no user or no items in the cart
-    >
-        Create Order
-    </Button>
-</GridItem>
+       
       
       </Grid>
     </VStack>

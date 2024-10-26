@@ -34,7 +34,6 @@ export const LinkItems = [
 
 export const orderStatusList = [
   {name: 'Select status', value: null},
-  {name: 'Verifying Payment', value: 'verifying payment'},
   {name: 'Accepted', value: 'accepted'},
   {name: 'Processing', value: 'processing'},
   {name: 'Packed', value: 'packed'},
@@ -42,6 +41,7 @@ export const orderStatusList = [
   {name: 'Out for delivery', value: 'out for delivery'},
   {name: 'Transit', value: 'transit'},
   {name: 'Delivered', value: 'delivered'},
+  {name: 'Verifying Payment', value: 'verifying payment'},
   {name: 'Canceled', value: 'canceled'},
   {name: 'Failed', value: 'failed'}
 ];
