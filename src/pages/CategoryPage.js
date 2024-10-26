@@ -42,7 +42,7 @@ function CategoryPage() {
         await fetchCategory();
     }
 
-    console.log(categories);
+    // console.log(categories);
 
     if (loading) {
         return (

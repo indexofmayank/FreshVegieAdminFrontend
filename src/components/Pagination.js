@@ -9,7 +9,7 @@ const Pagination = ({ pagination, setPagination }) => {
   
   
 
-  console.log(pagination);
+  // console.log(pagination);
   const handleLimitChange = (event) => {
     const newLimit = Number(event.target.value);
     setPagination((prev) => {
