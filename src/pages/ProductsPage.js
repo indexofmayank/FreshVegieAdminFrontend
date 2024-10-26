@@ -28,20 +28,20 @@ function ProductsPage() {
   const [productlist, setProductlist] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 5,
+    limit: 10,
     totalPage: 0,
     totalItems: 0,
   })
 
   useEffect(() => {
     setPagination({
-      limit: products.limit || 5,
+      limit: products.limit || 10,
       page: products.page || 1,
       totalPage: products.totalPage || 0,
       totalItems: products.totalProducts || 0,
     });
     setProductlist(products.data)
-  }, []);
+  }, [products]);
 
   // useEffect(() => {
   //   fetchProducts(pagination.page, pagination.limit);
