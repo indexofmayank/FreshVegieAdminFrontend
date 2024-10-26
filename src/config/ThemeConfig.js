@@ -22,7 +22,7 @@ const theme = extendTheme({
   },
   fontSizes: {
     xs: "11px",
-    sm: "10px",
+    sm: "12px",
     md: "12px",
     lg: "14px",
     xl: "16px",

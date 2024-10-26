@@ -57,7 +57,7 @@ function BannerTable({ banners }) {
                     <Spinner size='lg' color='brown.500' />
                 </HStack>
             ) : (
-                <Table variant='simple'>
+                <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
                     <Thead>
                         <Tr>
                             <Th>Image</Th>

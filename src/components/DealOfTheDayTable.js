@@ -27,7 +27,7 @@ function DealOfTheDayTable({ dealOfTheDay }) {
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
 
-            <Table variant='simple'>
+            <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
                 <Thead>
                     {/* <Tr>
                         <Th>
