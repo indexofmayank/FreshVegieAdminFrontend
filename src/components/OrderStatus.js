@@ -56,6 +56,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
     useEffect(() => {
         setOrderStatic(prevState => [...prevState, orderStatus]);
     }, [orderStatus]);
+    console.log(orderStatus)
         
     return (
         <Box p={6}>
@@ -99,6 +100,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
                 {
                     orderStatic[0]?.orderStatus?.map((status, index) => {
                         const { label, data } = status;
+                        console.log(label, data)
                         return (
                             <OrderCard key={index} label={label} value={data} onClick={() => handleCardClick(label)} />
                         );
