@@ -21,9 +21,7 @@ import axios from "axios";
 function BlukImageUploadPage() {
     const [assetList, setAssetList] = useState([]);
     const [assetSearchQuery, setAssetSearchQuery] = useState('');
-
-    useEffect(() => {
-        async function loaddata(){
+    const loaddata = async () => {
         const response = await axios.get(`${zipAssetUpload_url}`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -32,6 +30,9 @@ function BlukImageUploadPage() {
         const {success, data} = response.data;
         setAssetList(data)
     }
+
+    useEffect(() => {
+       
         loaddata()
        
     }, []);
@@ -40,7 +41,7 @@ function BlukImageUploadPage() {
     return (
         <SidebarWithHeader>
             <HStack mb={5}>
-                <CreateAssestModal />
+                <CreateAssestModal loaddata={loaddata}/>
                 <Button
                     colorScheme="brown"
                     variant="outline"
@@ -67,7 +68,7 @@ function BlukImageUploadPage() {
                     />
                 </InputGroup>
             </HStack>
-            <AssestImageTable  assetList={assetList}/>
+            <AssestImageTable  assetList={assetList} />
         </SidebarWithHeader>
     );
 }

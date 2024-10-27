@@ -13,13 +13,14 @@ import {
     useToast,
     Box,
     Text,
-    Divider
+    Divider,
+    Spinner
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import {zipAssetUpload_url,imageAssetUpload_url} from '../utils/constants'
 
-function CreateAssestModal() {
+function CreateAssestModal({ loaddata }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
     const toast = useToast();
@@ -28,10 +29,11 @@ function CreateAssestModal() {
     const [zipFile, setZipFile] = useState(null);
     const [isSaveButtonLoading, setSaveButtonLoading] = useState(false);
     const [isSaveButtonDisable, setSaveButtonDisable] = useState(true);
+    
 
     useEffect(() => {
         setSaveButtonDisable(false);
-    }, [zipFile]);
+    }, [zipFile,imageFile]);
 
     // Dropzone for image files
     const onDropImage = useCallback((acceptedFiles) => {
@@ -74,6 +76,62 @@ function CreateAssestModal() {
         onDrop: onDropZip,
         accept: '.zip',
     });
+
+    const handleSave = async () => {
+        setLoading(true); // Show the loader
+        setSaveButtonLoading(true);
+        try {
+            if (zipFile) {
+                const zipData = new FormData();
+                zipData.append("file", zipFile);
+                const response = await axios.post(zipAssetUpload_url, zipData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                if (response.data.success) {
+                    setZipFile(null);
+                    await loaddata();
+                    toast({
+                        position: 'top',
+                        description: response.data.message,
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                    onClose(); // Close modal on success
+                }
+            } else if (imageFile) {
+                const imageData = new FormData();
+                imageData.append("file", imageFile);
+                const response = await axios.post(imageAssetUpload_url, imageData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                if (response.data.success) {
+                    setImageFile(null);
+                    await loaddata();
+                    toast({
+                        position: 'top',
+                        description: response.data.message,
+                        status: "success",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                    onClose(); // Close modal on success
+                }
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || error.message || "Unexpected error";
+            toast({
+                position: 'top',
+                description: errorMessage,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
+        } finally {
+            setLoading(false); // Hide the loader
+            setSaveButtonLoading(false);
+        }
+    };
 
 
     return (
@@ -146,148 +204,30 @@ function CreateAssestModal() {
                             isLoading={isSaveButtonLoading}
                             disabled={isSaveButtonDisable}
                             colorScheme='brown'
-                            onClick={async () => {
-                                // console.log('we come here');
-                               
-                                console.log(zipFile)
-                                console.log(imageFile)
-                                if(zipFile){
-                                    const zipData = new FormData();
-                                    zipData.append("file", zipFile);
-                                    // console.log('calling zipdata');
-                                    try {
-                                    const response = await axios.post(zipAssetUpload_url, zipData, {
-                                        header: {
-                                            'Content-Type': 'multipart/form-data',
-                                        }
-                                    });
-                                    if(response.data.success){
-                                        setZipFile(null)
-                                        toast({
-                                            position: 'top',
-                                            // title: "",
-                                            description: response.data.message,
-                                            status: "success",
-                                            duration: 3000,
-                                            isClosable: true,
-                                        });
-                                    }
-                                        console.log(response);
-                                        return response.data;
-                                    } catch (error) {
-                                        // Check if the error is from the server (response exists)
-                                        if (error.response) {
-                                            // console.error('Error response from server:', error.response);
-                                            // console.log(error.response.data.message)
-                                            // alert(`Error: ${error.response.data.message}`);
-                                            toast({
-                                                position: 'top',
-                                                // title: "",
-                                                description: error.response.data.message,
-                                                status: "error",
-                                                duration: 3000,
-                                                isClosable: true,
-                                            });
-                                        } else if (error.request) {
-                                            // The request was made, but no response was received
-                                            // console.error('No response received:', error.request);
-                                            toast({
-                                                position: 'top',
-                                                // title: "",
-                                                description: "No response received",
-                                                status: "error",
-                                                duration: 3000,
-                                                isClosable: true,
-                                            });
-                                            // alert('Error: No response from server');
-                                        } else {
-                                            // Something else happened while making the request
-                                            // console.error('Unexpected error:', error.message);
-                                            toast({
-                                                position: 'top',
-                                                // title: "",
-                                                description: error.message,
-                                                status: "error",
-                                                duration: 3000,
-                                                isClosable: true,
-                                            });
-                                            // alert(`Error: ${error.message}`);
-                                        }
-                                        return null;
-                                    }
-                                }else{
-                                    // console.log('calling imagedata');
-                                    const imageData = new FormData();
-                                    imageData.append("file", imageFile);
-                                    try {
-                                    const response = await axios.post(imageAssetUpload_url, imageData, {
-                                        header: {
-                                            'Content-Type': 'multipart/form-data',
-                                        }
-                                    });
-                                    if(response.data.success){
-                                        setImageFile(null)
-                                    toast({
-                                        position: 'top',
-                                        // title: "",
-                                        description: response.data.message,
-                                        status: "success",
-                                        duration: 3000,
-                                        isClosable: true,
-                                    });
-                                }
-                                    console.log(response);
-                                    return response.data;
-                                } catch (error) {
-                                    // Check if the error is from the server (response exists)
-                                    if (error.response) {
-                                        // console.error('Error response from server:', error.response);
-                                        // console.log(error.response.data.message)
-                                        // alert(`Error: ${error.response.data.message}`);
-                                        toast({
-                                            position: 'top',
-                                            // title: "",
-                                            description: error.response.data.message,
-                                            status: "error",
-                                            duration: 3000,
-                                            isClosable: true,
-                                        });
-                                    } else if (error.request) {
-                                        // The request was made, but no response was received
-                                        // console.error('No response received:', error.request);
-                                        toast({
-                                            position: 'top',
-                                            // title: "",
-                                            description: "No response received",
-                                            status: "error",
-                                            duration: 3000,
-                                            isClosable: true,
-                                        });
-                                        // alert('Error: No response from server');
-                                    } else {
-                                        // Something else happened while making the request
-                                        // console.error('Unexpected error:', error.message);
-                                        toast({
-                                            position: 'top',
-                                            // title: "",
-                                            description: error.message,
-                                            status: "error",
-                                            duration: 3000,
-                                            isClosable: true,
-                                        });
-                                        // alert(`Error: ${error.message}`);
-                                    }
-                                    return null;
-                                }
-                                }
-                               
-                            }}
+                            loading loadingText="Saving..."
+                            onClick={handleSave}
                         >
                             Save
                         </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            {loading && (
+                <Box
+                    position="fixed"
+                    top="0"
+                    left="0"
+                    width="100vw"
+                    height="100vh"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    bg="rgba(0, 0, 0, 0.5)"
+                    zIndex="9999"
+                >
+                    <Spinner size="xl" color="white" />
+                </Box>
+            )}
         </>
     );
 }
