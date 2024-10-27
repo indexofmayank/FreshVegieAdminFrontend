@@ -50,7 +50,8 @@ function DealOfTheDayTable({ dealOfTheDay }) {
                     </Th>
                 </Thead>
                 <Tbody>
-                    {deals.map((deal, index) => {
+                    {(deals.length > 0 ?
+                     deals.map((deal, index) => {
                         const { name, image, _id } = deal;
                         return (
                             <Tr key={index}>
@@ -88,7 +89,8 @@ function DealOfTheDayTable({ dealOfTheDay }) {
                                 </Td>
                             </Tr>
                         )
-                    })}
+                    })
+                    : <Tr><Td colSpan={3}> No data available </Td></Tr>)}
                 </Tbody>
             </Table>
 

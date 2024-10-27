@@ -71,7 +71,8 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {categories.map((category, index) => {
+                        {(categories.length > 0 ?
+                        categories.map((category, index) => {
                             const { image, name, _id, status, order } = category;
                             return (
                                 <Tr key={index}>
@@ -108,7 +109,8 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
                                     </Td>
                                 </Tr>
                             );
-                        })}
+                        })
+                        : <></>)}
                     </Tbody>
                 </Table>
             )}

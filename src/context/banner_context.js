@@ -102,7 +102,7 @@ export const BannerProvider = ({children}) => {
     };
 
     useEffect(() => {
-        fetchBanner();
+        // fetchBanner();
     }, []);
 
     return (
