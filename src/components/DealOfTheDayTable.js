@@ -69,7 +69,7 @@ function DealOfTheDayTable({ dealOfTheDay }) {
                                 <Td>
                                     <Image
                                         src={image}
-                                        boxSize='60px'
+                                        boxSize='50px'
                                         objectFit='content'
                                         borderRadius='lg'
                                     />

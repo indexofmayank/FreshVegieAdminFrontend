@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     SidebarWithHeader,
     GeoFancingPolygon,
@@ -17,10 +17,21 @@ function GeoFancing() {
         geoFancing_error: error,
         fetchGeoFancing
     } = useGeoFancingContext();
-
+    const [geofencingData, setGeofencingData] = useState([]);
     const handleRefresh = async () => {
         await fetchGeoFancing;
     };
+
+    useEffect(() => {
+        fetchGeoFancing();
+    }, []);
+
+    useEffect(() => {
+        if (geoFancings) {
+            setGeofencingData(geoFancings);
+        }
+    }, [geoFancings]);
+    console.log(geoFancings)
 
     if (loading) {
         return (
@@ -81,7 +92,7 @@ function GeoFancing() {
                     Refresh
                 </Button>
             </HStack>
-            <GeoFancingTable  geoFancings={geoFancings}/>
+            <GeoFancingTable  geoFancings={geofencingData}/>
         </SidebarWithHeader>
     )
 }

@@ -160,7 +160,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        fetchNotifications()
+        // fetchNotifications()
     }, []);
 
     return (

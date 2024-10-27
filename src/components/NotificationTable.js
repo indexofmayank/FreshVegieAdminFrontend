@@ -47,7 +47,8 @@ function NotificationTable({ notifications }) {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {notifications.map((notification, index) => {
+                        {(notifications.length > 0 ?
+                        notifications.map((notification, index) => {
                             const {
                                 name,
                                 redirect_to,
@@ -65,7 +66,7 @@ function NotificationTable({ notifications }) {
                                     <Td>
                                         <Image
                                             src={banner}
-                                            boxSize='60px'
+                                            boxSize='50px'
                                             objectFit='content'
                                             borderRadius='lg'
                                         />
@@ -94,7 +95,8 @@ function NotificationTable({ notifications }) {
                                     </Td>
                                 </Tr>
                             );
-                        })}
+                        })
+                        :<Tr><Td colSpan={6}> No Notification data found</Td></Tr>)}
                     </Tbody>
                 </Table>
             )}
