@@ -203,7 +203,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
     <Grid templateColumns="2fr 1fr" gap={6} p={4}>
       {/* Left Side: Order Table */}
       <GridItem>
-        <Box bg="white" shadow="md" p={4} borderRadius="md">
+        <Box bg="white" shadow="md" p={2} borderRadius="md">
           <Heading size="md" mb={4}>
             Order Details of {orderId}
           </Heading>
@@ -231,7 +231,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
                           <Image
                             src={image}
                             alt={name}
-                            boxSize="50px"
+                            boxSize="40px"
                             mr={3}
                           />
                           <Box>

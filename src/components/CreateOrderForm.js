@@ -453,7 +453,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                 <Tbody>
                   <Tr key={index}>
                     <Td style={{width:'10%'}}>
-                      <Image src={image} boxSize="50px" />
+                      <Image src={image} boxSize="40px" />
                     </Td>
                     <Td style={{width:'35%'}}>
                       <Text>{item.name}</Text>
@@ -487,7 +487,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
           </Table>
 
           {/* Total Section */}
-          <Box mt={4} p={4} border="1px solid lightgray" borderRadius="md" bg="gray.50">
+          <Box mt={4} p={2} border="1px solid lightgray" borderRadius="md" bg="gray.50">
             <HStack justifyContent="space-between" mt={2}>
               <Text>No. of items:</Text>
               <Text>{items.length}</Text>
