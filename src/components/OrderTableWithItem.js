@@ -207,7 +207,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
           <Heading size="md" mb={4}>
             Order Details of {orderId}
           </Heading>
-          <Table variant="simple">
+          <Table  variant='striped' colorScheme='whiteAlpha' size='sm'>
             <Thead>
               <Tr>
                 <Th>Item Name</Th>

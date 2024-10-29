@@ -79,7 +79,7 @@ function CreateNewProductModal() {
 
   useEffect(() => {
     fetchCategoryByName();
-    resetNewProduct();
+    // resetNewProduct();
   }, []);
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
