@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Input,Button,VStack,HStack, Box, Divider, Image, Text, Grid, GridItem,Heading, List,ListItem, FormControl,FormLabel,useToast, SimpleGrid, useDisclosure, ModalCloseButton,toast, Table,Thead,Tbody,Tr, Th,Td,Select,option
+  Input,Button,VStack,HStack, Box, Divider, Image, Text, Grid, GridItem,Heading, List,ListItem, FormControl,FormLabel,useToast, SimpleGrid, useDisclosure, ModalCloseButton,toast, Table,Thead,Tbody,Tr, Th,Td,
 } from '@chakra-ui/react';
 
 import { useProductContext } from '../context/product_context';
@@ -8,6 +8,7 @@ import { useUserContext } from '../context/user_context';
 import { useOrderContext } from '../context/order_context';
 import {useCustomerContext} from '../context/customer_context';
 import { FaTrash } from "react-icons/fa";
+import Select from 'react-select';
 
 const CreateOrderForm = () => {
   const [items, setItems] = useState([]); 
@@ -103,8 +104,8 @@ const CreateOrderForm = () => {
 
   const onUserSelect = (event) => {
     // const userId = event.target.value;
-    const userId = event.target.value;
-    // console.log(userId)
+    // console.log(event._id)
+    const userId = event._id;
     // console.log(customerlist)
     setSelectedUser(userId);
     setSelectedCustomerId(userId);
@@ -132,9 +133,10 @@ const CreateOrderForm = () => {
   };
 
   const onProductSelect = (event) => {
+    // console.log(event._id)
     // const userId = event.target.value;
-    const productId = event.target.value;
-    // console.log(productId)
+    const productId = event._id;
+    // console.log(event)
     // // console.log(customerlist)
     // setSelectedproduct(productId);
     const product = productlist.find((product) => product._id == productId);
@@ -413,7 +415,8 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
             Create Order
           </Heading>
           <Box mb={4} position="relative">
-          <Select
+
+          {/* <Select
                 name='product'
                 focusBorderColor='brown.500'
                 value={selectedproduct} onChange={onProductSelect}
@@ -428,7 +431,24 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                  )
                })
               ):(<></>)}
-              </Select>
+              </Select> */}
+              <Select 
+               getOptionLabel={option =>
+                  `${option.name}`
+                } 
+                value={selectedproduct}
+                onChange={onProductSelect}
+                // onChange={this.handleSelect}
+                getOptionValue={option => `${option}`}
+                 options={productlist}
+                 isSearchable={true}
+                // filterOption={this.customFilter}
+                // onInputChange={this.handleInputChange}
+                noOptionsMessage={() => null}
+                placeholder={'Enter product name'}
+                autoFocus={true}
+                // menuIsOpen={this.state.menuOpen}
+                  />
           </Box>
           {/* Added products */}
           <Table style={{width:'100%'}} variant='striped' colorScheme='whiteAlpha' size='md'>
@@ -528,7 +548,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
           <Heading size="md" mb={4}>
             Select Customer
           </Heading>
-          <Select
+          {/* <Select
                 name='user'
                 focusBorderColor='brown.500'
                 value={selectedUser} onChange={onUserSelect}
@@ -543,7 +563,24 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                  )
                })
               ):(<></>)}
-              </Select>
+              </Select> */}
+               <Select 
+               getOptionLabel={user =>
+                  `${user.name}`
+                } 
+                value={selectedUser}
+                onChange={onUserSelect}
+                // onChange={this.handleSelect}
+                getOptionValue={option => `${option}`}
+                 options={customerlist}
+                 isSearchable={true}
+                // filterOption={this.customFilter}
+                // onInputChange={this.handleInputChange}
+                noOptionsMessage={() => null}
+                placeholder={'Enter user name'}
+                autoFocus={true}
+                // menuIsOpen={this.state.menuOpen}
+                  />
           <Grid mt={5}>
 
          
