@@ -155,7 +155,11 @@ const CreateOrderForm = () => {
     }
   }, [allproduct]);
 
+  // useEffect(() => {
+  //   getAllProductForOrder();
+  // }, []);
 
+// console.log(allproduct)
 
   const addItem = (item) => {
 
@@ -432,6 +436,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                })
               ):(<></>)}
               </Select> */}
+              {/* {productlist.length > 0 ? ( */}
               <Select 
                getOptionLabel={option =>
                   `${option.name}`
@@ -449,6 +454,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                 autoFocus={true}
                 // menuIsOpen={this.state.menuOpen}
                   />
+                {/* ):(<></>)} */}
           </Box>
           {/* Added products */}
           <Table style={{width:'100%'}} variant='striped' colorScheme='whiteAlpha' size='md'>

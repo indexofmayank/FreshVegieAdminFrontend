@@ -76,7 +76,8 @@ function ProductsTable({ products, pagination, setPagination }) {
             </Tr>
           </Thead>
           <Tbody>
-            {products.map((product, index) => {
+          {(products.length > 0 ?
+            products.map((product, index) => {
               const { image, name, category, stock, price, product_status, _id } =
               product;
               return (
@@ -136,7 +137,8 @@ function ProductsTable({ products, pagination, setPagination }) {
                 </Tr>
 
               );
-            })}
+            })
+            : <></>)}
           </Tbody>
         </Table>
       )}
