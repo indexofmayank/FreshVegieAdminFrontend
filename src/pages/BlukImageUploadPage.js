@@ -26,7 +26,7 @@ function BlukImageUploadPage() {
     const toast = useToast();
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
         const loaddata = async () => {
             const response = await axios.get(`${zipAssetUpload_url}`, {
@@ -45,7 +45,8 @@ function BlukImageUploadPage() {
         }, []);
 
         const handleDelete = async (id) => {
-            const response = await axios.delete(`${deleteAsset_url}/${id}`);
+            const response = await axios.delete(`${deleteAsset_url}${id}`);
+            console.log(response);
             const { success, data } = response.data;
             if (success) {
                 const responseTwo = await axios.get(`${zipAssetUpload_url}`, {
@@ -104,10 +105,9 @@ function BlukImageUploadPage() {
                         />
                     </InputGroup>
                 </HStack>
-
+                <AssestImageTable assetList={assetList} handleDelete={handleDelete} />
             </SidebarWithHeader>
         );
     }
-}
 
 export default BlukImageUploadPage;
