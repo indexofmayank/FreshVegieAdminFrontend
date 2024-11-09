@@ -17,7 +17,7 @@ import {
 const initialState = {
     dealOfTheDay_loading: false,
     dealOfTheDay_error: false,
-    dealOfTheDay: {},
+    dealOfTheDay: [],
 }
 
 const DealOfTheDayContext = React.createContext();
@@ -48,9 +48,9 @@ export const DealOfTheDayProvider = ({children}) => {
         }
     }
 
-    useEffect(() => {
-        fetchDealOfTheDayForTable();
-    }, []);
+    // useEffect(() => {
+    //     fetchDealOfTheDayForTable();
+    // }, []);
 
     return (
         <DealOfTheDayContext.Provider

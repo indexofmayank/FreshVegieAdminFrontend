@@ -275,7 +275,7 @@ export const ProductProvider = ({ children }) => {
   
 
   useEffect(() => {
-    fetchProducts();
+    // fetchProducts();
     getAllProductForOrder();
   }, []);
 

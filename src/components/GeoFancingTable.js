@@ -59,36 +59,39 @@ function GeoFancingTable({ geoFancings }) {
           <Spinner size='lg' color='brown.500' />
         </HStack>
       ) : (
-        <Table variant='simple'>
+        <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
           <Thead>
             <Tr>
               <Th>Image</Th>
               <Th>Name</Th>
+              <Th>Pincodes</Th>
               <Th>Status</Th>
               <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
-            {geoFancings.map((geoFancing, index) => {
-              const { name, image, status, _id } = geoFancing;
+            {( geoFancings.length > 0 ?
+             geoFancings.map((geoFancing, index) => {
+              const { name, image, status, _id,pincodes } = geoFancing;
               return (
                 <Tr key={index}>
-                  <Td>
+                  <Td style={{width:'10%'}}>
                     <Image
                       src={image}
-                      boxSize='100px'
+                      boxSize='50px'
                       objectFit='cover'
                       borderRadius='lg'
                     />
                   </Td>
-                  <Td>{name}</Td>
-                  <Td>
+                  <Td style={{width:'20%'}}>{name}</Td>
+                  <Td style={{width:'30%'}}>{pincodes.join(', ')}</Td>
+                  <Td style={{width:'20%'}}>
                     <Switch
                       isChecked={status}
                       colorScheme='brown'
                     />
                   </Td>
-                  <Td>
+                  <Td style={{width:'20%'}}>
                     <Menu>
                       <MenuButton as={Button} rightIcon={<BiChevronDown />}>
                         Actions
@@ -105,7 +108,8 @@ function GeoFancingTable({ geoFancings }) {
                   </Td>
                 </Tr>
               );
-            })}
+            })
+            :<Tr><Td colSpan={3}> No Geofancing data found</Td></Tr>)}
           </Tbody>
         </Table>
       )}

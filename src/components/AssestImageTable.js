@@ -12,15 +12,19 @@ import {
     Spinner,
     useToast,
     HStack,
-    IconButton
+    IconButton,
+
 } from '@chakra-ui/react';
-import { BiCopy } from 'react-icons/bi'; // Import the copy icon
+import { BiCopy } from 'react-icons/bi'; 
+import { MdDeleteOutline } from "react-icons/md";
+import {deleteAsset_url} from '../utils/constants';
+import axios from "axios";
 
-function AssestImageTable({assetList}) {
+
+function AssestImageTable({assetList, handleDelete}) {
     const [loading, setLoading] = useState(false);
-    // console.log(assetList);
 
-    const toast = useToast(); // Using Chakra UI's toast for notifications
+    const toast = useToast(); 
 
   const handleCopy = (url) => {
     navigator.clipboard.writeText(url).then(() => {
@@ -35,6 +39,8 @@ function AssestImageTable({assetList}) {
     });
   };
 
+
+
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
              {loading ? (
@@ -42,7 +48,7 @@ function AssestImageTable({assetList}) {
           <Spinner size='lg' color='brown.500' />
         </HStack>
       ) : (
-        <Table variant='simple'>
+        <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
           <Thead>
             <Tr>
               <Th>Image</Th>
@@ -53,7 +59,7 @@ function AssestImageTable({assetList}) {
           </Thead>
           <Tbody>
             {assetList.map((asset, index) => {
-              const { image, name } =asset;
+              const { image, name, _id } =asset;
               return (
                 <Tr key={index}>
                   <Td>
@@ -75,6 +81,14 @@ function AssestImageTable({assetList}) {
                       icon={<BiCopy />}
                       aria-label="Copy URL"
                       onClick={() => handleCopy(image)}
+                      size="lg"
+                    />
+                  </Td>
+                  <Td>
+                    <IconButton
+                      icon={<MdDeleteOutline />}
+                      aria-label="delete URL"
+                      onClick={() => handleDelete(_id)}
                       size="lg"
                     />
                   </Td>

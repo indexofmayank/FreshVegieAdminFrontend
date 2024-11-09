@@ -106,9 +106,6 @@ export const GeoFancingProvider = ({children}) => {
         }
     };
 
-    useEffect(() => {
-        fetchGeoFancing();
-    }, []);
     
     return (
         <GeoFancingContext.Provider 

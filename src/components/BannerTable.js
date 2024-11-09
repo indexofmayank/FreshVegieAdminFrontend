@@ -57,7 +57,7 @@ function BannerTable({ banners }) {
                     <Spinner size='lg' color='brown.500' />
                 </HStack>
             ) : (
-                <Table variant='simple'>
+                <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
                     <Thead>
                         <Tr>
                             <Th>Image</Th>
@@ -74,7 +74,7 @@ function BannerTable({ banners }) {
                                     <Td>
                                         <Image
                                             src={image}
-                                            boxSize='60px'
+                                            boxSize='50px'
                                             objectFit='content'
                                             borderRadius='lg'
                                         />

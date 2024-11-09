@@ -28,34 +28,46 @@ function ProductsPage() {
   const [productlist, setProductlist] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 5,
+    limit: 10,
     totalPage: 0,
     totalItems: 0,
   })
 
   useEffect(() => {
     setPagination({
-      limit: products.limit || 5,
+      limit: products.limit || 10,
       page: products.page || 1,
       totalPage: products.totalPage || 0,
       totalItems: products.totalProducts || 0,
     });
-    setProductlist(products.data)
-  }, []);
+
+  }, [products]);
+
+  useEffect(() => {
+    if (products.data) {
+      setProductlist(products.data)
+    }
+}, [products]);
 
   // useEffect(() => {
   //   fetchProducts(pagination.page, pagination.limit);
-  // }, []);
+  // }, [pagination.page, pagination.limit]);
 
+    useEffect(() => {
+       fetchProducts();
+  }, []);
+ 
 
   useEffect(() => {
-    console.log(suggestionList);
+    // console.log(suggestionList);
     if(suggestionList.length>0){
       setProductlist(suggestionList);
     }
    
   }, [suggestionList]);
 
+// console.log(products);
+// console.log(productlist);
 
   const handleRefresh = async () => {
     await fetchProducts(pagination.page, pagination.limit);
@@ -103,7 +115,7 @@ function ProductsPage() {
       </SidebarWithHeader>
     );
   }
-  console.log(products); 
+  // console.log(products); 
   return (
     <SidebarWithHeader>
       <HStack mb={5} spacing={4}>

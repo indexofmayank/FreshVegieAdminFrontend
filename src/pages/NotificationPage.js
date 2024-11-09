@@ -14,7 +14,7 @@ import {getAllUserFcmToken_url} from '../utils/constants';
 function NotificationPage() {
 
     const [allUserToken, setAllUserToken] = useState([]);
-
+    const [notificationsData, setNotificationsData] = useState([]);
     const {
         notificatin_loading: loading,
         notification_error: error,
@@ -39,7 +39,16 @@ function NotificationPage() {
         loadData();
     }, [setAllUserToken]);
 
+    useEffect(() => {
+        fetchNotifications()
+    }, []);
 
+    useEffect(() => {
+        if (notifications) {
+            setNotificationsData(notifications);
+        }
+    }, [notifications]);
+    
     if (loading) {
         return (
             <SidebarWithHeader>
@@ -100,7 +109,7 @@ function NotificationPage() {
                     Refresh
                 </Button>
             </HStack>
-            <NotificationTable notifications={notifications} />
+            <NotificationTable notifications={notificationsData} />
         </SidebarWithHeader>
     );
 

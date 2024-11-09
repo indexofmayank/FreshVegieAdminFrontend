@@ -11,19 +11,27 @@ import {
     Spinner,
     Heading,
     InputGroup,
-    Input
+    Input,
+    useToast
 } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import {zipAssetUpload_url} from '../utils/constants';
+import {deleteAsset_url} from '../utils/constants';
 import axios from "axios";
 
 
 function BlukImageUploadPage() {
     const [assetList, setAssetList] = useState([]);
     const [assetSearchQuery, setAssetSearchQuery] = useState('');
+<<<<<<< HEAD
+    const toast = useToast(); 
+
 
     useEffect(() => {
         async function loaddata(){
+=======
+    const loaddata = async () => {
+>>>>>>> f5b353e0b1bd530bb200c5e424ac25c6e76e82d7
         const response = await axios.get(`${zipAssetUpload_url}`, {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -32,15 +40,47 @@ function BlukImageUploadPage() {
         const {success, data} = response.data;
         setAssetList(data)
     }
+
+    useEffect(() => {
+       
         loaddata()
        
     }, []);
 
-// console.log(assetList)
+    const handleDelete = async (id) => {
+        const response = await axios.delete(`${deleteAsset_url}/${id}`);
+        const {success, data} = response.data;
+        if(success) {
+            const responseTwo = await axios.get(`${zipAssetUpload_url}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            const {success, data} = responseTwo.data;
+            setAssetList(data)
+          return toast({
+            position: 'top',
+            description: 'Asset deleted',
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+          });
+        } else {
+          return toast({
+            position: 'top',
+            description: data,
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          });
+        }
+      }
+
+console.log(assetList)
     return (
         <SidebarWithHeader>
             <HStack mb={5}>
-                <CreateAssestModal />
+                <CreateAssestModal loaddata={loaddata}/>
                 <Button
                     colorScheme="brown"
                     variant="outline"
@@ -67,7 +107,11 @@ function BlukImageUploadPage() {
                     />
                 </InputGroup>
             </HStack>
-            <AssestImageTable  assetList={assetList}/>
+<<<<<<< HEAD
+            <AssestImageTable  assetList={assetList} handleDelete={handleDelete}/>
+=======
+            <AssestImageTable  assetList={assetList} />
+>>>>>>> f5b353e0b1bd530bb200c5e424ac25c6e76e82d7
         </SidebarWithHeader>
     );
 }

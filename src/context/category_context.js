@@ -129,9 +129,9 @@ export const CategoryProvider = ({children}) => {
         }
     }
 
-    useEffect(() => {
-        fetchCategory();
-    }, []);
+    // useEffect(() => {
+    //     // fetchCategory();
+    // }, []);
 
     return (
         <CategoryContext.Provider

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     SidebarWithHeader,
     CreateNewDealOfTheDay,
@@ -16,18 +16,32 @@ function DealOfTheDayPage() {
         dealOfTheDay,
         fetchDealOfTheDayForTable
     } = useDealOfTheDayContext();
-
+    const [dealofthedaydata, setDealofthedaydata] = useState([]);
 
     const handleRefresh = async () => {
         await fetchDealOfTheDayForTable();
-    }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchDealOfTheDayForTable();
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (dealOfTheDay) {
+            console.log("working");
+            setDealofthedaydata(dealOfTheDay);
+        }
+    }, [dealOfTheDay]);
 
     if (loading) {
         return (
             <SidebarWithHeader>
                 <HStack mb={3}>
                     <Button
-                        colorScheme="brown"
+                        colorScheme="blue" // Updated color scheme to "blue"
                         variant="outline"
                         leftIcon={<MdOutlineRefresh />}
                         onClick={handleRefresh}
@@ -36,11 +50,10 @@ function DealOfTheDayPage() {
                     </Button>
                 </HStack>
                 <VStack alignItems='center' justifyContent='center'>
-                    <Spinner size='lg' color='brown.500' />
+                    <Spinner size='lg' color='blue.500' />
                 </VStack>
-
             </SidebarWithHeader>
-        )
+        );
     }
 
     if (error) {
@@ -48,7 +61,7 @@ function DealOfTheDayPage() {
             <SidebarWithHeader>
                 <HStack mb={5}>
                     <Button
-                        colorScheme="brown"
+                        colorScheme="blue" // Updated color scheme to "blue"
                         variant="outline"
                         leftIcon={<MdOutlineRefresh />}
                         onClick={handleRefresh}
@@ -59,26 +72,25 @@ function DealOfTheDayPage() {
                 <VStack alignItems='center' justifyContent='center'>
                     <Heading color='red.500'>There was an error</Heading>
                 </VStack>
-
             </SidebarWithHeader>
-
-        )
+        );
     }
-
 
     return (
         <SidebarWithHeader>
             <HStack mb={5}>
                 <Button
-                    colorScheme="brown"
+                    colorScheme="blue" // Updated color scheme to "blue"
                     variant="outline"
                     leftIcon={<MdOutlineRefresh />}
+                    onClick={handleRefresh}
                 >
                     Refresh
                 </Button>
-
             </HStack>
-            <DealOfTheDayTable dealOfTheDay={dealOfTheDay}/>
+            {dealofthedaydata ? 
+                <DealOfTheDayTable dealOfTheDay={dealofthedaydata} />
+             : null}
         </SidebarWithHeader>
     );
 }

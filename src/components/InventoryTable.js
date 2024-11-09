@@ -133,7 +133,7 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
             <Spinner size='lg' color='brown.500' />
           </HStack>
         ) : (
-          <Table size='sm'>
+          <Table variant='striped' colorScheme='whiteAlpha' size='sm'>
             <Thead>
               <Tr>
                 <Th>Product</Th>

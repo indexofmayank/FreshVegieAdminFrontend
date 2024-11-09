@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useEffect } from "react";
 import {
   SidebarWithHeader,
   CreateNewBannerModal,
@@ -22,6 +22,12 @@ function BannerPage() {
   const handleRefresh = async () => {
     await fetchBanner();
   }
+
+  useEffect(() => {
+
+     fetchBanner();
+   
+}, []);
 
   if (loading) {
     return (

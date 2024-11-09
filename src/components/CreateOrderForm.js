@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Input,Button,VStack,HStack, Box, Divider, Image, Text, Grid, GridItem,Heading, List,ListItem, FormControl,FormLabel,useToast, SimpleGrid, useDisclosure, ModalCloseButton,toast, Table,Thead,Tbody,Tr, Th,Td,Select,option
+  Input,Button,VStack,HStack, Box, Divider, Image, Text, Grid, GridItem,Heading, List,ListItem, FormControl,FormLabel,useToast, SimpleGrid, useDisclosure, ModalCloseButton,toast, Table,Thead,Tbody,Tr, Th,Td,
 } from '@chakra-ui/react';
 
 import { useProductContext } from '../context/product_context';
@@ -8,6 +8,7 @@ import { useUserContext } from '../context/user_context';
 import { useOrderContext } from '../context/order_context';
 import {useCustomerContext} from '../context/customer_context';
 import { FaTrash } from "react-icons/fa";
+import Select from 'react-select';
 
 const CreateOrderForm = () => {
   const [items, setItems] = useState([]); 
@@ -103,8 +104,8 @@ const CreateOrderForm = () => {
 
   const onUserSelect = (event) => {
     // const userId = event.target.value;
-    const userId = event.target.value;
-    // console.log(userId)
+    // console.log(event._id)
+    const userId = event._id;
     // console.log(customerlist)
     setSelectedUser(userId);
     setSelectedCustomerId(userId);
@@ -132,9 +133,10 @@ const CreateOrderForm = () => {
   };
 
   const onProductSelect = (event) => {
+    // console.log(event._id)
     // const userId = event.target.value;
-    const productId = event.target.value;
-    // console.log(productId)
+    const productId = event._id;
+    // console.log(event)
     // // console.log(customerlist)
     // setSelectedproduct(productId);
     const product = productlist.find((product) => product._id == productId);
@@ -153,7 +155,11 @@ const CreateOrderForm = () => {
     }
   }, [allproduct]);
 
+  // useEffect(() => {
+  //   getAllProductForOrder();
+  // }, []);
 
+// console.log(allproduct)
 
   const addItem = (item) => {
 
@@ -221,7 +227,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems.map((item, i) =>
         i === index && item.quantity < maxquantity
-          ? { ...item, quantity: parseFloat(item.quantity) + parseFloat(incrementvalue) }
+          ? { ...item, quantity: (parseFloat(item.quantity) + parseFloat(incrementvalue)).toFixed(2) }
           : item
       )
     );
@@ -240,7 +246,7 @@ const CreateOrderForm = () => {
     setItems((prevItems) =>
       prevItems
         .map((item, i) =>
-          i === index && item.quantity > minquantity ? { ...item, quantity: parseFloat(item.quantity) - parseFloat(incrementvalue) } : item
+          i === index && item.quantity > minquantity ? { ...item, quantity: (parseFloat(item.quantity) - parseFloat(incrementvalue)).toFixed(2) } : item
         )
         .filter((item) => item.quantity > 0)
     );
@@ -255,15 +261,15 @@ const CreateOrderForm = () => {
 
     const subtotal = items.reduce((acc, item) => {
       return acc + (item.item_price * item.quantity);
-    }, 0);
+    }, 0).toFixed(2);
   
     const total = items.reduce((acc, item) => {
       const itemTotal = item.offer_price ? item.offer_price * item.quantity : item.price * item.quantity;
       return acc + itemTotal;
-    }, 0);
+    }, 0).toFixed(2);
   
-    setGrandTotal(total);  // Only the item total, without delivery charges
-    setSubtotal(subtotal)
+    setGrandTotal(parseFloat(total));
+    setSubtotal(parseFloat(subtotal));
   }, [items, minimumCartAmount, deliveryCharges]);
 
   const deliveryFee = grandTotal < minimumCartAmount && items.length > 0 ? deliveryCharges : 0;
@@ -271,14 +277,16 @@ const CreateOrderForm = () => {
 // Calculate total discount whenever items change
 useEffect(() => {
   const total = items.reduce((acc, item) => {
-    const totalOfferPrice = item.item_price * item.quantity - item.offer_price * item.quantity;
-    return acc + totalOfferPrice;
-  }, 0);
+    const totalOfferPrice = (item.item_price * item.quantity - item.offer_price * item.quantity).toFixed(2);
+    return acc + parseFloat(totalOfferPrice);
+  }, 0).toFixed(2);
   
-  setTotalDiscount(total);
+  setTotalDiscount(parseFloat(total));
 }, [items]);
 
-
+const formattedGrandTotal = parseFloat(grandTotal || 0);
+const formattedDeliveryFee = parseFloat(deliveryFee || 0);
+const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
 
 
   const removeItem = (index) => {
@@ -411,7 +419,8 @@ useEffect(() => {
             Create Order
           </Heading>
           <Box mb={4} position="relative">
-          <Select
+
+          {/* <Select
                 name='product'
                 focusBorderColor='brown.500'
                 value={selectedproduct} onChange={onProductSelect}
@@ -426,16 +435,35 @@ useEffect(() => {
                  )
                })
               ):(<></>)}
-              </Select>
+              </Select> */}
+              {/* {productlist.length > 0 ? ( */}
+              <Select 
+               getOptionLabel={option =>
+                  `${option.name}`
+                } 
+                value={selectedproduct}
+                onChange={onProductSelect}
+                // onChange={this.handleSelect}
+                getOptionValue={option => `${option}`}
+                 options={productlist}
+                 isSearchable={true}
+                // filterOption={this.customFilter}
+                // onInputChange={this.handleInputChange}
+                noOptionsMessage={() => null}
+                placeholder={'Enter product name'}
+                autoFocus={true}
+                // menuIsOpen={this.state.menuOpen}
+                  />
+                {/* ):(<></>)} */}
           </Box>
           {/* Added products */}
-          <Table variant='simple'>
+          <Table style={{width:'100%'}} variant='striped' colorScheme='whiteAlpha' size='md'>
             {items.length > 0 && (
               <Thead>
                 <Tr>
                   <Th>Image</Th>
                   <Th>Name</Th>
-                  <Th>Actions</Th>
+                  <Th style={{textAlign:'center'}}>quantity</Th>
                   <Th>Offer price</Th>
                   <Th>Item price</Th>
                   <Th>Item total</Th>
@@ -450,29 +478,29 @@ useEffect(() => {
               return (
                 <Tbody>
                   <Tr key={index}>
-                    <Td>
-                      <Image src={image} boxSize="50px" />
+                    <Td style={{width:'10%'}}>
+                      <Image src={image} boxSize="40px" />
                     </Td>
-                    <Td>
+                    <Td style={{width:'35%'}}>
                       <Text>{item.name}</Text>
                     </Td>
-                    <Td>
+                    <Td style={{width:'5%',textAlign:'center'}}>
                       <HStack>
                         <Button onClick={() => decrementCount(index, incrementvalue, maxquantity, minquantity)}>-</Button>
                         <Text>{item.quantity}</Text>
                         <Button onClick={() => incrementCount(index, incrementvalue, maxquantity, minquantity)}>+</Button>
                       </HStack>
                     </Td>
-                    <Td>
-                      {offer_price}
+                    <Td style={{width:'15%',textAlign:'center'}}>
+                      {offer_price.toFixed(2)}
                     </Td>
-                    <Td>
-                      {item_price}
+                    <Td style={{width:'5%',textAlign:'center'}}>
+                      {item_price.toFixed(2)}
                     </Td>
-                    <Td>
-                      {offer_price * quantity}
+                    <Td style={{width:'15%',textAlign:'center'}}>
+                      {(offer_price * quantity).toFixed(2)}
                     </Td>
-                    <Td>
+                    <Td style={{width:'5%'}}>
                     <Button colorScheme="red" onClick={() => removeItem(index)}>
                       <FaTrash />
                     </Button>
@@ -485,7 +513,7 @@ useEffect(() => {
           </Table>
 
           {/* Total Section */}
-          <Box mt={4} p={4} border="1px solid lightgray" borderRadius="md" bg="gray.50">
+          <Box mt={4} p={2} border="1px solid lightgray" borderRadius="md" bg="gray.50">
             <HStack justifyContent="space-between" mt={2}>
               <Text>No. of items:</Text>
               <Text>{items.length}</Text>
@@ -504,9 +532,21 @@ useEffect(() => {
             </HStack>
             <HStack justifyContent="space-between" mt={2}>
             <Text>Total:</Text>
-            <Text>{`₹${grandTotal + deliveryFee}`}</Text>  {/* Add delivery fee to the grand total here */}
+            <Text>{`₹${finalTotal}`}</Text>  {/* Add delivery fee to the grand total here */}
           </HStack>
           </Box>
+          <GridItem colSpan={3}>
+    <Button
+        isLoading={createOrderLoadingState}
+        loadingText='Creating order'
+        colorScheme="blue"
+        mt={5}
+        onClick={handleCreateOrder}
+        isDisabled={!selectedUser || items.length === 0 || !showaddAddressbox} // Disable if no user or no items in the cart
+    >
+        Create Order
+    </Button>
+</GridItem>
         </GridItem>
 
         {/* Customer and Address Section */}
@@ -514,7 +554,7 @@ useEffect(() => {
           <Heading size="md" mb={4}>
             Select Customer
           </Heading>
-          <Select
+          {/* <Select
                 name='user'
                 focusBorderColor='brown.500'
                 value={selectedUser} onChange={onUserSelect}
@@ -529,7 +569,24 @@ useEffect(() => {
                  )
                })
               ):(<></>)}
-              </Select>
+              </Select> */}
+               <Select 
+               getOptionLabel={user =>
+                  `${user.name}`
+                } 
+                value={selectedUser}
+                onChange={onUserSelect}
+                // onChange={this.handleSelect}
+                getOptionValue={option => `${option}`}
+                 options={customerlist}
+                 isSearchable={true}
+                // filterOption={this.customFilter}
+                // onInputChange={this.handleInputChange}
+                noOptionsMessage={() => null}
+                placeholder={'Enter user name'}
+                autoFocus={true}
+                // menuIsOpen={this.state.menuOpen}
+                  />
           <Grid mt={5}>
 
          
@@ -700,18 +757,7 @@ useEffect(() => {
           </SimpleGrid>
          :<></>)}
         </GridItem>
-       <GridItem colSpan={3}>
-    <Button
-        isLoading={createOrderLoadingState}
-        loadingText='Creating order'
-        colorScheme="blue"
-        mt={5}
-        onClick={handleCreateOrder}
-        isDisabled={!selectedUser || items.length === 0 || !showaddAddressbox} // Disable if no user or no items in the cart
-    >
-        Create Order
-    </Button>
-</GridItem>
+       
       
       </Grid>
     </VStack>

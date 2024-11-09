@@ -56,6 +56,8 @@ function InventoryPage() {
     await fetchInventory();
     await fetchCategoryByName();
   };
+
+  
   if (loading) {
     return (
       <SidebarWithHeader>
