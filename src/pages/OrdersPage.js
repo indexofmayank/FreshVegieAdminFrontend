@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SidebarWithHeader, OrdersTable, OrderStatus } from '../components';
 import { useOrderContext } from '../context/order_context';
-import { Heading, VStack, HStack, Button, Spinner, Tooltip } from '@chakra-ui/react';
+import { Heading, VStack, HStack, Button, Spinner, Tooltip, Menu, MenuButton, MenuList, MenuItem, MenuTrigger, MenuContent, IconButton } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { FaDownload } from 'react-icons/fa';
 import axios from 'axios';
@@ -56,7 +56,10 @@ function OrdersPage() {
     setTableLabel(label);
     await fetchOrdersForTable('', '', '', label);
   };
-  console.log(filter);
+
+  useEffect(() => {
+    console.log(tabelLabel);
+  }, [tabelLabel]);
   const handleDownload = async () => {
     console.log(selectedDate);
    
@@ -78,7 +81,7 @@ function OrdersPage() {
   
     } else {
       try {
-        const response = await axios.get(`${getCsvDownload_url}?filter=${filter}`, {
+        const response = await axios.get(`${getCsvDownload_url}?filter=${filter}&tableLabel=${tabelLabel}`, {
           responseType: 'blob',
         });
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -161,7 +164,13 @@ function OrdersPage() {
           onClick={handleDownload}
         />
       </Tooltip>
-        ):<></>}
+        ): (
+          <FaDownload
+            size={30}
+            style={{ cursor: 'pointer' }}
+            onClick={handleDownload}
+          />
+        )}
       </HStack>
       {tabelLabel === null ? (
         <OrderStatus
