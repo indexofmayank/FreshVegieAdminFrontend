@@ -481,13 +481,13 @@ function CreateNewProductModal() {
                     <FormControl>
                       <FormLabel>Unit</FormLabel>
                       <Select placeholder="Please select" name='product_weight_type' value={product_weight_type} onChange={updateNewProductDetails}>
-                        <option value="kg">KG</option>
-                        <option value="gram">G</option>
+                        <option value="kg">kg</option>
+                        <option value="gram">g</option>
                         <option value="pkt">pkt</option>
                         <option value="pcs">pcs</option>
                         <option value="unit">unit</option>
                         <option value="l">ltr</option>
-                        <option value="ml">Ml</option>
+                        <option value="ml">ml</option>
                       </Select>
                     </FormControl>
                   </SimpleGrid>
