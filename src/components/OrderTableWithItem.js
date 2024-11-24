@@ -242,7 +242,7 @@ const OrderTableWithItem = ({ id, orderWithItems, userBillingInfo, userPaymentIn
                       <Td>₹{item_price}</Td>
                       <Td>₹{offer_price}</Td>
                       <Td>{quantity}</Td>
-                      <Td>₹{tax}</Td>
+                      <Td>{tax}%</Td>
                       <Td>₹{quantity*offer_price}</Td>
                     </Tr>
                   );

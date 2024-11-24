@@ -519,6 +519,8 @@ function UpdateProductModal({ id }) {
                         <option value="pkt">pkt</option>
                         <option value="pcs">pcs</option>
                         <option value="unit">unit</option>
+                        <option value="l">ltr</option>
+                        <option value="ml">Ml</option>
                         </Select>
                       </FormControl>
                     </SimpleGrid>
