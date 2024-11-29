@@ -26,7 +26,7 @@ export const DealOfTheDayProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const fetchDealOfTheDayForTable = async () => {
-        dispatch({type: getFeaturedProductForTable_url});
+        dispatch({type: GET_ALLDEALOFTHEDAY_BEGIN});
         try {
             const response = await axios.get(getFeaturedProductForTable_url);
             const {data} = response.data;
