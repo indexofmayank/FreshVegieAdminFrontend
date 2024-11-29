@@ -36,7 +36,8 @@ function UpdateBannerModal({ id }) {
         fetchBanner,
         fetchSingleBanner,
         updateExistingBannerDetails,
-        updateBanner
+        updateBanner,
+        
     } = useBannerContext();
 
     const [imageList, setImageList] = useState(image);
@@ -66,7 +67,7 @@ function UpdateBannerModal({ id }) {
         if(imageList.length < 1) {
             return toast({
                 position: 'top',
-                description: 'Add alteast one image',
+                description: 'Add atleast one image',
                 status: 'error',
                 duration: 5000,
                 isClosable: true
@@ -211,8 +212,6 @@ function UpdateBannerModal({ id }) {
                                 )}
                             </HStack>
                         </FormControl>
-
-
                     </ModalBody>
                     <ModalFooter>
                         <Button mr={3} onClick={onClose}>

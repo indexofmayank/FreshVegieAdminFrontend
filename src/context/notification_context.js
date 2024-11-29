@@ -4,7 +4,9 @@ import reducer from '../reducers/notification_reducer';
 import {
     getAllNotification_url, getProductByNameForInventory, getAllProductName_url,
     getAllCategoryName_url, getAllUserName_url, getSingleNotification_url,
-    getSelectedUserFcmToken_url, getFilteredUserNameForNotification_url
+    getSelectedUserFcmToken_url, getFilteredUserNameForNotification_url,
+    getNotificationById_url, updateNotficationById_url
+
 } from '../utils/constants';
 import {
     GET_NOTIFICATIONS_BEGIN,
@@ -22,7 +24,13 @@ import {
     GET_USERNAMEFORNOTIFICATION_SUCCESS,
     GET_SINGLENOTIFICATION_BEGIN,
     GET_SINGLENOTIFICATION_ERROR,
-    GET_SINGLENOTIFICATION_SUCCESS
+    GET_SINGLENOTIFICATION_SUCCESS,
+    GET_NOTIFICATION_BEGIN,
+    GET_NOTIFICATION_ERROR,
+    GET_NOTIFICATION_SUCCESS,
+    UPDATE_EXISTING_NOTIFICATION,
+
+
 } from "../actions";
 
 const initialState = {
@@ -56,7 +64,8 @@ const initialState = {
     userName: [],
     single_notification_loading: false,
     single_notification_error: false,
-    single_notification: {}
+    single_notification: {},
+    
 
 };
 
@@ -79,6 +88,7 @@ export const NotificationProvider = ({ children }) => {
         dispatch({type: GET_SINGLENOTIFICATION_BEGIN});
         try {
             const response = await axios.get(`${getSingleNotification_url}${id}`);
+            console.log(response);
             const {data} = response.data;
             dispatch({type: GET_SINGLENOTIFICATION_SUCCESS, payload: data});
         } catch (error) {
@@ -120,7 +130,7 @@ export const NotificationProvider = ({ children }) => {
     const updateExistingNotificationDetails = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        // dispatch({type: });
+        dispatch({type: UPDATE_EXISTING_NOTIFICATION, payload: {name, value}});
     }
 
     const fetchCategoryNameForNotification = async () => {
@@ -132,6 +142,21 @@ export const NotificationProvider = ({ children }) => {
         } catch (error) {
             console.error(error);
             dispatch({ type: GET_CATEGORYBYNAMEFORNOTIFICATION_ERROR });
+        }
+    }
+
+    const updateNotification = async (id, notification) => {
+        try {
+
+            console.log('notification:', notification);
+            console.log('id: ', id);
+            const response = await axios.put(`${updateNotficationById_url}${id}`, notification);
+            const {success, message} = response.data;
+            return {success: true};
+
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
         }
     }
 
@@ -159,9 +184,6 @@ export const NotificationProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        // fetchNotifications()
-    }, []);
 
     return (
         <NotificationContext.Provider
@@ -174,7 +196,9 @@ export const NotificationProvider = ({ children }) => {
                 fetchCategoryNameForNotification,
                 fetchUserNameForNotification,
                 fetchSingleNotification,
-                fetchUserFcmTokenByUserIds
+                fetchUserFcmTokenByUserIds,
+                updateExistingNotificationDetails,
+                updateNotification
             }}
         >
             {children}

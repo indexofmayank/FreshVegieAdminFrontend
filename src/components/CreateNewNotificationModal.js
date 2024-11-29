@@ -74,6 +74,8 @@ function CreateNewNotificationModal() {
         fetchUserNameForNotification
     } = useNotificationContext();
 
+
+
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
@@ -99,6 +101,7 @@ function CreateNewNotificationModal() {
     const [handleSubmitLoading, setHandleSubmitLoading] = useState(false);
     const [selectedCustomFilter, setSelectedCustomFilter] = useState(null);
     const toast = useToast();
+
 
     const handleSubmit = async () => {
         console.log(name);
@@ -223,6 +226,7 @@ function CreateNewNotificationModal() {
 
 
     useEffect(() => {
+        console.log(customFilters)
         const loadData = async () => {
             const filter = customFilters
             await fetchUserNameForNotification(filter)
@@ -375,14 +379,12 @@ function CreateNewNotificationModal() {
                                         placeholder='Select specific category'
                                         name='category'
                                         focusBorderColor='brown.500'
-                                        value={
-                                            categories.find(category => category._id === category)?.name || ''
-                                        }
+                                        value={categories.find(cat => cat._id === category)?.name || ''}
                                         readOnly
                                         onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
                                     />
                                     <InputRightElement>
-                                        <IconButton
+                                        <IconButton         
                                             aria-label='Open dropdown'
                                             icon={isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
                                             size='sm'
@@ -463,7 +465,7 @@ function CreateNewNotificationModal() {
                                     placeholder='Select Filter'
                                     name='customFilters'
                                     focusBorderColor='brown.500'
-                                    value={customFilters}
+                                value={customFilters}
                                     onChange={udpateNewNotificationDetails}
                                 >
                                     {/* <option key='1' value='abandoned_cart'>Abandoned cart</option> */}

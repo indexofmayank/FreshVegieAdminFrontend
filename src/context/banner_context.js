@@ -83,6 +83,7 @@ export const BannerProvider = ({children}) => {
         try {
             const response = await axios.put(`${udpate_banner_url}${id}`, banner);
             const {success, message} = response.data;
+            console.log(response);
             return {success, message};
         } catch (error) {
             const {success, message} = error.response.data;
@@ -121,8 +122,6 @@ export const BannerProvider = ({children}) => {
             {children}
         </BannerContext.Provider>
     )
-
-
 };
 
 export const useBannerContext = () => {

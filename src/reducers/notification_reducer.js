@@ -14,7 +14,11 @@ import {
     GET_USERNAMEFORNOTIFICATION_SUCCESS,
     GET_SINGLENOTIFICATION_BEGIN,
     GET_SINGLENOTIFICATION_ERROR,
-    GET_SINGLENOTIFICATION_SUCCESS
+    GET_SINGLENOTIFICATION_SUCCESS,
+    GET_NOTIFICATION_BEGIN,
+    GET_NOTIFICATION_ERROR,
+    GET_NOTIFICATION_SUCCESS,
+    UPDATE_EXISTING_NOTIFICATION
 } from '../actions';
 
 const notification_reducer = (state, action) => {
@@ -72,7 +76,7 @@ const notification_reducer = (state, action) => {
         return {...state, userName_loading: false,  userName_error: true}
     }
 
-    if(action.type === GET_SINGLENOTIFICATION_BEGIN) {
+    if(action.type === GET_SINGLENOTIFICATION_BEGIN) { 
         return {...state, single_notification_loading: true, single_notification_error: false}
     }
 
@@ -80,8 +84,18 @@ const notification_reducer = (state, action) => {
         return {...state, single_notification_loading: false, single_notification_error: true}
     }  
 
-    if(action.type === GET_SINGLENOTIFICATION_SUCCESS) {
-        return {...state, single_notification_loading: false, single_notification: action.payload }
+    if(action.type === GET_SINGLENOTIFICATION_SUCCESS) { 
+        const singleNotification = Array.isArray(action.payload) ? action.payload[0]: action.payload;
+        
+        return {...state, single_notification_loading: false, single_notification: singleNotification }
+    }
+
+    if(action.type === UPDATE_EXISTING_NOTIFICATION) {
+        const {name, value} = action.payload;
+        return {
+            ...state,
+            single_notification: {...state.single_notification, [name]: value}
+        }
     }
 
     throw new Error(`No matching "${action.type}" - action type`);
