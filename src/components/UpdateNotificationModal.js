@@ -106,6 +106,7 @@ function UpdateNotificationModal({ id }) {
   useEffect(() => {
     console.log(banner);
     setImageList(banner);
+    // setSelectedCustomers(prevState=>([...prevState, ...customers]));
   }, [single_notification_loading]);
 
 
@@ -190,8 +191,6 @@ function UpdateNotificationModal({ id }) {
 
     if(
       !name ||  
-      !redirect_to ||
-      !audience ||
       !banner ||
       !status
     ) {
@@ -318,7 +317,7 @@ function UpdateNotificationModal({ id }) {
                 onChange={updateExistingNotificationDetails}
               />
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
               <FormLabel>Redirect To</FormLabel>
               <Select
                 placeholder="Redirect To"
@@ -337,8 +336,8 @@ function UpdateNotificationModal({ id }) {
                   Link
                 </option>
               </Select>
-            </FormControl>
-            {redirect_to === "specific_product" && (
+            </FormControl> */}
+            {/* {redirect_to === "specific_product" && (
               <FormControl mt={4}>
                 <FormLabel>Specific Product</FormLabel>
                 <InputGroup>
@@ -483,9 +482,9 @@ function UpdateNotificationModal({ id }) {
                   onChange={updateExistingNotificationDetails}
                 />
               </FormControl>
-            )}
+            )} */}
 
-            <FormControl>
+            {/* <FormControl>
               <FormLabel>Audience</FormLabel>
               <Select
                 placeholder="audience"
@@ -501,7 +500,7 @@ function UpdateNotificationModal({ id }) {
                   Custom
                 </option>
               </Select>
-            </FormControl>
+            </FormControl> */}
 
             {audience === "custom" && (
               <FormControl>
@@ -525,7 +524,7 @@ function UpdateNotificationModal({ id }) {
                 </Select>
               </FormControl>
             )}
-            {audience === "branch" && (
+            {/* {audience === "branch" && (
               <FormControl>
                 <FormLabel>Branch</FormLabel>
                 <Select
@@ -635,7 +634,7 @@ function UpdateNotificationModal({ id }) {
                   </Box>
                 )}
               </FormControl>
-            )}
+            )} */}
             <FormControl>
               <FormLabel>Image</FormLabel>
               <Center
@@ -689,6 +688,8 @@ function UpdateNotificationModal({ id }) {
             </Button>
             <Button 
             colorScheme="brown"
+            loadingText="Updating Notification"
+            isLoading={loading}
             onClick={handleSubmit}
             >Save</Button>
           </ModalFooter>

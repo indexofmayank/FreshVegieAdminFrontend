@@ -122,9 +122,7 @@ function CreateNewNotificationModal() {
             !imageList ||
             !status ||
             !heading ||
-            !message ||
-            !selectedCustomers ||
-            !redirect_to
+            !message 
         ) {
             return toast({
                 position: 'top',
@@ -296,7 +294,7 @@ function CreateNewNotificationModal() {
                                 onChange={udpateNewNotificationDetails}
                             />
                         </FormControl>
-                        <FormControl>
+                        {/* <FormControl>
                             <FormLabel>Redirect To</FormLabel>
                             <Select
                                 placeholder='Redirect To'
@@ -309,9 +307,9 @@ function CreateNewNotificationModal() {
                                 <option key='2' value='category'>category</option>
                                 <option key='3' value='link'>Link</option>
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
 
-                        {redirect_to === 'specific_product' && (
+                        {/* {redirect_to === 'specific_product' && (
                             <FormControl mt={4}>
                                 <FormLabel>Specific Product</FormLabel>
                                 <InputGroup>
@@ -369,8 +367,8 @@ function CreateNewNotificationModal() {
                                 )}
                             </FormControl>
                         )}
-
-                        {redirect_to === 'category' && (
+ */}
+                        {/* {redirect_to === 'category' && (
                             <FormControl mt={4}>
                                 <FormLabel>Select category</FormLabel>
                                 <InputGroup>
@@ -428,9 +426,9 @@ function CreateNewNotificationModal() {
 
                                 )}
                             </FormControl>
-                        )}
+                        )} */}
 
-                        {redirect_to === 'link' && (
+                        {/* {redirect_to === 'link' && (
                             <FormControl>
                                 <FormLabel>Link</FormLabel>
                                 <Input
@@ -442,9 +440,9 @@ function CreateNewNotificationModal() {
                                 />
                             </FormControl>
 
-                        )}
+                        )} */}
 
-                        <FormControl>
+                        {/* <FormControl>
                             <FormLabel>Audience</FormLabel>
                             <Select
                                 placeholder='audience'
@@ -456,16 +454,16 @@ function CreateNewNotificationModal() {
                                 <option key='1' value='branch'>Branch</option>
                                 <option key='2' value='custom'>Custom</option>
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
 
-                        {audience === 'custom' && (
+                        {/* {audience === 'custom' && ( */}
                             <FormControl>
                                 <FormLabel>Custom Filter</FormLabel>
                                 <Select
                                     placeholder='Select Filter'
                                     name='customFilters'
                                     focusBorderColor='brown.500'
-                                value={customFilters}
+                                    value={customFilters}
                                     onChange={udpateNewNotificationDetails}
                                 >
                                     {/* <option key='1' value='abandoned_cart'>Abandoned cart</option> */}
@@ -474,9 +472,9 @@ function CreateNewNotificationModal() {
                                     <option key='4' value='all'>All</option>
                                 </Select>
                             </FormControl>
-                        )}
+                        {/* )} */}
 
-                        {audience === 'branch' && (
+                        {/* {audience === 'branch' && (
                             <FormControl>
                                 <FormLabel>Branch</FormLabel>
                                 <Select
@@ -491,9 +489,9 @@ function CreateNewNotificationModal() {
                                 </Select>
 
                             </FormControl>
-                        )}
+                        )} */}
 
-                        {audience && (
+                        {/* {audience && (
                             <FormControl mt={4}>
                                 <FormLabel>Customers</FormLabel>
                                 <InputGroup>
@@ -577,7 +575,7 @@ function CreateNewNotificationModal() {
                                     </Box>
                                 )}
                             </FormControl>
-                        )}
+                        )} */}
 
 
                         <FormControl>
