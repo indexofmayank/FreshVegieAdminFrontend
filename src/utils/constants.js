@@ -158,3 +158,4 @@ export const getFilteredUserNameForNotification_url = `${domain}/api/notificatio
 export const deleteAsset_url = `${domain}/api/asset/`;
 export const getNotificationById_url = `${domain}/api/notification/`;
 export const updateNotficationById_url = `${domain}/api/notification/`;
+export const deleteNotificationById_url = `${domain}/api/notification/`;

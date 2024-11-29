@@ -5,7 +5,8 @@ import {
     getAllNotification_url, getProductByNameForInventory, getAllProductName_url,
     getAllCategoryName_url, getAllUserName_url, getSingleNotification_url,
     getSelectedUserFcmToken_url, getFilteredUserNameForNotification_url,
-    getNotificationById_url, updateNotficationById_url
+    getNotificationById_url, updateNotficationById_url,
+    deleteNotificationById_url
 
 } from '../utils/constants';
 import {
@@ -160,6 +161,18 @@ export const NotificationProvider = ({ children }) => {
         }
     }
 
+    const deleteNotification = async (id) => {
+        console.log(id);
+        try {
+            const response = await axios.delete(`${deleteNotificationById_url}${id}`);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
+
     const fetchUserNameForNotification = async (filter='') => {
         dispatch({ type: GET_USERNAMEFORNOTIFICATION_BEGIN });
         try {
@@ -198,7 +211,8 @@ export const NotificationProvider = ({ children }) => {
                 fetchSingleNotification,
                 fetchUserFcmTokenByUserIds,
                 updateExistingNotificationDetails,
-                updateNotification
+                updateNotification,
+                deleteNotification
             }}
         >
             {children}

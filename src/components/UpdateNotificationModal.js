@@ -61,18 +61,18 @@ function UpdateNotificationModal({ id }) {
     single_notification_error,
     fetchSingleNotification,
     updateExistingNotificationDetails,
-    fetchProductNameForNotification,
-    notificationProductName_loading,
-    notificationProductName_error,
-    notificationProductName,
-    categoryName_loading,
-    categoryName_error,
-    categories,
-    fetchCategoryNameForNotification,
-    userName_loading,
-    userName_error,
-    userName,
-    fetchUserNameForNotification,
+    // fetchProductNameForNotification,
+    // notificationProductName_loading,
+    // notificationProductName_error,
+    // notificationProductName,
+    // categoryName_loading,
+    // categoryName_error,
+    // categories,
+    // fetchCategoryNameForNotification,
+    // userName_loading,
+    // userName_error,
+    // userName,
+    // fetchUserNameForNotification,
     updateNotification,
     fetchNotifications
   } = useNotificationContext();
@@ -110,64 +110,64 @@ function UpdateNotificationModal({ id }) {
   }, [single_notification_loading]);
 
 
-  useEffect(() => {
-    if (redirect_to === "specific_product") {
-      fetchProductNameForNotification();
-    }
-    if (redirect_to === "category") {
-      fetchCategoryNameForNotification();
-    }
-  }, [redirect_to]);
+  // useEffect(() => {
+  //   if (redirect_to === "specific_product") {
+  //     fetchProductNameForNotification();
+  //   }
+  //   if (redirect_to === "category") {
+  //     fetchCategoryNameForNotification();
+  //   }
+  // }, [redirect_to]);
 
-  useEffect(() => {
-    const loadData = async () => {
-      const filter = customFilters;
-      await fetchUserNameForNotification(filter);
-    };
-    loadData();
-  }, [customFilters]);
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     const filter = customFilters;
+  //     await fetchUserNameForNotification(filter);
+  //   };
+  //   loadData();
+  // }, [customFilters]);
 
   const handleRemoveImage = async () => {
     setImageList(null);
   };
 
-  const handleProductSelect = (product) => {
-    updateExistingNotificationDetails({
-      target: {
-        name: "specific_product",
-        value: product._id,
-      },
-    });
+  // const handleProductSelect = (product) => {
+  //   updateExistingNotificationDetails({
+  //     target: {
+  //       name: "specific_product",
+  //       value: product._id,
+  //     },
+  //   });
     
-    setDropdownOpen(false);
-  };
+  //   setDropdownOpen(false);
+  // };
 
-  const handleCategorySelect = (name, _id) => {
-    updateExistingNotificationDetails({
-      target: {
-        name: "category",
-        value: _id,
-      },
-    });
+  // const handleCategorySelect = (name, _id) => {
+  //   updateExistingNotificationDetails({
+  //     target: {
+  //       name: "category",
+  //       value: _id,
+  //     },
+  //   });
 
-    setCategoryDropdownOpen(false);
-  };
+  //   setCategoryDropdownOpen(false);
+  // };
 
-  const handleUserSelect = (name, _id) => {
-    setSelectedCustomers((prevState) => [...prevState, { _id, name }]);
-    updateExistingNotificationDetails({
-      target: {
-        name: "customer",
-        value: _id,
-      },
-    });
-  };
+  // const handleUserSelect = (name, _id) => {
+  //   setSelectedCustomers((prevState) => [...prevState, { _id, name }]);
+  //   updateExistingNotificationDetails({
+  //     target: {
+  //       name: "customer",
+  //       value: _id,
+  //     },
+  //   });
+  // };
 
-  const handleRemoveCustomer = (_id) => {
-    setSelectedCustomers((prevState) =>
-      prevState.filter((customer) => customer._id !== _id)
-    );
-  };
+  // const handleRemoveCustomer = (_id) => {
+  //   setSelectedCustomers((prevState) =>
+  //     prevState.filter((customer) => customer._id !== _id)
+  //   );
+  // };
 
   const handleSubmit = async () => {
 
@@ -259,9 +259,9 @@ function UpdateNotificationModal({ id }) {
         minW="100%"
         onClick={async () => {
           await fetchSingleNotification(id);    
-          await fetchProductNameForNotification();
-          await fetchCategoryNameForNotification();
-          await fetchUserNameForNotification();
+          // await fetchProductNameForNotification();
+          // await fetchCategoryNameForNotification();
+          // await fetchUserNameForNotification();
           onOpen();
         }}
       >
