@@ -165,7 +165,7 @@ function NotificationTable({ notifications }) {
                   onClose();
                   return toast({
                     position: 'top',
-                    description: `${assetToDelete.name} deleted successfully`,
+                    description: `${assetToDelete.name} deleting Unsuccessfully`,
                     status: 'error',
                     duration: 5000,
                     isClosable: true
