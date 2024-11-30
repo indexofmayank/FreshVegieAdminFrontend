@@ -116,6 +116,11 @@ function NotificationTable({ notifications }) {
                           >
                             Delete
                           </MenuItem>
+                          <MenuItem
+                            onClick={() => {console.log('clicked')}}
+                          >
+                            Send  
+                          </MenuItem>
                         </MenuList>
                       </Menu>
                     </Td>
@@ -138,7 +143,7 @@ function NotificationTable({ notifications }) {
             {assetToDelete && (
               <Text>
                 Are you sure you want to delete{" "}
-                <strong>{assetToDelete.name}</strong>?
+                <strong>{assetToDelete.name}{" "}?</strong><p>Make sure, all associate product will also delete.</p>
               </Text>
             )}
           </ModalBody>
@@ -150,7 +155,6 @@ function NotificationTable({ notifications }) {
               colorScheme="red"
               onClick={ async () => {
                 const response = await deleteNotification(assetToDelete.id);
-                console.log(response);
                 if(response.success){
                   await fetchNotifications();
                   onClose();
