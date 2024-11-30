@@ -54,5 +54,4 @@ ReactDOM.render(
     </AdminProvider>
   </UserProvider >,
   document.getElementById('root')
-  
 );
