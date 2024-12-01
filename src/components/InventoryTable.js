@@ -45,7 +45,6 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
   };
 
 
-  //for bulk update
   const handleInputChange = (e, index, field) => {
     const { value } = e.target;
     const updatedList = [...filteredProducts];

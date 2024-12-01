@@ -119,6 +119,7 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
               <Text>
                 Are you sure you want to delete{" "}
                 <strong>{assetToDelete.name}</strong>?
+                This'll also delete all associate products
               </Text>
             )}
           </ModalBody>

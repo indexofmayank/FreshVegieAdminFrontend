@@ -28,13 +28,17 @@ const initialState = {
 const AdminContext = React.createContext();
 
 export const AdminProvider = ({ children }) => {
+
+  
   const { currentUser } = useUserContext();
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(currentUser);
 
   const fetchAdmins = async () => {
     dispatch({ type: GET_ADMINS_BEGIN });
     try {
       const response = await axios.get(admins_url);
+      console.log(response);
       const { data } = response.data;
       dispatch({ type: GET_ADMINS_SUCCESS, payload: data });
     } catch (error) {

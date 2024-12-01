@@ -1,23 +1,35 @@
 import React, {Children, useContext, useEffect, useReducer} from "react";
 import axios from 'axios';
 import reducer from '../reducers/dealoftheday_reducer';
-import {getDealOfTheDayForTable_url, getFeaturedProductForTable_url, getDealOfTheDay_url, getSingleDealOfTheDay_url, updateDealOfTheDay_url} from '../utils/constants';
+import {
+    getDealOfTheDayForTable_url, 
+    getFeaturedProductForTable_url, 
+    getDealOfTheDay_url, 
+    getSingleDealOfTheDay_url, 
+    updateDealOfTheDay_url,
+    getDealOfDayByDropdown_url,
+    getDealOfTheDayByProductId_url,
+    udpateDealOftheDayProduct_url
+} from '../utils/constants';
 
 import {
     GET_ALLDEALOFTHEDAY_BEGIN,
     GET_ALLDEALOFTHEDAY_ERROR,
     GET_ALLDEALOFTHEDAY_SUCCESS,
-    CREATE_NEW_DEALOFTHEDAY,
-    GET_PRODUCTFORDEALOFTHEDAY_BEGIN,
-    GET_PRODUCTFORDEALOFTHEDAY_ERROR,
-    GET_PRODUCTFORDEALOFTHEDAY_SUCCESS,
-    UPDATE_PRODUCTFORDEALOFdTHEDAY
+    GET_SINGLE_DEALOFTHEDAYBYID_BEGIN,
+    GET_SINGLE_DEALOFTHEDAYBYID_SUCCESS,
+    GET_SINGLE_DEALOFTHEDAYBYID_ERROR
+
 } from '../actions';
+
 
 const initialState = {
     dealOfTheDay_loading: false,
     dealOfTheDay_error: false,
     dealOfTheDay: [],
+    single_dealOfTheDay_loading: false,
+    single_dealOfTheDay_error: false,
+    single_dealOfTheDay: {},
 }
 
 const DealOfTheDayContext = React.createContext();
@@ -48,9 +60,44 @@ export const DealOfTheDayProvider = ({children}) => {
         }
     }
 
-    // useEffect(() => {
-    //     fetchDealOfTheDayForTable();
-    // }, []);
+    const getDealOfTheDayForDropdown = async (name='') => {
+        console.log(name);
+        try {
+            const response = await axios.post(`${getDealOfDayByDropdown_url}`,
+                {name: name}
+            );
+            const {data} = response.data;
+            return {data};
+        } catch (error) {
+            const {success, message} = error.response.data;
+            return {success, message};
+        }
+    }
+
+    const fetchDealOfTheDayById = async (id) => {
+        dispatch({type: GET_SINGLE_DEALOFTHEDAYBYID_BEGIN});
+        try {
+            const response = await axios.get(`${getDealOfTheDayByProductId_url}${id}`);
+            const {data} = response.data;
+            dispatch({type: GET_SINGLE_DEALOFTHEDAYBYID_SUCCESS, payload: data});
+        } catch (error) {
+            dispatch({type: GET_SINGLE_DEALOFTHEDAYBYID_ERROR});
+        }
+    }
+
+    const updateSingleDealOfTheDay = async (id, updatedData) => {
+        console.log(updatedData);
+        try {
+            const response = await axios.put(`${udpateDealOftheDayProduct_url}${id}`,
+                {featured: true}
+            );
+            console.log(response);
+            const {success, message} = response.data;
+            return {success, message};
+        } catch (error) {
+            const {success, message} = error.response
+        }
+    }
 
     return (
         <DealOfTheDayContext.Provider
@@ -58,6 +105,9 @@ export const DealOfTheDayProvider = ({children}) => {
                 ...state,
                 fetchDealOfTheDayForTable,
                 updateDealOfTheDay,
+                getDealOfTheDayForDropdown,
+                fetchDealOfTheDayById,
+                updateSingleDealOfTheDay
             }}
         >
             {children}

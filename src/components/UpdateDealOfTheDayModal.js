@@ -66,6 +66,7 @@ function UpdateDealOfTheDayModal({ id, name, image }) {
 
                         <FormControl>
                             <Checkbox
+                                mt={3}
                                 name='featured'
                                 colorScheme='brown'
                                 isChecked={currentFeature}

@@ -52,6 +52,7 @@ import DeliveryInstructionsPagination from './DeliveryInstructionsPagination';
 import BlukUploadProduct from './BulkUploadProduct';
 import CreateAssestModal from './CreateAssestModal';
 import AssestImageTable from './AssestImageTable';
+import SearchBoxForDealOfTheDay from './SearchBoxForDealOfTheDay';
 
 
 export {
@@ -108,5 +109,6 @@ export {
   DeliveryInstructionsPagination,
   BlukUploadProduct,
   CreateAssestModal,
-  AssestImageTable
+  AssestImageTable,
+  SearchBoxForDealOfTheDay
 };

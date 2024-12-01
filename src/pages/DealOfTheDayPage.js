@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
     SidebarWithHeader,
     CreateNewDealOfTheDay,
-    DealOfTheDayTable
+    SearchBoxForDealOfTheDay,
+    DealOfTheDayTable,
+    UpdateDealOfTheDayModal
 } from '../components';
-import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
+import { HStack, Button, VStack, Spinner, Heading, Select } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useDealOfTheDayContext } from '../context/dealoftheday_context';
 
@@ -16,11 +18,15 @@ function DealOfTheDayPage() {
         dealOfTheDay,
         fetchDealOfTheDayForTable
     } = useDealOfTheDayContext();
+
+
     const [dealofthedaydata, setDealofthedaydata] = useState([]);
 
     const handleRefresh = async () => {
         await fetchDealOfTheDayForTable();
     };
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,12 +42,13 @@ function DealOfTheDayPage() {
         }
     }, [dealOfTheDay]);
 
+
     if (loading) {
         return (
             <SidebarWithHeader>
                 <HStack mb={3}>
                     <Button
-                        colorScheme="blue" // Updated color scheme to "blue"
+                        colorScheme="blue" 
                         variant="outline"
                         leftIcon={<MdOutlineRefresh />}
                         onClick={handleRefresh}
@@ -61,7 +68,7 @@ function DealOfTheDayPage() {
             <SidebarWithHeader>
                 <HStack mb={5}>
                     <Button
-                        colorScheme="blue" // Updated color scheme to "blue"
+                        colorScheme="blue" 
                         variant="outline"
                         leftIcon={<MdOutlineRefresh />}
                         onClick={handleRefresh}
@@ -80,13 +87,14 @@ function DealOfTheDayPage() {
         <SidebarWithHeader>
             <HStack mb={5}>
                 <Button
-                    colorScheme="blue" // Updated color scheme to "blue"
+                    colorScheme="blue" 
                     variant="outline"
                     leftIcon={<MdOutlineRefresh />}
                     onClick={handleRefresh}
                 >
                     Refresh
                 </Button>
+            <SearchBoxForDealOfTheDay />
             </HStack>
             {dealofthedaydata ? 
                 <DealOfTheDayTable dealOfTheDay={dealofthedaydata} />

@@ -44,7 +44,7 @@ const SearchBoxForInventory = ({ placeholder, onSelectProduct, category }) => {
   const handleSelectSuggestion = (product) => {
     setQuery(product.name);
     setShowSuggestions(false);
-    onSelectProduct(product); // Pass the selected product back to the parent component
+    onSelectProduct(product); 
   };
 
   return (
