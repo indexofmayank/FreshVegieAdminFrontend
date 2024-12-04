@@ -9,7 +9,8 @@ import {
     updateDealOfTheDay_url,
     getDealOfDayByDropdown_url,
     getDealOfTheDayByProductId_url,
-    udpateDealOftheDayProduct_url
+    udpateDealOftheDayProduct_url,
+    udpateBlukDealOfTheDay_url
 } from '../utils/constants';
 
 import {
@@ -61,7 +62,6 @@ export const DealOfTheDayProvider = ({children}) => {
     }
 
     const getDealOfTheDayForDropdown = async (name='') => {
-        console.log(name);
         try {
             const response = await axios.post(`${getDealOfDayByDropdown_url}`,
                 {name: name}
@@ -99,6 +99,22 @@ export const DealOfTheDayProvider = ({children}) => {
         }
     }
 
+    const blukUpdateDealOfTheDay = async (updatedData) => {
+        try {
+            console.log(updatedData);
+            const response = await axios.put(`${udpateBlukDealOfTheDay_url}`,
+                updatedData
+            );
+            console.log(response);
+            const {success, message} = response;
+            return {success, message};
+        } catch (error) {
+            console.log(error);
+            const {success, message} = error.response;
+            return {success, message};
+        }
+    }
+
     return (
         <DealOfTheDayContext.Provider
             value={{
@@ -107,7 +123,8 @@ export const DealOfTheDayProvider = ({children}) => {
                 updateDealOfTheDay,
                 getDealOfTheDayForDropdown,
                 fetchDealOfTheDayById,
-                updateSingleDealOfTheDay
+                updateSingleDealOfTheDay,
+                blukUpdateDealOfTheDay,
             }}
         >
             {children}

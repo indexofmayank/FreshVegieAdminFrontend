@@ -6,7 +6,7 @@ import {
     DealOfTheDayTable,
     UpdateDealOfTheDayModal
 } from '../components';
-import { HStack, Button, VStack, Spinner, Heading, Select } from '@chakra-ui/react';
+import { HStack, Button, VStack, Spinner, Heading, Select, useToast } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useDealOfTheDayContext } from '../context/dealoftheday_context';
 
@@ -16,16 +16,48 @@ function DealOfTheDayPage() {
         dealOfTheDay_loading: loading,
         dealOfTheDay_error: error,
         dealOfTheDay,
-        fetchDealOfTheDayForTable
+        fetchDealOfTheDayForTable,
+        blukUpdateDealOfTheDay,
     } = useDealOfTheDayContext();
 
-
+    const toast = useToast();
+    const [updatedDeals, setUpdatedDeals] = useState([]);
     const [dealofthedaydata, setDealofthedaydata] = useState([]);
+    const [pushChangesLoading, setPushChangesLoading] = useState(false);
+
+    const handlePushChangesButton = async (e) => {
+        e.preventDefault();
+        setPushChangesLoading(true);
+        const response = await blukUpdateDealOfTheDay(updatedDeals);
+        if(response?.success) {
+            await fetchDealOfTheDayForTable();
+            setPushChangesLoading(false);
+            return toast({
+                position: 'top',
+                description: `${updatedDeals.length} updated successfully`,
+                status: 'success',
+                duration: 5000,
+                isClosable: true 
+            });
+        } else {
+            setPushChangesLoading(false);
+            return toast({
+                position: 'top',
+                description: response?.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true
+            });
+        }
+    };
+    
+
+    
+
 
     const handleRefresh = async () => {
         await fetchDealOfTheDayForTable();
     };
-
 
 
     useEffect(() => {
@@ -37,7 +69,6 @@ function DealOfTheDayPage() {
 
     useEffect(() => {
         if (dealOfTheDay) {
-            console.log("working");
             setDealofthedaydata(dealOfTheDay);
         }
     }, [dealOfTheDay]);
@@ -95,9 +126,20 @@ function DealOfTheDayPage() {
                     Refresh
                 </Button>
             <SearchBoxForDealOfTheDay />
+            <Button
+                colorScheme="brown"
+                onClick={(e) => {handlePushChangesButton(e)}}
+                isLoading={pushChangesLoading}
+                loadingText='Updating Banner'
+                >
+                Push Changes
+            </Button>
             </HStack>
             {dealofthedaydata ? 
-                <DealOfTheDayTable dealOfTheDay={dealofthedaydata} />
+                <DealOfTheDayTable dealOfTheDay={dealofthedaydata}
+                updatedDeals={updatedDeals}
+                setUpdatedDeals={setUpdatedDeals}
+                />
              : null}
         </SidebarWithHeader>
     );

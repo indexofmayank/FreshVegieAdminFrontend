@@ -162,3 +162,4 @@ export const deleteNotificationById_url = `${domain}/api/notification/`;
 export const getDealOfDayByDropdown_url = `${domain}/api/dealoftheday/featuredProduct/`;
 export const getDealOfTheDayByProductId_url = `${domain}/api/dealoftheday/singlefeaturedProduct/`;
 export const udpateDealOftheDayProduct_url = `${domain}/api/dealoftheday/body/featuredProduct/`;
+export const udpateBlukDealOfTheDay_url = `${domain}/api/dealoftheday/nownow/`;

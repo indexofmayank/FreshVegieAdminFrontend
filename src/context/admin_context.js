@@ -38,7 +38,6 @@ export const AdminProvider = ({ children }) => {
     dispatch({ type: GET_ADMINS_BEGIN });
     try {
       const response = await axios.get(admins_url);
-      console.log(response);
       const { data } = response.data;
       dispatch({ type: GET_ADMINS_SUCCESS, payload: data });
     } catch (error) {
