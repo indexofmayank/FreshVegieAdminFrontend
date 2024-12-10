@@ -20,12 +20,14 @@ import {
 import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useCustomerContext } from '../context/customer_context';
+import Pagination from './Pagination';
 
-export const UserTable = ({ customers }) => {
+export const UserTable = ({ customers,pagination, setPagination }) => {
     const toast = useToast();
     const { fetchCustomers } = useCustomerContext();
     const [loading, setLoading] = useState(false);
-
+   console.log(pagination)
+   console.log(setPagination)
     return (
         <SimpleGrid bg='white' p={5} shadow='lg' borderRadius='lg' overflowX='auto'>
             {loading ? (
@@ -74,6 +76,7 @@ export const UserTable = ({ customers }) => {
                     </Tbody>
                 </Table>
             )}
+        <Pagination pagination={pagination} setPagination={setPagination}/>
         </SimpleGrid>
     );
 };

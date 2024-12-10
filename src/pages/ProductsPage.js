@@ -66,7 +66,7 @@ function ProductsPage() {
    
   }, [suggestionList]);
 
-// console.log(products);
+console.log(products);
 // console.log(productlist);
 
   const handleRefresh = async () => {
