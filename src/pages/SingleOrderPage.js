@@ -67,7 +67,11 @@ function SingleOrderPage() {
     deliveryPartner,
     fetchDeliveryPartnersName,
     updateDeliveryInfo,
-    deliveryPartnerDetailById
+    deliveryPartnerDetailById,
+    fetchOrderDateByOrderId,
+    orderDate_loading,
+    orderDate_error,
+    orderDate
   } = useOrderContext();
 
   const handleChange = async (e) => {
@@ -101,6 +105,7 @@ function SingleOrderPage() {
     fetchQuantityWiseOrder(id);
     fetchSingleOrderStatus(id);
     fetchDeliveryPartnersName();
+    fetchOrderDateByOrderId(id);
   }, [id]);
 
   useEffect(() => {
@@ -318,6 +323,7 @@ function SingleOrderPage() {
           customOrderId={customOrderId}
           quantityWiseOrder={quantityWiseOrder}
           singleOrderStatus={singleOrderStatus}
+          orderDate={orderDate}
         />
 
       </VStack>

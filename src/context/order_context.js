@@ -29,7 +29,8 @@ import {
   updateAdminOrder_url,
   getUserBalanceFromWallet_url,
   updateUserBalanceForWallet_url,
-  getOrderIdByCustomOrderId_url
+  getOrderIdByCustomOrderId_url,
+  getOrderDateByOrderId_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -80,7 +81,10 @@ import {
   GET_ORDERFORCUSTOMISE_SUCCESS,
   GET_CUSTOMORDERIDFROM_ID_SUCCESS,
   GET_CUSTOMORDERIDFROM_ID_ERROR,
-  GET_CUSTOMORDERIDFROM_ID_BEGIN
+  GET_CUSTOMORDERIDFROM_ID_BEGIN,
+  GET_ORDERDATE_BEGIN,
+  GET_ORDERDATE_ERROR,
+  GET_ORDERDATE_SUCCESS
 } from '../actions';
 
 const initialState = {
@@ -147,6 +151,9 @@ const initialState = {
   orderIdBy_customOrderId: '',
   orderIdBy_customOrderId_loading: false,
   orderIdBy_customOrderId_error: false,
+  orderDate_loading: false,
+  orderDate_error: false,
+  orderDate: {}
 };
 
 const OrderContext = React.createContext();
@@ -517,6 +524,17 @@ export const OrderProvider = ({ children }) => {
     }
   }
 
+  const fetchOrderDateByOrderId = async (id) => {
+    dispatch({type: GET_ORDERDATE_BEGIN});
+    try {
+      const response = await axios.get(`${getOrderDateByOrderId_url}${id}`);
+      const {data} = response.data;
+      dispatch({type: GET_ORDERDATE_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_ORDERDATE_ERROR});
+    }
+  }
+
   useEffect(() => {
     fetchOrders();
   }, [currentUser]);
@@ -553,7 +571,8 @@ export const OrderProvider = ({ children }) => {
         updateOrderForAdmin,
         fetchUserBalanceFromWallet,
         updateUserRefundAmountToWallet,
-        fetchOrderIdFromCustomOrderId
+        fetchOrderIdFromCustomOrderId,
+        fetchOrderDateByOrderId
       }}
     >
       {children}

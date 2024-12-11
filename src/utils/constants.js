@@ -164,3 +164,4 @@ export const getDealOfTheDayByProductId_url = `${domain}/api/dealoftheday/single
 export const udpateDealOftheDayProduct_url = `${domain}/api/dealoftheday/body/featuredProduct/`;
 export const udpateBlukDealOfTheDay_url = `${domain}/api/dealoftheday/nownow/`;
 export const getOrderIdByCustomOrderId_url = `${domain}/api/orders/getOrderIdByCustomOrderId/`;
+export const getOrderDateByOrderId_url = `${domain}/api/orders/readeabledate/`;

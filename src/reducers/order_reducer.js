@@ -46,9 +46,10 @@ import {
   GET_ORDERFORCUSTOMISE_SUCCESS,
   GET_CUSTOMORDERIDFROM_ID_SUCCESS,
   GET_CUSTOMORDERIDFROM_ID_ERROR,
-  GET_CUSTOMORDERIDFROM_ID_BEGIN
-
-
+  GET_CUSTOMORDERIDFROM_ID_BEGIN,
+  GET_ORDERDATE_BEGIN,
+  GET_ORDERDATE_ERROR,
+  GET_ORDERDATE_SUCCESS
 } from '../actions';
 
 const order_reducer = (state, action) => {
@@ -243,6 +244,18 @@ const order_reducer = (state, action) => {
 
   if(action.type === GET_CUSTOMORDERIDFROM_ID_SUCCESS) {
     return {...state, orderIdBy_customOrderId_error: false, orderIdBy_customOrderId: action.payload}
+  }
+
+  if(action.type === GET_ORDERDATE_BEGIN) {
+    return {...state, orderDate_loading: true, orderDate_error: false}
+  }
+
+  if(action.type === GET_ORDERDATE_ERROR) {
+    return {...state, orderDate_error: true, orderDate_loading: false}
+  }
+
+  if(action.type === GET_ORDERDATE_SUCCESS) {
+    return {...state, orderDate_loading: false,  orderDate: action.payload}
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);

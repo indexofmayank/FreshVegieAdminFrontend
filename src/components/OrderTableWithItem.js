@@ -50,6 +50,7 @@ const OrderTableWithItem = ({
   customOrderId,
   quantityWiseOrder,
   singleOrderStatus,
+  orderDate,
 }) => {
   const history = useHistory();
   const userBillingdata = userBillingInfo?.userBillingInfo?.[0] || [];
@@ -427,11 +428,17 @@ const OrderTableWithItem = ({
           </Box>
 
           <Box bg="white" shadow="md" p={4} borderRadius="md">
-              <HStack justifyContent='space-between' mt={4}>
-                {" "}
-                <Text fontSize='bold' mt={4}>Total Item: {orderItemsarr.length} </Text>
-                <Text fontSize='bold' mt={4}>Date: </Text>
-              </HStack>
+              <Heading size="sm" mb={2}>
+                Order Details
+              </Heading>
+            <HStack justifyContent="space-between" mt={4}>
+              <Text fontSize="bold" mt={4}>
+                Total Item: {orderItemsarr.length}{" "}
+              </Text>
+              <Text fontSize="bold" mt={4}>
+                Date-time: {orderDate?.createdAtKolkata}{" "}
+              </Text>
+            </HStack>
             <HStack justifyContent="space-between" mt={4}>
               <OrderWeightPopover
                 totalWeight={totalItemCount}

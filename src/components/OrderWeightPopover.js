@@ -21,12 +21,12 @@ import {
   
     return (
       <>
-        <Button onClick={onOpen}>Weight   {totalWeight} Kg</Button>
+        <Button onClick={onOpen}>Item  {totalWeight}</Button>
   
         <Modal isOpen={isOpen} onClose={onClose} size="md">
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Order Weight</ModalHeader>
+            <ModalHeader>Order Item</ModalHeader>
             <Divider />
             <ModalBody>
               <Box>
@@ -47,7 +47,7 @@ import {
                         />
                         <Text>{name} </Text>
                       </HStack>
-                      <Text>{quantity} Kg</Text>
+                      <Text>{quantity} </Text>
                     </HStack>
                     );
                   })
@@ -57,7 +57,7 @@ import {
               </Box>
                 <Divider/>
               <Text fontWeight="bold" mt={4}>
-                Total Weight: {totalWeight} Kg
+                Total Item: {totalWeight} 
               </Text>
             </ModalBody>
             <Divider/>
