@@ -28,7 +28,8 @@ import {
   getCustomiseOrderDetail_url,
   updateAdminOrder_url,
   getUserBalanceFromWallet_url,
-  updateUserBalanceForWallet_url
+  updateUserBalanceForWallet_url,
+  getOrderIdByCustomOrderId_url
 } from '../utils/constants';
 import {
   GET_ORDERS_BEGIN,
@@ -76,7 +77,10 @@ import {
   GET_ORDERFOREDIT_SUCCESS,
   GET_ORDERFORCUSTOMISE_BEGIN,
   GET_ORDERFORCUSTOMISE_ERROR,
-  GET_ORDERFORCUSTOMISE_SUCCESS
+  GET_ORDERFORCUSTOMISE_SUCCESS,
+  GET_CUSTOMORDERIDFROM_ID_SUCCESS,
+  GET_CUSTOMORDERIDFROM_ID_ERROR,
+  GET_CUSTOMORDERIDFROM_ID_BEGIN
 } from '../actions';
 
 const initialState = {
@@ -140,6 +144,9 @@ const initialState = {
   pending_orders: 0,
   delivered_orders: 0,
   total_revenue: 0,
+  orderIdBy_customOrderId: '',
+  orderIdBy_customOrderId_loading: false,
+  orderIdBy_customOrderId_error: false,
 };
 
 const OrderContext = React.createContext();
@@ -198,6 +205,7 @@ export const OrderProvider = ({ children }) => {
     dispatch({type: GET_ORDERWITHITEM_BEGIN});
     try { 
       const response = await axios.get(`${get_orderWithItem_url}${id}`);
+      console.log(response?.data);
       const {data} = response.data;
       dispatch({type: GET_ORDERWITHITEM_SUCCESS, payload: data});
     } catch(error) {
@@ -255,7 +263,6 @@ export const OrderProvider = ({ children }) => {
   };
 
   const updateDeliveryInfo = async (id, type, name, email, phone, _id) => {
-    console.log(_id);
     try {
       const response = await axios.put(`${updateDeliveryPartnerDetails_url}${id}`, {
         type,
@@ -293,9 +300,11 @@ export const OrderProvider = ({ children }) => {
   }
 
   const fetchCustomOrderId = async (id) => {
+    console.log(id);
     dispatch({type: GET_CUSTOMORDERID_BEGIN});
     try {
       const response = await axios.get(`${get_customOrderId_url}${id}`);
+      console.log(response);
       const {data} = response;
       dispatch({type: GET_CUSTOMORDERID_SUCCESS, payload: data});
     } catch (error) {
@@ -447,8 +456,10 @@ export const OrderProvider = ({ children }) => {
     dispatch({type: GET_ORDERFORCUSTOMISE_BEGIN});
     try {
       const response = await axios.get(`${getCustomiseOrderDetail_url}${id}`);
-      const {data} = response.data;
+      console.log(response?.data?.data);
+      const data = response.data?.data;
       dispatch({type: GET_ORDERFORCUSTOMISE_SUCCESS, payload: data});
+      return;
     } catch (error) {
       dispatch({type: GET_ORDERFORCUSTOMISE_ERROR});
     }
@@ -473,7 +484,6 @@ export const OrderProvider = ({ children }) => {
   const fetchUserBalanceFromWallet = async (id) => {
     try {
       const response = await axios.get(`${getUserBalanceFromWallet_url}${id}`);
-      console.log(response);
       const {success, balance} = response.data;
       return {success, balance}
     } catch (error) {
@@ -483,8 +493,7 @@ export const OrderProvider = ({ children }) => {
   }
 
   const updateUserRefundAmountToWallet = async (id, amount, orderid) => {
-    console.log(orderid);
-    try {
+          try {
       const response = await axios.post(`${updateUserBalanceForWallet_url}${id}`, {
         amount,
         description: 'refund initiated for '+`${orderid}`
@@ -494,6 +503,17 @@ export const OrderProvider = ({ children }) => {
     } catch (error) {
       const {message} = error;
       return {success: false, message};
+    }
+  }
+
+  const fetchOrderIdFromCustomOrderId = async (customOrderId) => {
+    dispatch({type: GET_CUSTOMORDERIDFROM_ID_BEGIN});
+    try {
+      const response = await axios.get(`${getOrderIdByCustomOrderId_url}${customOrderId}`);
+      const {data} = response.data;
+      dispatch({type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data});
+    } catch (error) {
+      dispatch({type: GET_CUSTOMORDERIDFROM_ID_ERROR});
     }
   }
 
@@ -532,7 +552,8 @@ export const OrderProvider = ({ children }) => {
         fetchOrderForCustomise,
         updateOrderForAdmin,
         fetchUserBalanceFromWallet,
-        updateUserRefundAmountToWallet
+        updateUserRefundAmountToWallet,
+        fetchOrderIdFromCustomOrderId
       }}
     >
       {children}

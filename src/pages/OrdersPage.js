@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SidebarWithHeader, OrdersTable, OrderStatus } from '../components';
+import { SidebarWithHeader, OrdersTable, OrderStatus, SearchBoxForOrder} from '../components';
 import { useOrderContext } from '../context/order_context';
 import { Heading, VStack, HStack, Button, Spinner, Tooltip, Menu, MenuButton, MenuList, MenuItem, MenuTrigger, MenuContent, IconButton } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -7,11 +7,10 @@ import { FaDownload } from 'react-icons/fa';
 import axios from 'axios';
 import { getCsvDownload_url } from '../utils/constants';
 import { useOrderStatusContext } from '../context/orderStatus_context';
-import { useHistory } from 'react-router-dom'; // Import useHistory
+import { useHistory } from 'react-router-dom'; 
 
 function OrdersPage() {
-  const history = useHistory(); // Initialize history object
-
+  const history = useHistory(); 
   const {
     orderStatus_loading: loading,
     orderStatus_error: error,
@@ -157,7 +156,7 @@ function OrdersPage() {
           Refresh
         </Button>
         {tabelLabel === null ? (
-        <Tooltip label="Download Orders CSV" aria-label="Download Orders CSV Tooltip">
+          <Tooltip label="Download Orders CSV" aria-label="Download Orders CSV Tooltip">
         <FaDownload 
           size={30}
           style={{ cursor: 'pointer' }}
@@ -166,11 +165,12 @@ function OrdersPage() {
       </Tooltip>
         ): (
           <FaDownload
-            size={30}
-            style={{ cursor: 'pointer' }}
-            onClick={handleDownload}
+          size={30}
+          style={{ cursor: 'pointer' }}
+          onClick={handleDownload}
           />
         )}
+        <SearchBoxForOrder />
       </HStack>
       {tabelLabel === null ? (
         <OrderStatus

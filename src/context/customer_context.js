@@ -29,10 +29,11 @@ const CustomerContext = React.createContext();
 export const CustomerProvider = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const fetchCustomers = async (newPage, limit) => {
+    const fetchCustomers = async (page, limit) => {
         dispatch({type: GET_CUSTOMER_BEGIN});
         try{
-            const response = await axios.get(customers_url)
+            const response = await axios.get(`${customers_url}?page=${page}&limit=${limit}`);
+            console.log(response);
             const {data} = response;
             dispatch({type: GET_CUSTOMER_SUCCESS, payload: data});
         } catch(error) {

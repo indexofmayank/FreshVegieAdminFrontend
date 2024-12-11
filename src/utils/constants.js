@@ -163,3 +163,4 @@ export const getDealOfDayByDropdown_url = `${domain}/api/dealoftheday/featuredPr
 export const getDealOfTheDayByProductId_url = `${domain}/api/dealoftheday/singlefeaturedProduct/`;
 export const udpateDealOftheDayProduct_url = `${domain}/api/dealoftheday/body/featuredProduct/`;
 export const udpateBlukDealOfTheDay_url = `${domain}/api/dealoftheday/nownow/`;
+export const getOrderIdByCustomOrderId_url = `${domain}/api/orders/getOrderIdByCustomOrderId/`;

@@ -44,7 +44,7 @@ function UsersPage () {
   useEffect(() => {
     fetchCustomers(pagination.page, pagination.limit);
   }, [pagination.page, pagination.limit]);
-    // console.log(customerwithaddress);
+
     console.log(customers);
 
     if (loading) {
@@ -103,6 +103,7 @@ function UsersPage () {
             customers={customers.data}
             pagination={pagination}
             setPagination={setPagination}
+            totalPages={customers.totalPages}
             />
         </SidebarWithHeader>
     );

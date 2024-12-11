@@ -33,7 +33,7 @@ function InventoryPage() {
 
   useEffect(() => {
     const callAsyncCategories = async () => {
-      await fetchCategoryByName();
+      await fetchCategoryByName(pagination.page, pagination.limit);
     }
     callAsyncCategories();
   }, []);

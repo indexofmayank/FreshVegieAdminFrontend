@@ -43,7 +43,11 @@ import {
   GET_ORDERFOREDIT_SUCCESS,
   GET_ORDERFORCUSTOMISE_BEGIN,
   GET_ORDERFORCUSTOMISE_ERROR,
-  GET_ORDERFORCUSTOMISE_SUCCESS
+  GET_ORDERFORCUSTOMISE_SUCCESS,
+  GET_CUSTOMORDERIDFROM_ID_SUCCESS,
+  GET_CUSTOMORDERIDFROM_ID_ERROR,
+  GET_CUSTOMORDERIDFROM_ID_BEGIN
+
 
 } from '../actions';
 
@@ -221,14 +225,25 @@ const order_reducer = (state, action) => {
     return {...state, orderForCustomise_loading: true,  orderForCustomise_error: false}
   }
 
+  if(action.type === GET_ORDERFORCUSTOMISE_SUCCESS) {
+    return {...state, orderForCustomise_loading: false, orderForCustomise: action.payload}
+  }
+
   if(action.type === GET_ORDERFORCUSTOMISE_ERROR ){
     return {...state, orderForCustomise_loading: false, orderForCustomise_error: true }
   }
 
-  if(action.type === GET_ORDERFORCUSTOMISE_SUCCESS) {
-    return {...state, orderForCustomise_loading: false, orderForCustomise: action.payload }
+  if(action.type === GET_CUSTOMORDERIDFROM_ID_BEGIN ){
+    return {...state,  orderIdBy_customOrderId_loading: false, orderIdBy_customOrderId_error: true}
   }
 
+  if(action.type === GET_CUSTOMORDERIDFROM_ID_ERROR ){
+    return {...state, orderIdBy_customOrderId_error: true, orderIdBy_customOrderId_loading: false }
+  }
+
+  if(action.type === GET_CUSTOMORDERIDFROM_ID_SUCCESS) {
+    return {...state, orderIdBy_customOrderId_error: false, orderIdBy_customOrderId: action.payload}
+  }
 
   throw new Error(`No Matching "${action.type}" - action type`);
 };

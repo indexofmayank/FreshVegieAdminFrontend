@@ -30,11 +30,11 @@ import {
   Icon
 } from '@chakra-ui/react';
 import { useOrderContext } from '../context/order_context';
-import { useHistory } from 'react-router-dom'; // Import useHistory
+import { useHistory } from 'react-router-dom'; 
 
 function OrdersTable({ orders, totalItem, page, totalPage, limit, itemFetchFunction, label }) {
   const toast = useToast();
-  const history = useHistory(); // Initialize history object
+  const history = useHistory(); 
   const { currentUser } = useUserContext();
   const { fetchOrders, deleteOrder } = useOrderContext();
   const [loading, setLoading] = useState(false);
