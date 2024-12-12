@@ -1,88 +1,123 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Input,
   InputGroup,
   InputRightElement,
   List,
+  ListItem,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { FaSistrix } from "react-icons/fa";
-import {useOrderContext} from '../context/order_context';
-import { useHistory } from 'react-router-dom'; 
-
-
+import { useOrderContext } from "../context/order_context";
+import { useHistory } from "react-router-dom";
 
 function SearchBoxForOrder() {
-  const history = useHistory(); 
+  const history = useHistory();
+  const inputRef = useRef();
 
   const {
     orderIdBy_customOrderId,
     orderIdBy_customOrderId_loading,
     orderIdBy_customOrderId_error,
-    fetchOrderIdFromCustomOrderId
+    fetchOrderIdFromCustomOrderId,
   } = useOrderContext();
 
   const [query, setQuery] = useState("");
   const toast = useToast();
   const [showSuggestion, setShowSuggestion] = useState(false);
-  const [suggestion, setSuggestion] = useState(false);
+
+  const handleClickOutside = (event) => {
+    if(inputRef.current && !inputRef.current.contains(event.target)) {
+      setShowSuggestion(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, []);
 
 
   useEffect(() => {
-    if (query.length >= 4) {
-      const orderRegex = /^ORD\d+$/;
-      if (!orderRegex.test(query)) {
+    const fetchRequiredData = async () => {
+      try {
+        await fetchOrderIdFromCustomOrderId(query);
+      } catch (error) {
         setShowSuggestion(false);
-        toast({
-          position: "top",
-          title: "Invalid Order Number",
-          description: "Order number must be in the format ORD1, ORD2, etc.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
       }
-     setShowSuggestion(true);
-     fetchOrderIdFromCustomOrderId(query);
-    
-    }
-    else {
-      setShowSuggestion(false);
-    }
-  }, [query, toast]);
+    };
+    fetchRequiredData();
+  }, [query]);
+
+  useEffect(() => {
+    console.log(orderIdBy_customOrderId);
+  }, [orderIdBy_customOrderId]);
 
   return (
-    <Box position="relative">
+    <Box position="relative" ref={inputRef}>
       <InputGroup>
         <Input
           value={query}
-          placeholder="Search with order number"
+          placeholder="Write product name"
           onChange={(e) => {
             setQuery(e.target.value);
           }}
-          // onKeyDown={handleKeyDown}  
+          onFocus={() => {
+            setShowSuggestion(true);
+          }}
         />
         <InputRightElement>
           <FaSistrix />
         </InputRightElement>
+        {showSuggestion && (
+          <Box
+            position="absolute"
+            bg="white"
+            w="100%"
+            zIndex={10}
+            border="1px solid #e2e8f0"
+            borderRadius="md"
+            cursor="pointer"
+            _hover={{ bg: "gray.100" }}
+            onClick={() => {}}
+          >
+            {showSuggestion && orderIdBy_customOrderId.length > 0 && (
+              <Box
+                position="absolute"
+                bg="white"
+                w="100%"
+                zIndex={10}
+                border="1px solid #e2e8f0"
+                borderRadius="md"
+                mt={10}
+              >
+                <List maxH="200px" overflowY="auto">
+                  {orderIdBy_customOrderId.map((item, index) => {
+                    const { user, orderId, _id } = item;
+                    return (
+                      <ListItem
+                        key={index}
+                        p={2}
+                        cursor="pointer"
+                        _hover={{ bg: "gray.100" }}
+                        onClick={() => {
+                          history.push(`orders/${_id}`);
+                        }}
+                      >
+                        {orderId} -- {user}
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Box>
+            )}
+          </Box>
+        )}
       </InputGroup>
-      {showSuggestion && orderIdBy_customOrderId && (
-        <Box
-          position='absolute'
-          bg='white'
-          w='100%'
-          zIndex={10}
-          border='1px solid #e2e8f0'
-          borderRadius='md'
-          mt={2}
-          cursor="pointer"
-          _hover={{ bg: "gray.100" }}
-          onClick={() => {history.push(`orders/${orderIdBy_customOrderId.id}`)}}
-        >
-          {orderIdBy_customOrderId.orderId}
-        </Box>
-      )}
     </Box>
   );
 }

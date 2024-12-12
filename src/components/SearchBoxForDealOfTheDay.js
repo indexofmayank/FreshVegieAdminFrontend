@@ -107,7 +107,7 @@ const SearchBoxForDealOfTheDay = () => {
               const { name, _id } = suggestion;
               return (
                 <ListItem
-                  key={_id}
+                  key={index}
                   p={2}
                   cursor="pointer"
                   _hover={{ bg: "gray.100" }}

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useReducer } from 'react';
-import axios from 'axios';
-import reducer from '../reducers/order_reducer';
-import { useUserContext } from './user_context';
+import React, { useContext, useEffect, useReducer } from "react";
+import axios from "axios";
+import reducer from "../reducers/order_reducer";
+import { useUserContext } from "./user_context";
 import {
   orders_url,
   single_order_url,
@@ -30,8 +30,9 @@ import {
   getUserBalanceFromWallet_url,
   updateUserBalanceForWallet_url,
   getOrderIdByCustomOrderId_url,
-  getOrderDateByOrderId_url
-} from '../utils/constants';
+  getOrderDateByOrderId_url,
+  getLastTenOrder_url,
+} from "../utils/constants";
 import {
   GET_ORDERS_BEGIN,
   GET_ORDERS_ERROR,
@@ -84,8 +85,8 @@ import {
   GET_CUSTOMORDERIDFROM_ID_BEGIN,
   GET_ORDERDATE_BEGIN,
   GET_ORDERDATE_ERROR,
-  GET_ORDERDATE_SUCCESS
-} from '../actions';
+  GET_ORDERDATE_SUCCESS,
+} from "../actions";
 
 const initialState = {
   orders_loading: false,
@@ -93,7 +94,7 @@ const initialState = {
   order_withItems_loading: false,
   order_withItems_error: false,
   orders: [],
-  order_withItems:   {},
+  order_withItems: {},
   single_order_loading: false,
   single_order_error: false,
   single_order: {},
@@ -112,8 +113,8 @@ const initialState = {
   quantityWiseOrder_laoding: false,
   quantityWiseOrder_error: false,
   quantityWiseOrder: {},
-  single_order_status: '',
-  single_order_payment_status: '',
+  single_order_status: "",
+  single_order_payment_status: "",
   singleOrderStatus_loading: false,
   singleOrderStatus_error: false,
   singleOrderStatus: {},
@@ -134,26 +135,26 @@ const initialState = {
   orderForCustomise_error: false,
   orderForCustomise: {},
   new_order_address: {
-    address_name: '',
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    locality: '',
-    landmark: '',
-    city: '',
-    pin_code: '',
-    state: ''
+    address_name: "",
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    locality: "",
+    landmark: "",
+    city: "",
+    pin_code: "",
+    state: "",
   },
   pending_orders: 0,
   delivered_orders: 0,
   total_revenue: 0,
-  orderIdBy_customOrderId: '',
+  orderIdBy_customOrderId: [],
   orderIdBy_customOrderId_loading: false,
   orderIdBy_customOrderId_error: false,
   orderDate_loading: false,
   orderDate_error: false,
-  orderDate: {}
+  orderDate: {},
 };
 
 const OrderContext = React.createContext();
@@ -162,29 +163,36 @@ export const OrderProvider = ({ children }) => {
   const { currentUser } = useUserContext();
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchOrdersForTable = async (page='', limit='', status='', label='') => {
+  const fetchOrdersForTable = async (
+    page = "",
+    limit = "",
+    status = "",
+    label = ""
+  ) => {
     try {
-      dispatch({type:GET_ORDERFORTABEL_BEGIN });
-      const response = await axios.get(`${getOrderForTable_url}?label=${label}&page=${page}&limit=${limit}`);
-      const {data} = response;
-      dispatch({type: GET_ORDERFORTABEL_SUCCESS, payload: data});
+      dispatch({ type: GET_ORDERFORTABEL_BEGIN });
+      const response = await axios.get(
+        `${getOrderForTable_url}?label=${label}&page=${page}&limit=${limit}`
+      );
+      const { data } = response;
+      dispatch({ type: GET_ORDERFORTABEL_SUCCESS, payload: data });
     } catch (error) {
       console.error(error);
-      dispatch({type: GET_ORDERFORTABLE_ERROR});
+      dispatch({ type: GET_ORDERFORTABLE_ERROR });
     }
-  }
+  };
 
   const fetchRecentOrderForTable = async () => {
     try {
-      dispatch({type:GET_RECENTORDERFORTABLE_BEGIN });
+      dispatch({ type: GET_RECENTORDERFORTABLE_BEGIN });
       const response = await axios.get(getRecentOrderForTable_url);
-      const {data} = response.data;
-      dispatch({type: GET_RECENTORDERFORTABLE_SUCCESS, payload: data});
+      const { data } = response.data;
+      dispatch({ type: GET_RECENTORDERFORTABLE_SUCCESS, payload: data });
     } catch (error) {
       console.error(error);
-      dispatch({type: GET_RECENTORDERFORTABLE_ERROR});
+      dispatch({ type: GET_RECENTORDERFORTABLE_ERROR });
     }
-  }
+  };
 
   const fetchOrders = async () => {
     dispatch({ type: GET_ORDERS_BEGIN });
@@ -208,51 +216,50 @@ export const OrderProvider = ({ children }) => {
     }
   };
 
-  const fetchOrderWithItems = async(id) => {
-    dispatch({type: GET_ORDERWITHITEM_BEGIN});
-    try { 
+  const fetchOrderWithItems = async (id) => {
+    dispatch({ type: GET_ORDERWITHITEM_BEGIN });
+    try {
       const response = await axios.get(`${get_orderWithItem_url}${id}`);
       console.log(response?.data);
-      const {data} = response.data;
-      dispatch({type: GET_ORDERWITHITEM_SUCCESS, payload: data});
-    } catch(error) {
-      dispatch({type: GET_ORDERWITHITEM_ERROR});
+      const { data } = response.data;
+      dispatch({ type: GET_ORDERWITHITEM_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({ type: GET_ORDERWITHITEM_ERROR });
     }
   };
 
   const fetchUserOrderBillingInfo = async (id) => {
-    dispatch({type: GET_USERBILLINGINFO_BEGIN});
+    dispatch({ type: GET_USERBILLINGINFO_BEGIN });
     try {
       const response = await axios.get(`${get_userBillingInfo_url}${id}`);
-      const {data} = response;
-      dispatch({type: GET_USERBILLINGINFO_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_USERBILLINGINFO_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_USERBILLINGINFO_ERROR});
+      dispatch({ type: GET_USERBILLINGINFO_ERROR });
     }
-  }
+  };
 
   const fetchUserOrderPaymentInfo = async (id) => {
-    dispatch({type: GET_USERBILLINGINFO_BEGIN});
+    dispatch({ type: GET_USERBILLINGINFO_BEGIN });
     try {
       const response = await axios.get(`${get_userPaymentInfo_url}${id}`);
-      const {data} = response;
-      dispatch({type: GET_USERPAYMENTINFO_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_USERPAYMENTINFO_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_USERBILLINGINFO_ERROR});
+      dispatch({ type: GET_USERBILLINGINFO_ERROR });
     }
-  }  
+  };
 
   const fetchUserOrderDeliveryInfo = async (id) => {
-    dispatch({type: GET_USERDELIVERYINFO_BEGIN});
+    dispatch({ type: GET_USERDELIVERYINFO_BEGIN });
     try {
       const response = await axios.get(`${get_userDeliveryInfo_url}${id}`);
-      const {data} = response;
-      dispatch({type: GET_USERDELIVERYINFO_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_USERDELIVERYINFO_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_USERDELIVERYINFO_ERROR});
+      dispatch({ type: GET_USERDELIVERYINFO_ERROR });
     }
-  }
-
+  };
 
   const updateOrderStatus = async (status, id) => {
     try {
@@ -271,23 +278,25 @@ export const OrderProvider = ({ children }) => {
 
   const updateDeliveryInfo = async (id, type, name, email, phone, _id) => {
     try {
-      const response = await axios.put(`${updateDeliveryPartnerDetails_url}${id}`, {
-        type,
-        name,
-        phone,
-        email,
-        _id
-      });
-      const {success, data} = response.data;
+      const response = await axios.put(
+        `${updateDeliveryPartnerDetails_url}${id}`,
+        {
+          type,
+          name,
+          phone,
+          email,
+          _id,
+        }
+      );
+      const { success, data } = response.data;
       fetchOrders();
       fetchUserOrderDeliveryInfo(id);
-      return {success, data};
+      return { success, data };
     } catch (error) {
-      const {success, message} = error.response.data;
-      return {success, message};
+      const { success, message } = error.response.data;
+      return { success, message };
     }
-  }
-
+  };
 
   const deleteOrder = async (id) => {
     try {
@@ -303,121 +312,137 @@ export const OrderProvider = ({ children }) => {
   const updateNewOrderAddressDetails = (e) => {
     const name = e.target.name;
     let value = e.target.value;
-    dispatch({type: CREATE_NEW_ORDER, payload: {name, value}});
-  }
+    dispatch({ type: CREATE_NEW_ORDER, payload: { name, value } });
+  };
 
   const fetchCustomOrderId = async (id) => {
     console.log(id);
-    dispatch({type: GET_CUSTOMORDERID_BEGIN});
+    dispatch({ type: GET_CUSTOMORDERID_BEGIN });
     try {
       const response = await axios.get(`${get_customOrderId_url}${id}`);
       console.log(response);
-      const {data} = response;
-      dispatch({type: GET_CUSTOMORDERID_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_CUSTOMORDERID_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_CUSTOMORDERID_ERROR});
+      dispatch({ type: GET_CUSTOMORDERID_ERROR });
     }
   };
 
   const updateOrderPaymentStatus = async (id, updateStatus) => {
     try {
-      const response = await axios.put(`${updatePaymentStatus_url}${id}`,{
-        "status" : updateStatus
+      const response = await axios.put(`${updatePaymentStatus_url}${id}`, {
+        status: updateStatus,
       });
-      const {success, message} = response.data;
+      const { success, message } = response.data;
       fetchUserOrderPaymentInfo(id);
-      return {success, message};
+      return { success, message };
     } catch (error) {
-      const {success, message} = error;
-      return {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
   const fetchQuantityWiseOrder = async (id) => {
-    dispatch({type: GET_QUANTITYWISEORDER_BEGIN});
+    dispatch({ type: GET_QUANTITYWISEORDER_BEGIN });
     try {
       const response = await axios.get(`${get_orderQuantityWise_url}${id}`);
-      const {data} = response;
-      dispatch({type: GET_QUANTITYWISEORDER_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_QUANTITYWISEORDER_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_QUANTITYWISEORDER_ERROR});
+      dispatch({ type: GET_QUANTITYWISEORDER_ERROR });
     }
-  }
+  };
 
   const markOrderPaymentToPaid = async (id, amount) => {
     try {
-      const response = await axios.put(`${updatePaymentStatusToPaid_url}${id}`, {
-        'amount': amount
-      });
-      const {data} = response;
+      const response = await axios.put(
+        `${updatePaymentStatusToPaid_url}${id}`,
+        {
+          amount: amount,
+        }
+      );
+      const { data } = response;
       fetchUserOrderPaymentInfo(id);
       return data;
     } catch (error) {
-      const {success, message} = error;
-      return {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
   const updateOrderStatusToCancelled = async (id) => {
     try {
-      const response = await axios.put(`${updateOrderStatusToCancelled_url}${id}`);
-      const {data} = response;
+      const response = await axios.put(
+        `${updateOrderStatusToCancelled_url}${id}`
+      );
+      const { data } = response;
       fetchUserOrderDeliveryInfo(id);
       fetchUserOrderDeliveryInfo(id);
       return data;
     } catch (error) {
-      const {success, message} = error;
-      return  {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
   const fetchSingleOrderStatus = async (id) => {
-    dispatch({type: GET_SINGLEORDERSTATUS_BEGIN});
+    dispatch({ type: GET_SINGLEORDERSTATUS_BEGIN });
     try {
       const response = await axios.get(`${getSingleOrderStatus_url}${id}`);
-      const {data} = response;
-      dispatch({type: GET_SINGLEORDERSTATUS_SUCCESS, payload: data});
+      const { data } = response;
+      dispatch({ type: GET_SINGLEORDERSTATUS_SUCCESS, payload: data });
     } catch (error) {
-      const {success, message} = error;
-      dispatch({type: GET_SINGLEORDERSTATUS_ERROR});
+      const { success, message } = error;
+      dispatch({ type: GET_SINGLEORDERSTATUS_ERROR });
     }
-  } 
+  };
 
   const fetchDeliveryPartnersName = async () => {
-    dispatch({type: GET_DELIVERYPARTNERBYNAME_BEGIN});
+    dispatch({ type: GET_DELIVERYPARTNERBYNAME_BEGIN });
     try {
       const response = await axios.get(getDeliveryPartnerName_url);
-      const {data} = response.data;
-      dispatch({type: GET_DELIVERYPARTNERBYNAME_SUCCESS, payload: data});
+      const { data } = response.data;
+      dispatch({ type: GET_DELIVERYPARTNERBYNAME_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_DELIVERYPARTNERBYNAME_ERROR});
+      dispatch({ type: GET_DELIVERYPARTNERBYNAME_ERROR });
     }
-  }
+  };
 
   const udpateOrderStatusAsDelivered = async (id) => {
     try {
       const response = await axios.put(`${updateOrderStatusToDelivered}${id}`);
-      const {success, message} = response.data;
+      const { success, message } = response.data;
       fetchUserOrderDeliveryInfo(id);
-      return {success, message};
+      return { success, message };
     } catch (error) {
-      const {success, message} = error;
-      return {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
   const deliveryPartnerDetailById = async (id) => {
     try {
-      const response = await axios.get(`${getDeliveryPartnerDetailById_url}${id}`);
-      const {data} = response.data;
+      const response = await axios.get(
+        `${getDeliveryPartnerDetailById_url}${id}`
+      );
+      const { data } = response.data;
       return data;
     } catch (error) {
-      const {success, message} = error;
-      return {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
-  const createNewOrder = async (orderItems, user, shippingInfo, orderedFrom, discountPrice, itemPrice, paymentInfo, deliveryInfo ) => {
+  const createNewOrder = async (
+    orderItems,
+    user,
+    shippingInfo,
+    orderedFrom,
+    discountPrice,
+    itemPrice,
+    paymentInfo,
+    deliveryInfo
+  ) => {
     try {
       const response = await axios.post(`${createOrder_url}`, {
         orderItems,
@@ -427,113 +452,134 @@ export const OrderProvider = ({ children }) => {
         discountPrice,
         itemPrice,
         paymentInfo,
-        deliveryInfo
+        deliveryInfo,
       });
-      const {success, message} = response.data;
-      return {success, message};
+      const { success, message } = response.data;
+      return { success, message };
     } catch (error) {
-      const {success, message} = error;
-      return {success, message};
+      const { success, message } = error;
+      return { success, message };
     }
-  }
+  };
 
-  const fetchOrderForEditOrder = async(id) => {
-      dispatch({type: GET_ORDERFOREDIT_BEGIN });
+  const fetchOrderForEditOrder = async (id) => {
+    dispatch({ type: GET_ORDERFOREDIT_BEGIN });
     try {
       const response = await axios.get(`${getOrderForEditOrder_url}${id}`);
-      const {data} = response.data;
-      dispatch({type: GET_ORDERFOREDIT_SUCCESS, payload: data});
+      const { data } = response.data;
+      dispatch({ type: GET_ORDERFOREDIT_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_ORDERFOREDIT_ERROR});
+      dispatch({ type: GET_ORDERFOREDIT_ERROR });
     }
-  }
+  };
 
-  const fetchStaticDeliveryInstructionsInfo = async() => {
+  const fetchStaticDeliveryInstructionsInfo = async () => {
     try {
       const response = await axios.get(getStaticDeliveryInstructionsInfo_url);
-      const {success, data} = response.data;
-      return {success, data};
+      const { success, data } = response.data;
+      return { success, data };
     } catch (error) {
-      const {message} = error.message;
-      return {success: false, message};
+      const { message } = error.message;
+      return { success: false, message };
     }
-  }
+  };
 
   const fetchOrderForCustomise = async (id) => {
-    dispatch({type: GET_ORDERFORCUSTOMISE_BEGIN});
+    dispatch({ type: GET_ORDERFORCUSTOMISE_BEGIN });
     try {
       const response = await axios.get(`${getCustomiseOrderDetail_url}${id}`);
       console.log(response?.data?.data);
       const data = response.data?.data;
-      dispatch({type: GET_ORDERFORCUSTOMISE_SUCCESS, payload: data});
+      dispatch({ type: GET_ORDERFORCUSTOMISE_SUCCESS, payload: data });
       return;
     } catch (error) {
-      dispatch({type: GET_ORDERFORCUSTOMISE_ERROR});
+      dispatch({ type: GET_ORDERFORCUSTOMISE_ERROR });
     }
-  }
+  };
 
-  const updateOrderForAdmin = async (id, orderItems, paymentInfo, discountPrice, grandTotal) => {
+  const updateOrderForAdmin = async (
+    id,
+    orderItems,
+    paymentInfo,
+    discountPrice,
+    grandTotal
+  ) => {
     try {
       const response = await axios.put(`${updateAdminOrder_url}${id}`, {
-       orderItems,
-       paymentInfo,
-       discountPrice,
-       grandTotal
+        orderItems,
+        paymentInfo,
+        discountPrice,
+        grandTotal,
       });
-      const {success, message} = response.data;
-      return {success, message};
+      const { success, message } = response.data;
+      return { success, message };
     } catch (error) {
-     const { message} = error;
-     return {success: false, message};
+      const { message } = error;
+      return { success: false, message };
     }
-  }
+  };
 
   const fetchUserBalanceFromWallet = async (id) => {
     try {
       const response = await axios.get(`${getUserBalanceFromWallet_url}${id}`);
-      const {success, balance} = response.data;
-      return {success, balance}
+      const { success, balance } = response.data;
+      return { success, balance };
     } catch (error) {
-      const {message} = error;
-      return {success: false, message}
+      const { message } = error;
+      return { success: false, message };
     }
-  }
+  };
 
   const updateUserRefundAmountToWallet = async (id, amount, orderid) => {
-          try {
-      const response = await axios.post(`${updateUserBalanceForWallet_url}${id}`, {
-        amount,
-        description: 'refund initiated for '+`${orderid}`
-      });
-      const {success} = response.data;
-      return {success};
+    try {
+      const response = await axios.post(
+        `${updateUserBalanceForWallet_url}${id}`,
+        {
+          amount,
+          description: "refund initiated for " + `${orderid}`,
+        }
+      );
+      const { success } = response.data;
+      return { success };
     } catch (error) {
-      const {message} = error;
-      return {success: false, message};
+      const { message } = error;
+      return { success: false, message };
     }
-  }
+  };
 
   const fetchOrderIdFromCustomOrderId = async (customOrderId) => {
-    dispatch({type: GET_CUSTOMORDERIDFROM_ID_BEGIN});
+    dispatch({ type: GET_CUSTOMORDERIDFROM_ID_BEGIN });
     try {
-      const response = await axios.get(`${getOrderIdByCustomOrderId_url}${customOrderId}`);
-      const {data} = response.data;
-      dispatch({type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data});
+      console.log(customOrderId);
+      if (customOrderId.length <= 3) {
+        const response = await axios.get(getLastTenOrder_url);
+        const { data } = response.data;
+        dispatch({ type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data });
+      }
+      if (customOrderId.length >= 4) {
+        const orderRegex = /^ORD\d+$/;
+        if(!orderRegex.test(customOrderId)) {
+          throw new Error("Invalid custtom order Id format");
+        }
+        const response = await axios.get(`${getOrderIdByCustomOrderId_url}${customOrderId}`);
+        const {data} = response.data;
+        dispatch({type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data});
+      }
     } catch (error) {
-      dispatch({type: GET_CUSTOMORDERIDFROM_ID_ERROR});
+      dispatch({ type: GET_CUSTOMORDERIDFROM_ID_ERROR });
     }
-  }
+  };
 
   const fetchOrderDateByOrderId = async (id) => {
-    dispatch({type: GET_ORDERDATE_BEGIN});
+    dispatch({ type: GET_ORDERDATE_BEGIN });
     try {
       const response = await axios.get(`${getOrderDateByOrderId_url}${id}`);
-      const {data} = response.data;
-      dispatch({type: GET_ORDERDATE_SUCCESS, payload: data});
+      const { data } = response.data;
+      dispatch({ type: GET_ORDERDATE_SUCCESS, payload: data });
     } catch (error) {
-      dispatch({type: GET_ORDERDATE_ERROR});
+      dispatch({ type: GET_ORDERDATE_ERROR });
     }
-  }
+  };
 
   useEffect(() => {
     fetchOrders();
@@ -572,7 +618,7 @@ export const OrderProvider = ({ children }) => {
         fetchUserBalanceFromWallet,
         updateUserRefundAmountToWallet,
         fetchOrderIdFromCustomOrderId,
-        fetchOrderDateByOrderId
+        fetchOrderDateByOrderId,
       }}
     >
       {children}
