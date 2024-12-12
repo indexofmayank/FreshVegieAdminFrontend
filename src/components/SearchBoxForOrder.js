@@ -62,7 +62,7 @@ function SearchBoxForOrder() {
       <InputGroup>
         <Input
           value={query}
-          placeholder="Write product name"
+          placeholder="Search for Order number"
           onChange={(e) => {
             setQuery(e.target.value);
           }}
@@ -83,7 +83,6 @@ function SearchBoxForOrder() {
             borderRadius="md"
             cursor="pointer"
             _hover={{ bg: "gray.100" }}
-            onClick={() => {}}
           >
             {showSuggestion && orderIdBy_customOrderId.length > 0 && (
               <Box
