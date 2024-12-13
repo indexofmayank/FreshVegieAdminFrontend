@@ -21,7 +21,7 @@ import {
   
     return (
       <>
-        <Button onClick={onOpen}>Item  {totalWeight}</Button>
+        <Button onClick={onOpen}>Quantity  {totalWeight}</Button>
   
         <Modal isOpen={isOpen} onClose={onClose} size="md">
           <ModalOverlay />
@@ -57,7 +57,7 @@ import {
               </Box>
                 <Divider/>
               <Text fontWeight="bold" mt={4}>
-                Total Item: {totalWeight} 
+                Total Quantity: {totalWeight} 
               </Text>
             </ModalBody>
             <Divider/>
