@@ -219,6 +219,7 @@ const OrderTableWithItem = ({
                 <Th>Item Price</Th>
                 <Th>Disc. Price</Th>
                 <Th>Quantity</Th>
+                <Th>Type</Th>
                 <Th>Tax</Th>
                 <Th>Total</Th>
               </Tr>
@@ -236,6 +237,8 @@ const OrderTableWithItem = ({
                     item_total_discount,
                     item_total_tax,
                     quantity,
+                    product_weight,
+                    product_weight_type
                   } = item;
                   return (
                     <Tr key={index}>
@@ -250,6 +253,7 @@ const OrderTableWithItem = ({
                       <Td>₹{item_price}</Td>
                       <Td>₹{offer_price}</Td>
                       <Td>{quantity}</Td>
+                      <Td>{product_weight} {product_weight_type}</Td>
                       <Td>{tax}%</Td>
                       <Td>₹{quantity * offer_price}</Td>
                     </Tr>
