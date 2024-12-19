@@ -11,6 +11,9 @@ import { useProductContext } from '../context/product_context';
 import FilterComponent from '../components/FilterComponent';
 import SearchBox from '../components/SearchBox';
 import { FaAngleDown, FaArrowUp } from 'react-icons/fa';
+import axios from 'axios';
+import { getproductCsvDownload_url } from '../utils/constants';
+import { FaDownload } from 'react-icons/fa';
 
 function ProductsPage() {
   const {
@@ -73,6 +76,27 @@ console.log(products);
     await fetchProducts(pagination.page, pagination.limit);
   };
 
+  const handleDownload = async () => {
+    // console.log(selectedDate);
+      try {
+        const response = await axios.get(`${getproductCsvDownload_url}`, {
+          responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'product.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error downloading the file:', error);
+      }
+  
+    
+
+  };
+
 
   if (loading) {
     return (
@@ -130,7 +154,11 @@ console.log(products);
         >
           Refresh
         </Button>
-        
+        <FaDownload
+          size={30}
+          style={{ cursor: 'pointer' }}
+          onClick={handleDownload}
+          />
         <FormControl mt={4} >
           <InputGroup>
           <Input

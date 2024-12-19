@@ -5,7 +5,9 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import CreateNewCategoryModal from "../components/CreateNewCategoryModal";
 import { useCategoryContext } from '../context/category_context';
 import { CategoryTable } from '../components/CategoryTable';
-
+import axios from 'axios';
+import { getcategoryCsvDownload_url } from '../utils/constants';
+import { FaDownload } from 'react-icons/fa';
 function CategoryPage() {
     const {
         categories,
@@ -40,6 +42,27 @@ function CategoryPage() {
     const handleRefresh = async () => {
         await fetchCategory(pagination.page, pagination.limit);
     }
+
+    const handleDownload = async () => {
+        // console.log(selectedDate);
+          try {
+            const response = await axios.get(`${getcategoryCsvDownload_url}`, {
+              responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'category.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (error) {
+            console.error('Error downloading the file:', error);
+          }
+      
+        
+    
+      };
 
     useEffect(() => {
         if (categories.data) {
@@ -77,6 +100,11 @@ function CategoryPage() {
                 >
                     Refresh
                 </Button>
+                <FaDownload
+          size={30}
+          style={{ cursor: 'pointer' }}
+          onClick={handleDownload}
+          />
             </HStack>
             {/* <VStack alignItems='center' justifyContent='center'> */}
                 {renderContent()}
