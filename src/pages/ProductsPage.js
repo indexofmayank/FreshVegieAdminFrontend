@@ -69,7 +69,7 @@ function ProductsPage() {
    
   }, [suggestionList]);
 
-console.log(products);
+// console.log(products);
 // console.log(productlist);
 
   const handleRefresh = async () => {
@@ -154,11 +154,17 @@ console.log(products);
         >
           Refresh
         </Button>
-        <FaDownload
-          size={30}
-          style={{ cursor: 'pointer' }}
-          onClick={handleDownload}
-          />
+        <Button
+            colorScheme='brown'
+            variant='outline'
+            leftIcon={<FaDownload />}
+            onClick={handleDownload}
+            spacing={4}
+            px={4}
+            style={{padding:'20px 30px'}}
+           >
+            Download Products
+        </Button>
         <FormControl mt={4} >
           <InputGroup>
           <Input

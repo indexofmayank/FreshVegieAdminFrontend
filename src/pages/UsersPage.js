@@ -6,7 +6,9 @@ import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import {useCustomerContext} from '../context/customer_context';
 import { UserTable } from '../components/UserTable';
-
+import axios from 'axios';
+import { getuserCsvDownload_url } from '../utils/constants';
+import { FaDownload } from 'react-icons/fa';
 
 function UsersPage () {
 
@@ -45,7 +47,28 @@ function UsersPage () {
     fetchCustomers(pagination.page, pagination.limit);
   }, [pagination.page, pagination.limit]);
 
-    console.log(customers);
+  const handleDownload = async () => {
+    // console.log(selectedDate);
+      try {
+        const response = await axios.get(`${getuserCsvDownload_url}`, {
+          responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'User.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error downloading the file:', error);
+      }
+  
+    
+
+  };
+
+    // console.log(customers);
 
     if (loading) {
         return (
@@ -97,6 +120,14 @@ function UsersPage () {
                     onClick={handleRefresh}
                 >
                     Refresh
+                </Button>
+                <Button
+                    colorScheme='brown'
+                    variant='outline'
+                    leftIcon={<FaDownload />}
+                    onClick={handleDownload}
+                >
+                    Download User
                 </Button>
             </HStack>
             <UserTable 

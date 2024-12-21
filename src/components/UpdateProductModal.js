@@ -407,9 +407,9 @@ function UpdateProductModal({ id }) {
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Barcode</FormLabel>
+              <FormLabel>HSN Code</FormLabel>
               <Input
-                placeholder='barcode'
+                placeholder='HSN Code'
                 name='barcode'
                 value={barcode}
                 onChange={updateExistingProductDetails}

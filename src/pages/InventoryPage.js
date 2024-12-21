@@ -5,7 +5,9 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import { useProductContext } from '../context/product_context';
 import { useCategoryContext } from '../context/category_context';
 import { useInventoryContext } from "../context/inventory_context";
-
+import axios from 'axios';
+import { getproductinventoryCsvDownload_url } from '../utils/constants';
+import { FaDownload } from 'react-icons/fa';
 
 function InventoryPage() {
 
@@ -20,7 +22,7 @@ function InventoryPage() {
     inventory,
     fetchInventory
   } = useInventoryContext();
-  console.log(inventory);
+  // console.log(inventory);
 
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -55,6 +57,24 @@ function InventoryPage() {
   const handleRefresh = async () => {
     await fetchInventory();
     await fetchCategoryByName();
+  };
+
+  const handleDownload = async () => {
+    // console.log(selectedDate);
+      try {
+        const response = await axios.get(`${getproductinventoryCsvDownload_url}`, {
+          responseType: 'blob',
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'inventory.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      } catch (error) {
+        console.error('Error downloading the file:', error);
+      }
   };
 
   
@@ -108,6 +128,17 @@ function InventoryPage() {
           onClick={handleRefresh}
         >
           Refresh
+        </Button>
+        <Button
+            colorScheme='brown'
+            variant='outline'
+            leftIcon={<FaDownload />}
+            onClick={handleDownload}
+            spacing={4}
+            px={4}
+            style={{padding:'20px 30px'}}
+           >
+            Download inventory
         </Button>
       </HStack>
       <InventoryTable

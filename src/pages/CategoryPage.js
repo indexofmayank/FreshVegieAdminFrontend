@@ -100,11 +100,14 @@ function CategoryPage() {
                 >
                     Refresh
                 </Button>
-                <FaDownload
-          size={30}
-          style={{ cursor: 'pointer' }}
-          onClick={handleDownload}
-          />
+                <Button
+                    colorScheme='brown'
+                    variant='outline'
+                    leftIcon={<FaDownload />}
+                    onClick={handleDownload}
+                >
+                    Download Category
+                </Button>
             </HStack>
             {/* <VStack alignItems='center' justifyContent='center'> */}
                 {renderContent()}
