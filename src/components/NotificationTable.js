@@ -73,7 +73,7 @@ function NotificationTable({ notifications,allUserToken }) {
         redirect: "follow"
       };
 
-      fetch("http://localhost:5001/api/notification/sendnotification", requestOptions)
+      fetch("https://fresh-vegis.in/api/notification/sendnotification", requestOptions)
         .then((response) => response.text())
         .then((result) => {
           return toast({
