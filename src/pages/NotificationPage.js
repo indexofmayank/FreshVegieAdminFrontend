@@ -109,7 +109,7 @@ function NotificationPage() {
                     Refresh
                 </Button>
             </HStack>
-            <NotificationTable notifications={notificationsData} />
+            <NotificationTable notifications={notificationsData} allUserToken={allUserToken} />
         </SidebarWithHeader>
     );
 

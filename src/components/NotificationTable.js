@@ -30,8 +30,10 @@ import { BiChevronDown } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { UpdateNotificationModal } from "../components";
 import { useNotificationContext } from "../context/notification_context";
+// import {admin} from 'firebase-admin';
+// import {google} from 'googleapis';
 
-function NotificationTable({ notifications }) {
+function NotificationTable({ notifications,allUserToken }) {
     
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { deleteNotification, fetchNotifications } = useNotificationContext();
@@ -52,6 +54,48 @@ function NotificationTable({ notifications }) {
     }));
     onOpen();
   }
+
+
+
+  const sendNotificationtoUser = (id) =>{
+    console.log(id);
+    const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({
+        "id": id
+      });
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+      };
+
+      fetch("http://localhost:5001/api/notification/sendnotification", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          return toast({
+            position: 'top',
+            description: `Notification sent successfully`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true
+          });
+        })
+        // } console.log(result))
+        .catch((error) => {
+          return toast({
+            position: 'top',
+            description: `Something went wrong!`,
+            status: 'error',
+            duration: 5000,
+            isClosable: true
+          });
+        });
+  }
+
 
   const loading = false;
 
@@ -117,7 +161,10 @@ function NotificationTable({ notifications }) {
                             Delete
                           </MenuItem>
                           <MenuItem
-                            onClick={() => {console.log('clicked')}}
+                            onClick={() => {
+                              sendNotificationtoUser(_id)
+                              // console.log('clicked')
+                            }}
                           >
                             Send  
                           </MenuItem>
