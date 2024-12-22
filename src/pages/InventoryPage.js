@@ -42,7 +42,7 @@ function InventoryPage() {
 
   useEffect(() => {
     setPagination({
-      limit: inventory.limit || 5,
+      limit: inventory.limit || 10,
       page: inventory.page || 1,
       totalPage: inventory.totalPages || 0,
       totalItems: inventory.totalProducts || 0,
@@ -57,6 +57,7 @@ function InventoryPage() {
   const handleRefresh = async () => {
     await fetchInventory();
     await fetchCategoryByName();
+    setSelectedCategory('')
   };
 
   const handleDownload = async () => {
@@ -76,6 +77,7 @@ function InventoryPage() {
         console.error('Error downloading the file:', error);
       }
   };
+
 
   
   if (loading) {

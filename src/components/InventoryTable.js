@@ -39,9 +39,9 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
 
   const handleCategoryChange =  async(event) => {
     const categoryId = event.target.value;
-    console.log(categoryId);
+    // console.log(categoryId);
     setSelectedCategory(categoryId);
-    await fetchInventory('', '', categoryId, '');
+    await fetchInventory(pagination.page, pagination.limit, categoryId, '');
   };
 
 
@@ -63,7 +63,7 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
 
   const handleBulkUpdate = async () => {
     const productsToUpdate = Object.values(updatedProducts);
-    console.log('Products to be updated:', productsToUpdate);
+    // console.log('Products to be updated:', productsToUpdate);
 
     if(productsToUpdate.length < 1) {
       return toast({
@@ -213,7 +213,7 @@ const InventoryTable = ({ inventory, categoriesByName, selectedCategory, setSele
             </Tbody>
           </Table>
         )}
-      <InventoryTablePagination pagination={pagination} setPagination={setPagination} totalProducts={totalProducts}/>
+      <InventoryTablePagination pagination={pagination} setPagination={setPagination} totalProducts={totalProducts} selectedCategory={selectedCategory}/>
       </SimpleGrid>
     </>
   );

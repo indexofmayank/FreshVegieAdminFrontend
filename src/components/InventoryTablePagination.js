@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Flex, Button, Box, Select, Text } from '@chakra-ui/react';
 import {useInventoryContext} from '../context/inventory_context';
 
-const InventoryTablePagination = ({pagination, setPagination, totalProducts}) => {
+const InventoryTablePagination = ({pagination, setPagination, totalProducts,selectedCategory}) => {
     const {fetchInventory} = useInventoryContext();
 
 
@@ -10,15 +10,17 @@ const InventoryTablePagination = ({pagination, setPagination, totalProducts}) =>
         const newLimit = Number(event.target.value);
         setPagination((prev) => {
             const updatedState = {...prev, limit: newLimit, page: 1}
-            fetchInventory(updatedState.page, updatedState.limit, '', '');
+            fetchInventory(updatedState.page, updatedState.limit, selectedCategory, '');
             return updatedState
         })
     }
 
     const handlePageChange = (newPage) => {
         setPagination((prev) => ({...prev, page: newPage}));
-        fetchInventory(newPage, pagination.limit);
+        fetchInventory(newPage, pagination.limit,selectedCategory);
     }
+
+    console.log(pagination)
 
     return (
         <Flex justifyContent="space-between" alignItems="center" mt={4}>
