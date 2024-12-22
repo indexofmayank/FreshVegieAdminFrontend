@@ -32,7 +32,7 @@ export const AdminProvider = ({ children }) => {
   
   const { currentUser } = useUserContext();
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(currentUser);
+  // console.log(currentUser);
 
   const fetchAdmins = async () => {
     dispatch({ type: GET_ADMINS_BEGIN });
