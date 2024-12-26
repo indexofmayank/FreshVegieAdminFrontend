@@ -106,7 +106,7 @@ export const DealOfTheDayProvider = ({children}) => {
                 updatedData
             );
             console.log(response);
-            const {success, message} = response;
+            const {success, message} = response.data;
             return {success, message};
         } catch (error) {
             console.log(error);

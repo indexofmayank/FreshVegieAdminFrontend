@@ -83,6 +83,7 @@ const SearchBoxForDealOfTheDay = () => {
           onFocus={() => {
             if (suggestions.length > 0) setShowSuggestions(true);
           }}
+          style={{width:'300px'}}
           onBlur={() => {
             setTimeout(() => setShowSuggestions(false), 150);
           }}

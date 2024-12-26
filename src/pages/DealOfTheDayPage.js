@@ -29,12 +29,13 @@ function DealOfTheDayPage() {
         e.preventDefault();
         setPushChangesLoading(true);
         const response = await blukUpdateDealOfTheDay(updatedDeals);
+        console.log(response);
         if(response?.success) {
             await fetchDealOfTheDayForTable();
             setPushChangesLoading(false);
             return toast({
                 position: 'top',
-                description: `${updatedDeals.length} updated successfully`,
+                description: `Deal of the day table updated successfully`,
                 status: 'success',
                 duration: 5000,
                 isClosable: true 
