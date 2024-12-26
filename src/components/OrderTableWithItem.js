@@ -220,7 +220,7 @@ const OrderTableWithItem = ({
                 <Th>Disc. Price</Th>
                 <Th>Quantity</Th>
                 <Th>Type</Th>
-                <Th>Barcode</Th>
+                <Th>HSN Code</Th>
                 <Th>Tax</Th>
                 <Th>Total</Th>
               </Tr>
