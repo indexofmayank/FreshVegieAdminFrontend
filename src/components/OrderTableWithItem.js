@@ -273,13 +273,15 @@ const OrderTableWithItem = ({
               <Td></Td>
               <Td></Td>
               <Td>{totalItemCount}</Td>
+              <Td></Td>
+              <Td></Td>
               <Td>{totalTax}</Td>
               <Td>{itemsGrandTotal}</Td>
             </Tbody>
           </Table>
           {/* Additional Order Summary */}
           <Box mt={4}>
-            <SimpleGrid columns={2} spacing={4}>
+            <SimpleGrid columns={2} spacing={2}>
               <Text>Delivery Fee</Text>
               <Text textAlign="right">
                 {paymentInfo.usedelivery ? paymentInfo.deliverycharges : "Free"}
@@ -303,15 +305,15 @@ const OrderTableWithItem = ({
               )}
               <Text>Discounts</Text>
               <Text textAlign="right">₹{totalDiscount}</Text>
-              <Heading size="sm" mt={2}>
+              <Text size="lg">
                 Grand Total
-              </Heading>
-              <Heading size="sm" mt={2} textAlign="right">
+              </Text>
+              <Text size="lg" textAlign="right">
                 {itemsGrandTotal +
                   parseInt(
                     paymentInfo.usedelivery ? paymentInfo.deliverycharges : 0
                   )}
-              </Heading>
+              </Text>
             </SimpleGrid>
           </Box>
         </Box>
