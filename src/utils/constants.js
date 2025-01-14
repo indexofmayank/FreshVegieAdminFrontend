@@ -170,3 +170,4 @@ export const udpateBlukDealOfTheDay_url = `${domain}/api/dealoftheday/nownow/`;
 export const getOrderIdByCustomOrderId_url = `${domain}/api/orders/getOrderIdByCustomOrderId/`;
 export const getOrderDateByOrderId_url = `${domain}/api/orders/readeabledate/`;
 export const getLastTenOrder_url = `${domain}/api/orders/lasttenorder/orderforsearch/`;
+export const getcustomerForSearch_url = `${domain}/api/user/dropdown/forsearch/`;

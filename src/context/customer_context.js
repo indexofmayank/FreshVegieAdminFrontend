@@ -3,7 +3,7 @@ import axios from 'axios';
 import reducer from '../reducers/customer_reducer';
 
 import {
-    customers_url, delete_customer_url,userListingforAddorder
+    customers_url, delete_customer_url,userListingforAddorder,getcustomerForSearch_url
 } from '../utils/constants';
 
 import {
@@ -33,7 +33,7 @@ export const CustomerProvider = ({children}) => {
         dispatch({type: GET_CUSTOMER_BEGIN});
         try{
             const response = await axios.get(`${customers_url}?page=${page}&limit=${limit}`);
-            console.log(response);
+            // console.log(response);
             const {data} = response;
             dispatch({type: GET_CUSTOMER_SUCCESS, payload: data});
         } catch(error) {
@@ -52,6 +52,19 @@ export const CustomerProvider = ({children}) => {
         }
     };
 
+    const fetchCustomerByNameForSearch = async (name='') => {
+        // console.log(name);
+        try {
+          const response = await axios.get(`${getcustomerForSearch_url}?name=${name}`);
+          const {success, data} = response.data;
+        //   console.log(data);
+          return {success, data};
+        } catch (error) {
+          const {success, message} = error.message;
+          return {success, message};
+        }
+      }
+
     useEffect(() => {
         fetchCustomers();
         fetchuserListingforAddorder();
@@ -62,7 +75,8 @@ export const CustomerProvider = ({children}) => {
             value={{
                 ...state,
                 fetchCustomers,
-                fetchuserListingforAddorder
+                fetchuserListingforAddorder,
+                fetchCustomerByNameForSearch
             }}
         >
             {children}

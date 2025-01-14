@@ -2,7 +2,7 @@ import React,{ useState, useEffect } from 'react';
 import {
     SidebarWithHeader
 } from '../components';
-import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
+import { HStack, Button, VStack, Spinner, Heading,Input,FormControl,InputGroup } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import {useCustomerContext} from '../context/customer_context';
 import { UserTable } from '../components/UserTable';
@@ -18,18 +18,22 @@ function UsersPage () {
         customer_loading: loading,
         customer_error: error,
         fetchCustomers,
+        fetchCustomerByNameForSearch
     } = useCustomerContext();
 
     const handleRefresh = async () => {
         await fetchCustomers(pagination.page, pagination.limit);
     };
-
+    const [customerlist, setCustomerlist] = useState([]);
     const [pagination, setPagination] = useState({
       page: 1,
       limit: 10,
       totalPage: 0,
       totalItems: 0,
     })
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestionList, setSuggestionList] = useState([]);
     
     useEffect(() => {
       setPagination(prev => ({
@@ -41,11 +45,28 @@ function UsersPage () {
       }));
     
     }, [customers]);
-
+// console.log(suggestionList);
 
   useEffect(() => {
     fetchCustomers(pagination.page, pagination.limit);
   }, [pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    // console.log(suggestionList);
+    if(suggestionList.length>0){
+      setCustomerlist(suggestionList);
+    }
+   
+  }, [suggestionList]);
+
+  useEffect(() => {
+    // console.log(customers.data);
+    if(customers.data != undefined){
+      setCustomerlist(customers.data);
+    }
+   
+  }, [customers]);
+
 
   const handleDownload = async () => {
     // console.log(selectedDate);
@@ -129,9 +150,25 @@ function UsersPage () {
                 >
                     Download User
                 </Button>
+                 <FormControl mt={4} >
+          <InputGroup>
+          <Input
+            placeholder='Search for user'
+            name='Search Query'
+            focusBorderColor='brown.500'
+            value={searchQuery}
+            onChange={async (event) => {
+              setSearchQuery(event.target.value);
+              const response = await fetchCustomerByNameForSearch(event.target.value);
+              const { data } = response;
+              setSuggestionList(data);
+            }}
+          />
+          </InputGroup>
+        </FormControl>
             </HStack>
             <UserTable 
-            customers={customers.data}
+            customers={customerlist}
             pagination={pagination}
             setPagination={setPagination}
             totalPages={customers.totalPages}
