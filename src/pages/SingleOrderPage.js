@@ -18,7 +18,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useOrderContext } from '../context/order_context';
-import { orderStatusList } from '../utils/constants';
+import { orderStatusList,getNextStatusOptions } from '../utils/constants';
 
 function SingleOrderPage() {
   const { id } = useParams();
@@ -33,6 +33,9 @@ function SingleOrderPage() {
   const [deliveryPartnerEmail, setDeliveryPartnerEmail] = useState();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const [cleandOrderStatus, setCleanedOrderStatus] = useState('');
+  // const [currentStatus, setCurrentStatus] = useState(null);
+  const availableStatuses = getNextStatusOptions(cleandOrderStatus);
+  
   const {
     order_withItem_loading: loading,
     order_withItem_error: error,
@@ -112,7 +115,8 @@ function SingleOrderPage() {
     const loadData = () => {
       const status = singleOrderStatus?.data?.status || '';
       const cleanedStr = status.replace(/[^a-zA-Z0-9\s]/g, ' ');
-
+      // console.log(status);  
+      // setCurrentStatus(status)
       // Capitalize the first letter of each word
       const capitalizedStr = cleanedStr
         .toLowerCase()
@@ -138,6 +142,17 @@ function SingleOrderPage() {
       setAssignDeliveryDetailOpen(false);
     }
   }, [id, singleOrderStatus, setAssignDeliveryDetailOpen, userDeliveryInfo]);
+
+  useEffect(() => {
+    // console.log(cleandOrderStatus);
+    if (cleandOrderStatus !='') {
+      const availableStatuses = getNextStatusOptions(cleandOrderStatus);
+      // console.log(availableStatuses)
+    }
+  }, [cleandOrderStatus]);
+  
+
+
   if (loading) {
     return (
       <SidebarWithHeader>
@@ -167,7 +182,7 @@ function SingleOrderPage() {
     <SidebarWithHeader>
       <HStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>
         <Text>STATUS: </Text>
-        <Select
+        {/* <Select
           variant='filled'
           focusBorderColor='brown.500'
           value={cleandOrderStatus}
@@ -181,7 +196,22 @@ function SingleOrderPage() {
               </option>
             );
           })}
-        </Select>
+        </Select> */}
+        <Select
+        variant='filled'
+        focusBorderColor='brown.500'
+        value={cleandOrderStatus}
+        onChange={handleChange}
+        >
+      {availableStatuses.map((status, index) => {
+        const { name, value } = status;
+        return (
+          <option key={index} value={value}>
+            {name}
+          </option>
+        );
+      })}
+    </Select>
       </HStack>
       {isAssignDeliveryDetailOpen && singleOrderStatus?.data?.status === 'assign_delivery' && (
         <VStack bg='white' p={5} mb={5} shadow='sm' borderRadius='lg'>

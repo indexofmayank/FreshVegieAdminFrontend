@@ -80,26 +80,15 @@ function EditOrderPage() {
     const toast = useToast();
     const { id } = useParams();
 
+//    console.log(amount);
     useEffect(() => {
-        const total = items.reduce((acc, item) => {
-            return acc + (item.offer_price * item.quantity);
-        }, 0);
-        // if (total < minimumCartAmount) {
-            const finalAmount = total + deliverycharges;
-            const refund = amount - total
-            // console.log(refund);
-            // console.log(total);
-            // console.log(amount);
-            // console.log(finalAmount);
-            // setDeliveryFeeText(deliverycharges);
-            setGrandTotal(finalAmount);
-            setRefundAmount(refund);
-
-        // } else {
-            // setGrandTotal(total);
-            // setDeliveryFeeText('free');
-        // }
-    }, [items, fixedDeliveryCharges, minimumCartAmount]);
+        const total = items.reduce((acc, item) => acc + (item.offer_price * item.quantity), 0);
+        const refund = amount - total - (isDeliveryUsed ? deliverycharges : 0); // Exclude delivery charges
+        // console.log(total);
+        setGrandTotal(total + deliverycharges); // Keep delivery charges in grand total
+        setRefundAmount(refund > 0 ? refund : 0); // Ensure refund is not negative
+    }, [items, deliverycharges, amount, isDeliveryUsed]);
+    
 
     useEffect(() => {
         const total = items.reduce((acc, item) => {
@@ -128,7 +117,10 @@ function EditOrderPage() {
 
     useEffect(() => {
         if (orderItems) {
-            setItems(orderItems);
+            setItems(orderItems.map(item => ({
+                ...item,
+                initialQuantity: item.quantity // Store original ordered quantity
+            })));
         }
     }, [orderItems]);
 
@@ -151,8 +143,8 @@ function EditOrderPage() {
     // };
     const decrementCount = (index, currentQuantity,minquantity,maxquantity,incrementvalue) => {
         // console.log(index, currentQuantity,minquantity,maxquantity,incrementValue)
-        console.log(currentQuantity - incrementvalue,minquantity);
-        if (currentQuantity - incrementvalue < minquantity) {
+        // console.log(currentQuantity - incrementvalue,minquantity);
+        if (currentQuantity - incrementvalue < 0) {
             // Show a warning if attempting to reduce below the minimum quantity
             return toast({
                 position: 'top',
@@ -173,25 +165,26 @@ function EditOrderPage() {
     };
     
 
-    const incrementCount = (index, currentQuantity,minquantity,maxquantity,incrementvalue) => {
-        if (currentQuantity + incrementvalue > maxquantity) {
-        return toast({
-            position: 'top',
-            title: 'Limit reached',
-            description: `maximum limit 0 at a time`,
-            status: 'warning',
-            duration: 5000,
-            isClosable: true
-        });
-    } else {
-        // Update item quantity
-        setItems((prevItems) =>
-            prevItems.map((item, i) =>
-                i === index ? { ...item, quantity: parseFloat(currentQuantity) + parseFloat(incrementvalue) } : item
-            )
-        );
-    }
-    }
+    const incrementCount = (index, currentQuantity, minquantity, maxquantity, incrementvalue, initialQuantity) => {
+        if (currentQuantity + incrementvalue > initialQuantity) {
+            return toast({
+                position: 'top',
+                title: 'Limit reached',
+                description: `You cannot increase quantity beyond the originally ordered quantity (${initialQuantity}).`,
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            });
+        } else {
+            // Update item quantity, ensuring it does not exceed the initially ordered quantity
+            setItems((prevItems) =>
+                prevItems.map((item, i) =>
+                    i === index ? { ...item, quantity: parseFloat(currentQuantity) + parseFloat(incrementvalue) } : item
+                )
+            );
+        }
+    };
+    
 
     // const calculateTotals = () => {
     //     const total = items.reduce((acc, item) => acc + (item.offer_price * item.quantity), 0);
@@ -207,7 +200,6 @@ function EditOrderPage() {
 
         try {
             const updatedPaymentInfo = {
-
                 amount: grandTotal,
                 deliverycharges: paymentInfo.deliverycharges,
                 payment_type: paymentInfo.payment_type,
@@ -302,7 +294,10 @@ function EditOrderPage() {
                             )}
                             {items.map((item, index) => {
                                 // console.log( item.quantity,item.minquantity,item.maxquantity, item.incrementvalue);
+                               
                                 const { name, image, item_price, offer_price, quantity, unit, incrementvalue, maxquantity, minquantity } = item;
+                                const actualQty = quantity;
+                                // console.log(actualQty)
                                 return (
                                     <Tbody>
                                         <Tr key={index}>
@@ -316,10 +311,16 @@ function EditOrderPage() {
                                                 <HStack>
                                                 <Button 
                                                         onClick={() => decrementCount(index, item.quantity,item.minquantity,item.maxquantity, item.incrementvalue)} 
-                                                        isDisabled={item.quantity <= item.minquantity}
+                                                        // isDisabled={item.quantity <= item.minquantity}
                                                     >-</Button>
                                                     <Text>{item.quantity}</Text>
-                                                    <Button onClick={() => incrementCount(index, item.quantity,item.minquantity,item.maxquantity, item.incrementvalue)} isDisabled={item.quantity >= item.quantity}>+</Button>
+                                                    <Button 
+                                                        onClick={() => incrementCount(index, item.quantity, item.minquantity, item.maxquantity, item.incrementvalue, item.initialQuantity)} 
+                                                        isDisabled={item.quantity >= item.initialQuantity}
+                                                    >
+                                                        +
+                                                    </Button>
+
                                                 </HStack>
                                             </Td>
                                             <Td>

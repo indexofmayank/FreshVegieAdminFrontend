@@ -43,8 +43,32 @@ export const orderStatusList = [
   {name: 'Delivered', value: 'delivered'},
   {name: 'Verifying Payment', value: 'verifying payment'},
   {name: 'Canceled', value: 'canceled'},
-  {name: 'Failed', value: 'failed'}
+  {name: 'Failed', value: 'failed'},
+  // {name: 'Pending', value: 'pending'}
 ];
+
+export const getNextStatusOptions = (currentStatus) => {
+  const statusFlow = {
+    null: ['accepted', 'canceled'], // New order
+    received:['processing','verifying payment','accepted','packed','assign_delivery','out for delivery','transit','delivered','canceled'],
+    processing: ['verifying payment','accepted','packed','assign_delivery','out for delivery','transit','delivered','canceled'],
+    accepted: ['packed','assign_delivery','out for delivery','transit','delivered','canceled'],
+    packed: ['assign_delivery','out for delivery','transit','delivered','canceled'],
+    assign_delivery: ['out for delivery','transit','delivered','canceled'],
+    'out for delivery': ['transit','delivered','canceled'],
+    transit: ['delivered', 'canceled'],
+    delivered: [], // Final state
+    'verifying payment': ['accepted', 'canceled'],
+    canceled: [], // Final state
+    failed: ['verifying payment', 'canceled'],
+    pending: ['verifying payment', 'canceled'],
+  };
+
+  return orderStatusList.filter(
+    (status) => status.value === null || statusFlow[currentStatus]?.includes(status.value)
+  );
+};
+
 
 export const paymentStatusList = [
   {name: 'Pending', value: 'pending'},
@@ -55,6 +79,8 @@ export const paymentStatusList = [
   {name: 'Processing', value: 'processing'},
   {name : 'Disputed', value: 'disputed'}
 ];
+
+
 
 export const domain = process.env.REACT_APP_BACKEND_HOST;
 export const auth_url = `${domain}/api/admin/auth`;

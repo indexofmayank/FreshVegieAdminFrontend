@@ -57,7 +57,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
     useEffect(() => {
         setOrderStatic(prevState => [...prevState, orderStatus]);
     }, [orderStatus]);
-        
+    // console.log(orderStatic);
     return (
         <Box p={6}>
             <HStack justifyContent='space-between' >

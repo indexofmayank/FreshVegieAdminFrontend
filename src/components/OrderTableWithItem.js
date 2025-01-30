@@ -304,7 +304,7 @@ const OrderTableWithItem = ({
                 <></>
               )}
               <Text>Discounts</Text>
-              <Text textAlign="right">₹{totalDiscount}</Text>
+              <Text textAlign="right">₹{totalDiscount.toFixed(2)}</Text>
               <Text size="lg">
                 Grand Total
               </Text>
