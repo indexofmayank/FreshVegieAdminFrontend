@@ -515,7 +515,7 @@ function UpdateProductModal({ id }) {
                         <FormLabel>Unit</FormLabel>
                         <Select placeholder="Please select" name='product_weight_type' value={product_weight_type} onChange={updateExistingProductDetails}>
                         <option value="kg">kg</option>
-                        <option value="gram">g</option>
+                        <option value="g">g</option>
                         <option value="pkt">pkt</option>
                         <option value="pcs">pcs</option>
                         <option value="unit">unit</option>

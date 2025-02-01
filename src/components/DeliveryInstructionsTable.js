@@ -49,7 +49,9 @@ function DeliveryInstructionsTable({ instructions = [] }) {
         deliveryInsturction: {
             minimumcart_amount='',
             delivery_charges='',
-            initial_rewardpoint=''
+            initial_rewardpoint='',
+            max_referral='',
+            delivery_instruction=''
         },
         updateExistingDeliveryInstruction,
         updateDeliveryInstruction
@@ -69,7 +71,9 @@ function DeliveryInstructionsTable({ instructions = [] }) {
         if(
             !minimumcart_amount ||
             !delivery_charges ||
-            !initial_rewardpoint
+            !initial_rewardpoint ||
+            !max_referral ||
+            !delivery_instruction 
         ) {
             setSaveButtonLoading(false);
             return toast({
@@ -83,7 +87,9 @@ function DeliveryInstructionsTable({ instructions = [] }) {
         const updatedDeliveryInstruction = {
             minimumcart_amount,
             delivery_charges,
-            initial_rewardpoint
+            initial_rewardpoint,
+            max_referral,
+            delivery_instruction 
         };
         const response = await updateDeliveryInstruction(updatedDeliveryInstruction);
         const {success, message} = response;
@@ -146,6 +152,30 @@ function DeliveryInstructionsTable({ instructions = [] }) {
                     name='initial_rewardpoint'
                     focusBorderColor='brown.500'
                     value={initial_rewardpoint}
+                    onChange={updateExistingDeliveryInstruction}
+                />
+            </FormControl>
+            <FormControl mt={4}>
+                <FormLabel>Maximum referral amount allowed</FormLabel>
+                <Input
+                    ref={initialRef}
+                    type='number'
+                    placeholder='Initial reward point'
+                    name='max_referral'
+                    focusBorderColor='brown.500'
+                    value={max_referral}
+                    onChange={updateExistingDeliveryInstruction}
+                />
+            </FormControl>
+            <FormControl mt={4}>
+                <FormLabel>Delivery instructions</FormLabel>
+                <Input
+                    ref={initialRef}
+                    type='text'
+                    placeholder='Delivery instructions'
+                    name='delivery_instruction'
+                    focusBorderColor='brown.500'
+                    value={delivery_instruction}
                     onChange={updateExistingDeliveryInstruction}
                 />
             </FormControl>
