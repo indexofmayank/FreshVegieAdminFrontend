@@ -107,7 +107,7 @@ function OrderStatus({ orderStatus, totalOrder, totalAvg, totalSales, handleCard
                 }
             </SimpleGrid>
             <SimpleGrid columns={{ sm: 1, md: 3 }} spacing={4}>
-                <OrderCard label="Total Orders" value={totalOrder[0]?.totalOrders} key={48} />
+                <OrderCard label="Total Orders" value={totalOrder[0]?.totalOrders} onClick={() => handleCardClick('All')} key={48} />
                 <OrderCard label="Average Order Value" value={totalAvg} />
                 <OrderCard label="Total Sales" value={totalSales} onClick={() => { }} />
             </SimpleGrid>

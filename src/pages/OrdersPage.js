@@ -8,6 +8,7 @@ import axios from 'axios';
 import { getCsvDownload_url } from '../utils/constants';
 import { useOrderStatusContext } from '../context/orderStatus_context';
 import { useHistory } from 'react-router-dom'; 
+import { useDashboardContext } from '../context/dashboard_context'
 
 function OrdersPage() {
   const history = useHistory(); 
@@ -35,6 +36,19 @@ function OrdersPage() {
     orderForTable,
     fetchOrdersForTable
   } = useOrderContext();
+
+  const {
+    fetchOrderDashboardTable,
+    allOrdersForDashbaordTable
+  } = useDashboardContext();
+
+  useEffect(() => {
+    fetchOrderDashboardTable('', '', 'total_order');
+  }, []);
+
+
+  const resultedOrderes = allOrdersForDashbaordTable?.data || [];
+  // console.log(resultedOrderes)
   
   const [selectedDate, setSelectedDate] = useState([new Date(), new Date()])
 
@@ -57,10 +71,10 @@ function OrdersPage() {
   };
 
   useEffect(() => {
-    console.log(tabelLabel);
+    // console.log(tabelLabel);
   }, [tabelLabel]);
   const handleDownload = async () => {
-    console.log(selectedDate);
+    // console.log(selectedDate);
    
     if(filter=='Custom') {
       try {
@@ -172,7 +186,7 @@ function OrdersPage() {
         )}
         <SearchBoxForOrder />
       </HStack>
-      {tabelLabel === null ? (
+      {tabelLabel === null ?(
         <OrderStatus
           orderStatus={orderStatus}
           totalOrder={totalOrder}
@@ -184,8 +198,19 @@ function OrdersPage() {
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
-      ) : (
+      ) : tabelLabel === 'All' ? (
+        
         <OrdersTable 
+        orders={resultedOrderes}
+        totalItem={allOrdersForDashbaordTable?.totalOrders || null}
+        page={allOrdersForDashbaordTable?.page || null}
+        totalPage={allOrdersForDashbaordTable?.totalPages || null}
+        limit={allOrdersForDashbaordTable?.limit || null}
+        itemFetchFunction={fetchOrderDashboardTable}
+        label={tabelLabel}
+        />
+      ):( 
+      <OrdersTable 
         orders={resultedOrders} 
         totalItem={orderForTable?.totalOrders || null}
         page={orderForTable?.page || null}
@@ -194,7 +219,7 @@ function OrdersPage() {
         itemFetchFunction={fetchOrdersForTable}
         label={tabelLabel}
         />
-      )}
+        )}
     </SidebarWithHeader>
   );
 }

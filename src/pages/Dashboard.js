@@ -55,7 +55,7 @@ export default function Dashboard() {
   }
 
 
-  console.log(allOrdersForDashbaordTable);
+  // console.log(allOrdersForDashbaordTable);
   return (
     <SidebarWithHeader>
       <DashboardCards />
