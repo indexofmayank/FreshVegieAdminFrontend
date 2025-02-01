@@ -45,7 +45,7 @@ function SearchBoxForOrder() {
   useEffect(() => {
     const fetchRequiredData = async () => {
       try {
-        await fetchOrderIdFromCustomOrderId(query);
+        await fetchOrderIdFromCustomOrderId(query.toUpperCase());
       } catch (error) {
         setShowSuggestion(false);
       }
