@@ -59,7 +59,7 @@ const initialState = {
     notificationProductName: [],
     categoryName_loading: false,
     categoryName_error: false,
-    categories: [],
+    notificationcategorieName: [],
     userName_loading: false,
     userName_error: false,
     userName: [],

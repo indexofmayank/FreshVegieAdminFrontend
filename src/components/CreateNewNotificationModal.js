@@ -66,7 +66,7 @@ function CreateNewNotificationModal() {
         fetchProductNameForNotification,
         categoryName_loading,
         categoryName_error,
-        categories,
+        notificationcategorieName,
         fetchCategoryNameForNotification,
         userName_loading,
         userName_error,
@@ -294,7 +294,7 @@ function CreateNewNotificationModal() {
                                 onChange={udpateNewNotificationDetails}
                             />
                         </FormControl>
-                        {/* <FormControl>
+                        <FormControl>
                             <FormLabel>Redirect To</FormLabel>
                             <Select
                                 placeholder='Redirect To'
@@ -305,11 +305,11 @@ function CreateNewNotificationModal() {
                             >
                                 <option key='1' value='specific_product'>Specific Product</option>
                                 <option key='2' value='category'>category</option>
-                                <option key='3' value='link'>Link</option>
+                                {/* <option key='3' value='link'>Link</option> */}
                             </Select>
-                        </FormControl> */}
+                        </FormControl>
 
-                        {/* {redirect_to === 'specific_product' && (
+                        {redirect_to === 'specific_product' && (
                             <FormControl mt={4}>
                                 <FormLabel>Specific Product</FormLabel>
                                 <InputGroup>
@@ -367,8 +367,8 @@ function CreateNewNotificationModal() {
                                 )}
                             </FormControl>
                         )}
- */}
-                        {/* {redirect_to === 'category' && (
+
+                        {redirect_to === 'category' && (
                             <FormControl mt={4}>
                                 <FormLabel>Select category</FormLabel>
                                 <InputGroup>
@@ -377,7 +377,7 @@ function CreateNewNotificationModal() {
                                         placeholder='Select specific category'
                                         name='category'
                                         focusBorderColor='brown.500'
-                                        value={categories.find(cat => cat._id === category)?.name || ''}
+                                        value={notificationcategorieName.find(cat => cat._id === category)?.name || ''}
                                         readOnly
                                         onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
                                     />
@@ -404,7 +404,7 @@ function CreateNewNotificationModal() {
                                         width="100%"
                                     >
                                         <List spacing={3}>
-                                            {categories.map((category, index) => {
+                                            {notificationcategorieName.map((category, index) => {
                                                 const { _id, name } = category;
                                                 return (
                                                     <ListItem
@@ -426,7 +426,7 @@ function CreateNewNotificationModal() {
 
                                 )}
                             </FormControl>
-                        )} */}
+                        )}
 
                         {/* {redirect_to === 'link' && (
                             <FormControl>

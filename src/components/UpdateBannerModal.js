@@ -18,19 +18,28 @@ import {
     Image,
     Select,
     VStack,
-    HStack
+    HStack,
+    Box,
+    List,
+    ListItem,
+    InputGroup,
+    InputRightElement,
+    IconButton
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useBannerContext } from '../context/banner_context';
-
-
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { useNotificationContext } from '../context/notification_context';
 
 function UpdateBannerModal({ id }) {
     const {
         single_banner: {
             name = '',
             status = '',
-            image = ''
+            image = '',
+            redirect_to = "",
+            specific_product = "",
+            specific_category = ""
         },
         single_banner_loading,
         fetchBanner,
@@ -40,9 +49,17 @@ function UpdateBannerModal({ id }) {
         
     } = useBannerContext();
 
+    const {
+        notificationProductName,
+        fetchProductNameForNotification,
+        notificationcategorieName,
+        fetchCategoryNameForNotification,
+    } = useNotificationContext();
+
     const [imageList, setImageList] = useState(image);
     const [loading, setLoading] = useState(false);
-
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
     const toast = useToast();
@@ -74,10 +91,15 @@ function UpdateBannerModal({ id }) {
             });
         }
         setLoading(true);
+        const specificProduct = (redirect_to == 'specific_product'?specific_product:'');
+        const specificCategory = (redirect_to == 'category'?specific_category:'')
         const banner = {
             name,
             status,
-            image: imageList
+            image: imageList,
+            redirect_to,
+            specific_product:specificProduct,
+            specific_category:specificCategory
         };
         const responseCreate = await updateBanner(id, banner);
         setLoading(false);
@@ -101,6 +123,28 @@ function UpdateBannerModal({ id }) {
             });
         }
     };
+
+    const handleProductSelect = (product) => {
+        updateExistingBannerDetails({
+          target: {
+            name: "specific_product",
+            value: product._id,
+          },
+        });
+        
+        setDropdownOpen(false);
+      };
+    
+      const handleCategorySelect = (name, _id) => {
+        updateExistingBannerDetails({
+          target: {
+            name: "specific_category",
+            value: _id,
+          },
+        });
+    
+        setCategoryDropdownOpen(false);
+      };
 
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length > 0) {
@@ -127,8 +171,10 @@ function UpdateBannerModal({ id }) {
             <Text
                 colorScheme='brown'
                 minW='100%'
-                onClick={() => {
+                onClick={async () => {
                     fetchSingleBanner(id);
+                    await fetchProductNameForNotification();
+                    await fetchCategoryNameForNotification();
                     onOpen();
                 }}
             >
@@ -165,6 +211,157 @@ function UpdateBannerModal({ id }) {
                                 <option value='false'>Inactive</option>
                             </Select>
                         </FormControl>
+                        <FormControl>
+              <FormLabel>Redirect To</FormLabel>
+              <Select
+                placeholder="Redirect To"
+                name="redirect_to"
+                focusBorderColor="brown.500"
+                value={redirect_to}
+                onChange={updateExistingBannerDetails}
+              >
+                <option key="1" value="specific_product">
+                  Specific Product
+                </option>
+                <option key="2" value="category">
+                  category
+                </option>
+              </Select>
+            </FormControl>
+            {redirect_to === "specific_product" && (
+              <FormControl mt={4}>
+                <FormLabel>Specific Product</FormLabel>
+                <InputGroup>    
+                  <Input
+                    ref={initialRef}
+                    placeholder="Select specific product"
+                    name="specific_product"
+                    focusBorderColor="brown.500"
+                    value={
+                      notificationProductName.find(
+                        (product) => product._id === specific_product
+                      )?.name || ""
+                    }
+                    readOnly
+                    onClick={() => setDropdownOpen(!isDropdownOpen)}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label="Open dropdown"
+                      icon={isDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setDropdownOpen(!isDropdownOpen)}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+
+                {isDropdownOpen && (
+                  <Box
+                    maxHeight="200px"
+                    overflowY="auto"
+                    borderWidth="1px"
+                    borderRadius="md"
+                    mt="2"
+                    zIndex="10"
+                    bg="white"
+                    position="absolute"
+                    width="100%"
+                  >
+                    <List spacing={3}>
+                      {notificationProductName.map((product, index) => (
+                        <ListItem
+                          key={index}
+                          onClick={() => handleProductSelect(product)}
+                          cursor="pointer"
+                          _hover={{ bg: "gray.100" }}
+                          p="2"
+                          borderWidth={
+                            specific_product === product._id ? "1px" : "0"
+                          }
+                          borderColor={
+                            specific_product === product._id
+                              ? "brown.500"
+                              : "transparent"
+                          }
+                          borderRadius="md"
+                        >
+                          {product.name}
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                )}
+              </FormControl>
+            )}
+            {redirect_to === "category" && (
+              <FormControl mt={4}>
+                <FormLabel>Select category</FormLabel>
+                <InputGroup>
+                  <Input
+                    ref={initialRef}
+                    placeholder="Select specific category"
+                    name="specific_category"
+                    focusBorderColor="brown.500"
+                    value={
+                      notificationcategorieName.find((cat) => cat._id === specific_category)?.name || ""
+                    }
+                    // readOnly
+                    onClick={() =>
+                      setCategoryDropdownOpen(!isCategoryDropdownOpen)
+                    }
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      aria-label="Open dropdown"
+                      icon={
+                        isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />
+                      }
+                      size="sm"
+                      variant="ghost"
+                      onClick={() =>
+                        setCategoryDropdownOpen(!isCategoryDropdownOpen)
+                      }
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                {isCategoryDropdownOpen && (
+                  <Box
+                    maxHeight="200px"
+                    overflowY="auto"
+                    borderWidth="1px"
+                    borderRadius="md"
+                    mt="2"
+                    zIndex="10"
+                    bg="white"
+                    position="absolute"
+                    width="100%"
+                  >
+                    <List spacing={3}>
+                      {notificationcategorieName.map((category, index) => {
+                        const { _id, name } = category;
+                        return (
+                          <ListItem
+                            key={index}
+                            onClick={() => handleCategorySelect(name, _id)}
+                            cursor="pointer"
+                            _hover={{ bg: "gray.100" }}
+                            p="2"
+                            borderWidth={category === _id ? "1px" : "0"}
+                            borderColor={
+                              category === _id ? "brown.500" : "transparent"
+                            }
+                            borderRadius="md"
+                          >
+                            {category.name}
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Box>
+                )}
+              </FormControl>
+            )}
 
                         <FormControl mt={4}>
                             <FormLabel>Images</FormLabel>

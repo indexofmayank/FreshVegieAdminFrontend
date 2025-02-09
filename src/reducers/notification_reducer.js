@@ -61,7 +61,7 @@ const notification_reducer = (state, action) => {
     }
 
     if(action.type === GET_CATEGORYBYNAMEFORNOTIFICATION_SUCCESS) {
-        return {...state, categoryName_loading: false, categories: action.payload}
+        return {...state, categoryName_loading: false, notificationcategorieName: action.payload}
     }
 
     if(action.type === GET_USERNAMEFORNOTIFICATION_BEGIN) {

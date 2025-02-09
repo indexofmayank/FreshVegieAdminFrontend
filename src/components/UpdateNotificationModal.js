@@ -64,10 +64,10 @@ function UpdateNotificationModal({ id }) {
     // fetchProductNameForNotification,
     // notificationProductName_loading,
     // notificationProductName_error,
-    // notificationProductName,
+    notificationProductName,
     // categoryName_loading,
     // categoryName_error,
-    // categories,
+    notificationcategorieName,
     // fetchCategoryNameForNotification,
     // userName_loading,
     // userName_error,
@@ -131,27 +131,27 @@ function UpdateNotificationModal({ id }) {
     setImageList(null);
   };
 
-  // const handleProductSelect = (product) => {
-  //   updateExistingNotificationDetails({
-  //     target: {
-  //       name: "specific_product",
-  //       value: product._id,
-  //     },
-  //   });
+  const handleProductSelect = (product) => {
+    updateExistingNotificationDetails({
+      target: {
+        name: "specific_product",
+        value: product._id,
+      },
+    });
     
-  //   setDropdownOpen(false);
-  // };
+    setDropdownOpen(false);
+  };
 
-  // const handleCategorySelect = (name, _id) => {
-  //   updateExistingNotificationDetails({
-  //     target: {
-  //       name: "category",
-  //       value: _id,
-  //     },
-  //   });
+  const handleCategorySelect = (name, _id) => {
+    updateExistingNotificationDetails({
+      target: {
+        name: "category",
+        value: _id,
+      },
+    });
 
-  //   setCategoryDropdownOpen(false);
-  // };
+    setCategoryDropdownOpen(false);
+  };
 
   // const handleUserSelect = (name, _id) => {
   //   setSelectedCustomers((prevState) => [...prevState, { _id, name }]);
@@ -317,7 +317,7 @@ function UpdateNotificationModal({ id }) {
                 onChange={updateExistingNotificationDetails}
               />
             </FormControl>
-            {/* <FormControl>
+            <FormControl>
               <FormLabel>Redirect To</FormLabel>
               <Select
                 placeholder="Redirect To"
@@ -332,12 +332,12 @@ function UpdateNotificationModal({ id }) {
                 <option key="2" value="category">
                   category
                 </option>
-                <option key="3" value="link">
+                {/* <option key="3" value="link">
                   Link
-                </option>
+                </option> */}
               </Select>
-            </FormControl> */}
-            {/* {redirect_to === "specific_product" && (
+            </FormControl>
+            {redirect_to === "specific_product" && (
               <FormControl mt={4}>
                 <FormLabel>Specific Product</FormLabel>
                 <InputGroup>
@@ -413,7 +413,7 @@ function UpdateNotificationModal({ id }) {
                     name="category"
                     focusBorderColor="brown.500"
                     value={
-                      categories.find((cat) => cat._id === category)?.name || ""
+                      notificationcategorieName.find((cat) => cat._id === category)?.name || ""
                     }
                     readOnly
                     onClick={() =>
@@ -447,7 +447,7 @@ function UpdateNotificationModal({ id }) {
                     width="100%"
                   >
                     <List spacing={3}>
-                      {categories.map((category, index) => {
+                      {notificationcategorieName.map((category, index) => {
                         const { _id, name } = category;
                         return (
                           <ListItem
@@ -471,7 +471,7 @@ function UpdateNotificationModal({ id }) {
                 )}
               </FormControl>
             )}
-            {redirect_to === "link" && (
+            {/* {redirect_to === "link" && (
               <FormControl>
                 <FormLabel>Link</FormLabel>
                 <Input

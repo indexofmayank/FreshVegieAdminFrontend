@@ -7,7 +7,7 @@ import {
 import { HStack, Button, VStack, Spinner, Heading } from '@chakra-ui/react';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useBannerContext } from "../context/banner_context";
-
+import { useNotificationContext } from '../context/notification_context';
 
 function BannerPage() {
 
@@ -18,14 +18,21 @@ function BannerPage() {
     fetchBanner,
   } = useBannerContext();
 
+  const {
+    notificationProductName,
+    fetchProductNameForNotification,
+    notificationcategorieName,
+    fetchCategoryNameForNotification,
+} = useNotificationContext();
 
   const handleRefresh = async () => {
     await fetchBanner();
   }
 
   useEffect(() => {
-
-     fetchBanner();
+    fetchProductNameForNotification();
+    fetchCategoryNameForNotification();
+    fetchBanner();
    
 }, []);
 
@@ -87,7 +94,7 @@ function BannerPage() {
           Refresh
         </Button>
       </HStack>
-      <BannerTable banners={banners}/>
+      <BannerTable banners={banners} notificationcategorieName={notificationcategorieName} notificationProductName={notificationProductName}/>
     </SidebarWithHeader>
   )
 }

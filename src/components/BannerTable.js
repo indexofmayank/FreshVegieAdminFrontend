@@ -22,7 +22,7 @@ import { BiChevronDown } from 'react-icons/bi';
 import { useBannerContext } from '../context/banner_context';
 import { UpdateBannerModal } from '../components';
 
-function BannerTable({ banners }) {
+function BannerTable({ banners,notificationcategorieName,notificationProductName }) {
     const toast = useToast();
     const { fetchBanner, deleteBanner } = useBannerContext();
     const [loading, setLoading] = useState(false);
@@ -63,12 +63,15 @@ function BannerTable({ banners }) {
                             <Th>Image</Th>
                             <Th>Name</Th>
                             <Th>Status</Th>
+                            <Th>redirect_to</Th>
+                            <Th>specific_product</Th>
+                            <Th>specific_category</Th>
                             <Th></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {banners.map((banner, index) => {
-                            const { name, image, status, id } = banner;
+                            const { name, image, status, id,redirect_to,specific_product,specific_category } = banner;
                             return (
                                 <Tr key={index}>
                                     <Td>
@@ -87,6 +90,12 @@ function BannerTable({ banners }) {
                                             colorScheme='brown'
                                         />
                                     </Td>
+                                    <Td>{redirect_to}</Td>
+                                    <Td>{ notificationProductName.find(
+                                        (product) => product._id === specific_product
+                                    )?.name || "-"}</Td>
+                                    <Td>{notificationcategorieName.find((cat) => cat._id === specific_category)?.name || "-"}</Td>
+                    
                                     <Td>
                                         <Menu>
                                             <MenuButton as={Button} rightIcon={<BiChevronDown />}>
