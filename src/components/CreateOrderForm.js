@@ -65,6 +65,8 @@ const CreateOrderForm = () => {
    loadDeliveryData();
   })
 
+  // console.log(customerwithaddress)
+
   // useEffect(() => {
    
   // }, [customerwithaddress]);
@@ -89,6 +91,8 @@ const CreateOrderForm = () => {
     }
   }, [customerSearchTerm]);
 
+  // console.log(usernameForCreateOrder);
+
   useEffect(() => {
     if (selectedCustomerId) {
       fetchUserAddressById(selectedCustomerId);
@@ -96,6 +100,7 @@ const CreateOrderForm = () => {
   }, [selectedCustomerId]);
 
   useEffect(() => {
+    console.log(userAddresses);
     if (userAddresses && userAddresses.length > 0) {
       setSelectedCustomerAddresses(userAddresses);
     }
@@ -104,13 +109,13 @@ const CreateOrderForm = () => {
 
   const onUserSelect = (event) => {
     // const userId = event.target.value;
-    // console.log(event._id)
+    console.log(event._id)
     const userId = event._id;
     // console.log(customerlist)
     setSelectedUser(userId);
     setSelectedCustomerId(userId);
     // updateNewOrderAddressDetails(null)
-    const user = customerlist.find((user) => user._id == userId);
+    const user = usernameForCreateOrder.find((user) => user._id == userId);
     // console.log(user)
     // console.log(user.address)
     if (user.address.length> 0) {
@@ -137,7 +142,7 @@ const CreateOrderForm = () => {
     // const userId = event.target.value;
     const productId = event._id;
     // console.log(event)
-    // // console.log(customerlist)
+    // console.log(customerlist)
     // setSelectedproduct(productId);
     const product = productlist.find((product) => product._id == productId);
     addItem(product)
@@ -155,11 +160,11 @@ const CreateOrderForm = () => {
     }
   }, [allproduct]);
 
-  // useEffect(() => {
-  //   getAllProductForOrder();
-  // }, []);
+  useEffect(() => {
+    fetchUserForCreateOrder();
+  }, []);
 
-// console.log(allproduct)
+// console.log(usernameForCreateOrder)
 
   const addItem = (item) => {
 
@@ -578,7 +583,7 @@ const finalTotal = (formattedGrandTotal + formattedDeliveryFee).toFixed(2);
                 onChange={onUserSelect}
                 // onChange={this.handleSelect}
                 getOptionValue={option => `${option}`}
-                 options={customerlist}
+                 options={usernameForCreateOrder}
                  isSearchable={true}
                 // filterOption={this.customFilter}
                 // onInputChange={this.handleInputChange}
