@@ -20,7 +20,6 @@ import {
     Image,
     VStack,
     Checkbox,
-    Select,
     Radio,
     RadioGroup,
     Stack,
@@ -35,6 +34,7 @@ import { useDropzone } from 'react-dropzone';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { useNotificationContext } from '../context/notification_context';
 import { useBannerContext } from '../context/banner_context';
+import Select from 'react-select';
 
 function CreateNewBannerModal() {
 
@@ -43,13 +43,21 @@ function CreateNewBannerModal() {
             name,
             image,
             status,
-            redirect_to,
             specific_product,
             specific_category
         },
         createNewBanner,
         updateNewBannerDetails
     } = useBannerContext();
+
+    const redirectooptions = [
+        { value: 'specific_product', label: 'Specific Product' },
+        { value: 'category', label: 'category' },
+      ]
+      const statusoptions = [
+        { value: true, label: 'active' },
+        { value: false, label: 'Inactive' },
+      ]
     const {
         notificationProductName,
         fetchProductNameForNotification,
@@ -59,6 +67,9 @@ function CreateNewBannerModal() {
 
     const [imageList, setImageList] = useState(image);
     const [loading, setLoading] = useState(false);
+    const [redirect_to, setRedirect_to] = useState('');
+    const [selectedproduct, setSelectedproduct] = useState('');
+    const [selectedcategory, setSelectedcategory] = useState('');
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -66,27 +77,58 @@ function CreateNewBannerModal() {
     const intialRef = useRef();
     const toast = useToast();
 
-    const handleProductSelect = (product) => {
+    const onRedirecttoSelect = (event) => {
+        // console.log(event)
+        // console.log(event.value)
+        // console.log(event.label)
+        setRedirect_to(event.value)
+        updateNewBannerDetails({
+            target: {
+                name: 'redirect_to',
+                value: event.value
+            }
+        });
+        // const userId = event._id;
+        // setRedirect_to()
+    }
+    const onStatusSelect = (event) => {
+        // console.log(event)
+        // console.log(event.value)
+        // console.log(event.label)
+        // setRedirect_to(event.value)
+        updateNewBannerDetails({
+            target: {
+                name: 'status',
+                value: event.value
+            }
+        });
+        // const userId = event._id;
+        // setRedirect_to()
+    }
+
+    
+
+    const handleProductSelect = (event) => {
+        console.log(event)
         updateNewBannerDetails({
             target: {
                 name: 'specific_product',
-                value: product._id
+                value: event._id
             }
         });
-        setDropdownOpen(false);
+        setSelectedproduct(event);
     };
 
-    const handleCategorySelect = (name, _id) => {
+    const handleCategorySelect = (event) => {
         updateNewBannerDetails({
             target: {
                 name: 'specific_category',
-                value: _id
+                value: event._id
             }
         });
-
-        setCategoryDropdownOpen(false);
+        setSelectedcategory(event);
     }
-
+    // console.log(notificationProductName)
     const handleSubmit = async () => {
         console.log(name);
         console.log(status);
@@ -123,6 +165,7 @@ function CreateNewBannerModal() {
             specific_product,
             specific_category
         };
+        console.log(banner);
         const responseCreate = await createNewBanner(banner);
         setLoading(false);
         if(responseCreate.success) {
@@ -193,7 +236,8 @@ function CreateNewBannerModal() {
 
                         <FormControl>
                             <FormLabel>Status</FormLabel>
-                            <Select
+                            <Select options={statusoptions} name="status"  onChange={onStatusSelect} />
+                            {/* <Select
                                 placeholder='Select status'
                                 name='status'
                                 focusBorderColor='brown.500'
@@ -202,11 +246,11 @@ function CreateNewBannerModal() {
                             >
                                 <option value={true}>active</option>
                                 <option value={false}>Inactive</option>
-                            </Select>
+                            </Select> */}
                         </FormControl>
                         <FormControl>
                             <FormLabel>Redirect To</FormLabel>
-                            <Select
+                            {/* <Select
                                 placeholder='Redirect To'
                                 name='redirect_to'
                                 focusBorderColor='brown.500'
@@ -215,125 +259,51 @@ function CreateNewBannerModal() {
                             >
                                 <option key='1' value='specific_product'>Specific Product</option>
                                 <option key='2' value='category'>category</option>
-                                {/* <option key='3' value='link'>Link</option> */}
-                            </Select>
+                            </Select> */}
+                            <Select options={redirectooptions} name="redirect_to"  onChange={onRedirecttoSelect} />
                         </FormControl>
                         {redirect_to === 'specific_product' && (
                             <FormControl mt={4}>
                                 <FormLabel>Specific Product</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        ref={intialRef}
-                                        placeholder='Select specific product'
-                                        name='specific_product'
-                                        focusBorderColor='brown.500'
-                                        value={
-                                            notificationProductName.find(product => product._id === specific_product)?.name || ''
-                                        }
-                                        readOnly
-                                        onClick={() => setDropdownOpen(!isDropdownOpen)}
-                                    />
-                                    <InputRightElement>
-                                        <IconButton
-                                            aria-label='Open dropdown'
-                                            icon={isDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                                            size='sm'
-                                            variant='ghost'
-                                            onClick={() => setDropdownOpen(!isDropdownOpen)}
+                                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedproduct}
+                                        onChange={handleProductSelect}
+                                        // onChange={this.handleSelect}
+                                        // getOptionValue={option => `${option}`}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationProductName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        // onInputChange={this.handleInputChange}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter product name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
                                         />
-                                    </InputRightElement>
-                                </InputGroup>
-
-                                {isDropdownOpen && (
-                                    <Box
-                                        maxHeight="200px"
-                                        overflowY="auto"
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        mt="2"
-                                        zIndex="10"
-                                        bg="white"
-                                        position="absolute"
-                                        width="100%"
-                                    >
-                                        <List spacing={3}>
-                                            {notificationProductName.map((product, index) => (
-                                                <ListItem
-                                                    key={index}
-                                                    onClick={() => handleProductSelect(product)}
-                                                    cursor="pointer"
-                                                    _hover={{ bg: 'gray.100' }}
-                                                    p="2"
-                                                    borderWidth={specific_product === product._id ? '1px' : '0'}
-                                                    borderColor={specific_product === product._id ? 'brown.500' : 'transparent'}
-                                                    borderRadius="md"
-                                                >
-                                                    {product.name}
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </Box>
-                                )}
                             </FormControl>
                         )}
 
                         {redirect_to === 'category' && (
                             <FormControl mt={4}>
                                 <FormLabel>Select category</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        ref={intialRef}
-                                        placeholder='Select specific category'
-                                        name='specific_category'
-                                        focusBorderColor='brown.500'
-                                        value={notificationcategorieName.find(cat => cat._id === specific_category)?.name || ''}
-                                        readOnly
-                                        onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                                    />
-                                    <InputRightElement>
-                                        <IconButton         
-                                            aria-label='Open dropdown'
-                                            icon={isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                                            size='sm'
-                                            variant='ghost'
-                                            onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedcategory}
+                                        onChange={handleCategorySelect}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationcategorieName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter category name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
                                         />
-                                    </InputRightElement>
-                                </InputGroup>
-                                {isCategoryDropdownOpen && (
-                                    <Box
-                                        maxHeight="200px"
-                                        overflowY="auto"
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        mt="2"
-                                        zIndex="10"
-                                        bg="white"
-                                        position="absolute"
-                                        width="100%"
-                                    >
-                                        <List spacing={3}>
-                                            {notificationcategorieName.map((category, index) => {
-                                                const { _id, name } = category;
-                                                return (
-                                                    <ListItem
-                                                        key={index}
-                                                        onClick={() => handleCategorySelect(name, _id)}
-                                                        cursor="pointer"
-                                                        _hover={{ bg: 'gray.100' }}
-                                                        p="2"
-                                                        borderWidth={category === _id ? '1px' : '0'}
-                                                        borderColor={category === _id ? 'brown.500' : "transparent"}
-                                                        borderRadius="md"
-                                                    >
-                                                        {name}
-                                                    </ListItem>
-                                                )
-                                            })}
-                                        </List>
-                                    </Box>
-
-                                )}
                             </FormControl>
                         )}
 

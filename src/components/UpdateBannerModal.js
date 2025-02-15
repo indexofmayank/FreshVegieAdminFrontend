@@ -16,7 +16,6 @@ import {
     Center,
     Text,
     Image,
-    Select,
     VStack,
     HStack,
     Box,
@@ -30,14 +29,14 @@ import { useDropzone } from 'react-dropzone';
 import { useBannerContext } from '../context/banner_context';
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { useNotificationContext } from '../context/notification_context';
-
+import Select from 'react-select';
 function UpdateBannerModal({ id }) {
     const {
         single_banner: {
             name = '',
             status = '',
             image = '',
-            redirect_to = "",
+            redirect_to = '',
             specific_product = "",
             specific_category = ""
         },
@@ -49,6 +48,15 @@ function UpdateBannerModal({ id }) {
         
     } = useBannerContext();
 
+    const redirectooptions = [
+      { value: 'specific_product', label: 'Specific Product' },
+      { value: 'category', label: 'category' },
+    ]
+    const statusoptions = [
+      { value: true, label: 'active' },
+      { value: false, label: 'Inactive' },
+    ]
+// console.log(updateExistingBannerDetails);
     const {
         notificationProductName,
         fetchProductNameForNotification,
@@ -59,6 +67,10 @@ function UpdateBannerModal({ id }) {
     const [imageList, setImageList] = useState(image);
     const [loading, setLoading] = useState(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [redirect_too, setRedirect_too] = useState('');
+    const [selectedproduct, setSelectedproduct] = useState('');
+    const [selectedcategory, setSelectedcategory] = useState('');
+    const [selectedstatus, setSelectedstatus] = useState(false);
     const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const initialRef = useRef();
@@ -70,8 +82,8 @@ function UpdateBannerModal({ id }) {
     const handleSubmit = async () => {
         console.log(name); console.log(image); console.log(status);
         if(
-            !name ||
-            !status 
+            !name || !redirect_to
+
         ) {
             return toast({
                 position: 'top',
@@ -124,26 +136,46 @@ function UpdateBannerModal({ id }) {
         }
     };
 
-    const handleProductSelect = (product) => {
+    const onRedirecttoSelect = (event) => {
+      setRedirect_too(event)
+      updateExistingBannerDetails({
+          target: {
+              name: 'redirect_to',
+              value: event.value
+          }
+      });
+     
+  }
+  const onStatusSelect = (event) => {
+    setSelectedstatus(event)
+    updateExistingBannerDetails({
+          target: {
+              name: 'status',
+              value: event.value
+          }
+      });
+  }
+
+    const handleProductSelect = (event) => {
+      setSelectedproduct(event);
         updateExistingBannerDetails({
           target: {
             name: "specific_product",
-            value: product._id,
+            value: event._id,
           },
         });
-        
-        setDropdownOpen(false);
+        // setDropdownOpen(false);
       };
     
-      const handleCategorySelect = (name, _id) => {
+      const handleCategorySelect = (event) => {
         updateExistingBannerDetails({
           target: {
             name: "specific_category",
-            value: _id,
+            value: event._id,
           },
         });
-    
-        setCategoryDropdownOpen(false);
+        setSelectedcategory(event);
+        // setCategoryDropdownOpen(false);
       };
 
     const onDrop = useCallback((acceptedFiles) => {
@@ -164,6 +196,36 @@ function UpdateBannerModal({ id }) {
     useEffect(() => {
         setImageList(image);
     }, [single_banner_loading]);
+
+    useEffect(() => {
+      if(notificationcategorieName.length >0){
+        const selectedcategory = notificationcategorieName.find(
+          (category) => category._id === specific_category
+      );
+      setSelectedcategory(selectedcategory)
+      }
+      if(notificationProductName.length >0){
+        const selectedproductt = notificationProductName.find(
+          (product) => product._id === specific_product
+         );
+        setSelectedproduct(selectedproductt)
+      }
+      if(redirect_to){
+        const selectedoption = redirectooptions.find(
+          (redirectoption) => redirectoption.value === redirect_to
+         );
+        setRedirect_too(selectedoption)
+      }
+
+      if(status){
+        const selectedstatus = statusoptions.find(
+          (statusoption) => statusoption.value === status
+         );
+         setSelectedstatus(selectedstatus)
+      }
+
+  }, [single_banner_loading]);
+    
 
 
     return (
@@ -200,7 +262,8 @@ function UpdateBannerModal({ id }) {
 
                         <FormControl mt={4}>
                             <FormLabel>Status</FormLabel>
-                            <Select
+                            <Select options={statusoptions} value={selectedstatus} name="status"  onChange={onStatusSelect} />
+                            {/* <Select
                                 placeholder='Select status'
                                 name='status'
                                 focusBorderColor='brown.500'
@@ -209,11 +272,12 @@ function UpdateBannerModal({ id }) {
                             >
                                 <option value='true'>active</option>
                                 <option value='false'>Inactive</option>
-                            </Select>
+                            </Select> */}
                         </FormControl>
                         <FormControl>
               <FormLabel>Redirect To</FormLabel>
-              <Select
+              <Select options={redirectooptions}  value={redirect_too} name="redirect_to"  onChange={onRedirecttoSelect} />
+              {/* <Select
                 placeholder="Redirect To"
                 name="redirect_to"
                 focusBorderColor="brown.500"
@@ -226,140 +290,51 @@ function UpdateBannerModal({ id }) {
                 <option key="2" value="category">
                   category
                 </option>
-              </Select>
+              </Select> */}
             </FormControl>
             {redirect_to === "specific_product" && (
               <FormControl mt={4}>
+                
                 <FormLabel>Specific Product</FormLabel>
-                <InputGroup>    
-                  <Input
-                    ref={initialRef}
-                    placeholder="Select specific product"
-                    name="specific_product"
-                    focusBorderColor="brown.500"
-                    value={
-                      notificationProductName.find(
-                        (product) => product._id === specific_product
-                      )?.name || ""
-                    }
-                    readOnly
-                    onClick={() => setDropdownOpen(!isDropdownOpen)}
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label="Open dropdown"
-                      icon={isDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setDropdownOpen(!isDropdownOpen)}
-                    />
-                  </InputRightElement>
-                </InputGroup>
-
-                {isDropdownOpen && (
-                  <Box
-                    maxHeight="200px"
-                    overflowY="auto"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    mt="2"
-                    zIndex="10"
-                    bg="white"
-                    position="absolute"
-                    width="100%"
-                  >
-                    <List spacing={3}>
-                      {notificationProductName.map((product, index) => (
-                        <ListItem
-                          key={index}
-                          onClick={() => handleProductSelect(product)}
-                          cursor="pointer"
-                          _hover={{ bg: "gray.100" }}
-                          p="2"
-                          borderWidth={
-                            specific_product === product._id ? "1px" : "0"
-                          }
-                          borderColor={
-                            specific_product === product._id
-                              ? "brown.500"
-                              : "transparent"
-                          }
-                          borderRadius="md"
-                        >
-                          {product.name}
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-                )}
+                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedproduct}
+                                        onChange={handleProductSelect}
+                                        // onChange={this.handleSelect}
+                                        // getOptionValue={option => `${option}`}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationProductName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        // onInputChange={this.handleInputChange}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter product name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
+                                        />
               </FormControl>
             )}
             {redirect_to === "category" && (
               <FormControl mt={4}>
                 <FormLabel>Select category</FormLabel>
-                <InputGroup>
-                  <Input
-                    ref={initialRef}
-                    placeholder="Select specific category"
-                    name="specific_category"
-                    focusBorderColor="brown.500"
-                    value={
-                      notificationcategorieName.find((cat) => cat._id === specific_category)?.name || ""
-                    }
-                    // readOnly
-                    onClick={() =>
-                      setCategoryDropdownOpen(!isCategoryDropdownOpen)
-                    }
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label="Open dropdown"
-                      icon={
-                        isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />
-                      }
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setCategoryDropdownOpen(!isCategoryDropdownOpen)
-                      }
-                    />
-                  </InputRightElement>
-                </InputGroup>
-                {isCategoryDropdownOpen && (
-                  <Box
-                    maxHeight="200px"
-                    overflowY="auto"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    mt="2"
-                    zIndex="10"
-                    bg="white"
-                    position="absolute"
-                    width="100%"
-                  >
-                    <List spacing={3}>
-                      {notificationcategorieName.map((category, index) => {
-                        const { _id, name } = category;
-                        return (
-                          <ListItem
-                            key={index}
-                            onClick={() => handleCategorySelect(name, _id)}
-                            cursor="pointer"
-                            _hover={{ bg: "gray.100" }}
-                            p="2"
-                            borderWidth={category === _id ? "1px" : "0"}
-                            borderColor={
-                              category === _id ? "brown.500" : "transparent"
-                            }
-                            borderRadius="md"
-                          >
-                            {category.name}
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </Box>
-                )}
+                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedcategory}
+                                        onChange={handleCategorySelect}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationcategorieName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter category name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
+                                        />
+                
               </FormControl>
             )}
 
