@@ -26,7 +26,6 @@ import {
     Image,
     VStack,
     Checkbox,
-    Select,
     Radio,
     RadioGroup,
     Stack,
@@ -37,6 +36,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import { useNotificationContext } from '../context/notification_context';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import Select from 'react-select';
 import {getFilteredUserNameForNotification_url} from '../utils/constants';
 
 
@@ -49,7 +49,7 @@ function CreateNewNotificationModal() {
             message,
             redirect_to,
             specific_product,
-            category,
+            specific_category,
             link,
             audience,
             branch,
@@ -74,7 +74,19 @@ function CreateNewNotificationModal() {
         fetchUserNameForNotification
     } = useNotificationContext();
 
-
+    const redirectooptions = [
+        { value: 'specific_product', label: 'Specific Product' },
+        { value: 'category', label: 'category' },
+      ]
+      const statusoptions = [
+        { value: true, label: 'active' },
+        { value: false, label: 'Inactive' },
+      ]
+      const customfilter = [
+        { value: 'zeroOrders', label: 'New user' },
+        { value: 'moreThanOneOrder', label: 'Active user' },
+        { value: 'all', label: 'All' },
+      ]
 
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length > 0) {
@@ -98,9 +110,39 @@ function CreateNewNotificationModal() {
     const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
     const [isUsernameDropdownOpen, setUsernameDropdownOpen] = useState(false);
     const [selectedCustomers, setSelectedCustomers] = useState([]);
+    const [redirect_too, setRedirect_too] = useState('');
+    const [selectedproduct, setSelectedproduct] = useState('');
+    const [selectedcategory, setSelectedcategory] = useState('');
     const [handleSubmitLoading, setHandleSubmitLoading] = useState(false);
     const [selectedCustomFilter, setSelectedCustomFilter] = useState(null);
     const toast = useToast();
+
+    const onRedirecttoSelect = (event) => {
+        setRedirect_too(event.value)
+        udpateNewNotificationDetails({
+            target: {
+                name: 'redirect_to',
+                value: event.value
+            }
+        });
+    }
+    const onStatusSelect = (event) => {
+        udpateNewNotificationDetails({
+            target: {
+                name: 'status',
+                value: event.value
+            }
+        });
+    }
+    const oncustomfilterSelect = (event) => {
+        udpateNewNotificationDetails({
+            target: {
+                name: 'customFilters',
+                value: event.value
+            }
+        });
+    }
+    
 
 
     const handleSubmit = async () => {
@@ -143,13 +185,15 @@ function CreateNewNotificationModal() {
             });
         }
         setHandleSubmitLoading(true);
+        const specificProduct = (redirect_to == 'specific_product'?specific_product:'');
+        const specificCategory = (redirect_to == 'category'?specific_category:'')
         const notification = {
             name,
             heading,
             message,
             redirect_to,
-            specific_product,
-            category,
+            specific_product:specificProduct,
+            specific_category:specificCategory,
             link,
             audience,
             branch,
@@ -180,15 +224,15 @@ function CreateNewNotificationModal() {
         }
     }
 
-    const handleProductSelect = (product) => {
+    const handleProductSelect = (event) => {
         udpateNewNotificationDetails({
             target: {
                 name: 'specific_product',
-                value: product._id
+                value: event._id
             }
         });
 
-        setDropdownOpen(false);
+        setSelectedproduct(event);
     };
 
     const handleUserSelect = (name, _id) => {
@@ -204,16 +248,16 @@ function CreateNewNotificationModal() {
 
     }
 
-    const handleCategorySelect = (name, _id) => {
+    const handleCategorySelect = (event) => {
 
         udpateNewNotificationDetails({
             target: {
-                name: 'category',
-                value: _id
+                name: 'specific_category',
+                value: event._id
             }
         });
 
-        setCategoryDropdownOpen(false);
+        setSelectedcategory(event);
     }
 
     const handleRemoveCustomer = (_id) => {
@@ -263,7 +307,7 @@ function CreateNewNotificationModal() {
                         </FormControl>
                         <FormControl>
                             <FormLabel>Status</FormLabel>
-                            <Select
+                            {/* <Select
                                 placeholder='Select status'
                                 name='status'
                                 focusBorderColor='brown.500'
@@ -272,7 +316,8 @@ function CreateNewNotificationModal() {
                             >
                             <option value={true}>active</option>
                             <option value={false}>inactive</option>
-                            </Select>
+                            </Select> */}
+                             <Select options={statusoptions} name="status"  onChange={onStatusSelect} />
                         </FormControl>
                         <FormControl>
                             <FormLabel>Heading</FormLabel>
@@ -296,7 +341,7 @@ function CreateNewNotificationModal() {
                         </FormControl>
                         <FormControl>
                             <FormLabel>Redirect To</FormLabel>
-                            <Select
+                            {/* <Select
                                 placeholder='Redirect To'
                                 name='redirect_to'
                                 focusBorderColor='brown.500'
@@ -305,126 +350,55 @@ function CreateNewNotificationModal() {
                             >
                                 <option key='1' value='specific_product'>Specific Product</option>
                                 <option key='2' value='category'>category</option>
-                                {/* <option key='3' value='link'>Link</option> */}
-                            </Select>
+                               
+                            </Select> */}
+                             <Select options={redirectooptions} name="redirect_to"  onChange={onRedirecttoSelect} />
                         </FormControl>
 
                         {redirect_to === 'specific_product' && (
                             <FormControl mt={4}>
                                 <FormLabel>Specific Product</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        ref={intialRef}
-                                        placeholder='Select specific product'
-                                        name='specific_product'
-                                        focusBorderColor='brown.500'
-                                        value={
-                                            notificationProductName.find(product => product._id === specific_product)?.name || ''
-                                        }
-                                        readOnly
-                                        onClick={() => setDropdownOpen(!isDropdownOpen)}
-                                    />
-                                    <InputRightElement>
-                                        <IconButton
-                                            aria-label='Open dropdown'
-                                            icon={isDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                                            size='sm'
-                                            variant='ghost'
-                                            onClick={() => setDropdownOpen(!isDropdownOpen)}
+                                
+                                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedproduct}
+                                        onChange={handleProductSelect}
+                                        // onChange={this.handleSelect}
+                                        // getOptionValue={option => `${option}`}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationProductName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        // onInputChange={this.handleInputChange}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter product name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
                                         />
-                                    </InputRightElement>
-                                </InputGroup>
-
-                                {isDropdownOpen && (
-                                    <Box
-                                        maxHeight="200px"
-                                        overflowY="auto"
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        mt="2"
-                                        zIndex="10"
-                                        bg="white"
-                                        position="absolute"
-                                        width="100%"
-                                    >
-                                        <List spacing={3}>
-                                            {notificationProductName.map((product, index) => (
-                                                <ListItem
-                                                    key={index}
-                                                    onClick={() => handleProductSelect(product)}
-                                                    cursor="pointer"
-                                                    _hover={{ bg: 'gray.100' }}
-                                                    p="2"
-                                                    borderWidth={specific_product === product._id ? '1px' : '0'}
-                                                    borderColor={specific_product === product._id ? 'brown.500' : 'transparent'}
-                                                    borderRadius="md"
-                                                >
-                                                    {product.name}
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </Box>
-                                )}
+                               
                             </FormControl>
                         )}
 
                         {redirect_to === 'category' && (
                             <FormControl mt={4}>
                                 <FormLabel>Select category</FormLabel>
-                                <InputGroup>
-                                    <Input
-                                        ref={intialRef}
-                                        placeholder='Select specific category'
-                                        name='category'
-                                        focusBorderColor='brown.500'
-                                        value={notificationcategorieName.find(cat => cat._id === category)?.name || ''}
-                                        readOnly
-                                        onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                                    />
-                                    <InputRightElement>
-                                        <IconButton         
-                                            aria-label='Open dropdown'
-                                            icon={isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                                            size='sm'
-                                            variant='ghost'
-                                            onClick={() => setCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                                        />
-                                    </InputRightElement>
-                                </InputGroup>
-                                {isCategoryDropdownOpen && (
-                                    <Box
-                                        maxHeight="200px"
-                                        overflowY="auto"
-                                        borderWidth="1px"
-                                        borderRadius="md"
-                                        mt="2"
-                                        zIndex="10"
-                                        bg="white"
-                                        position="absolute"
-                                        width="100%"
-                                    >
-                                        <List spacing={3}>
-                                            {notificationcategorieName.map((category, index) => {
-                                                const { _id, name } = category;
-                                                return (
-                                                    <ListItem
-                                                        key={index}
-                                                        onClick={() => handleCategorySelect(name, _id)}
-                                                        cursor="pointer"
-                                                        _hover={{ bg: 'gray.100' }}
-                                                        p="2"
-                                                        borderWidth={category === _id ? '1px' : '0'}
-                                                        borderColor={category === _id ? 'brown.500' : "transparent"}
-                                                        borderRadius="md"
-                                                    >
-                                                        {name}
-                                                    </ListItem>
-                                                )
-                                            })}
-                                        </List>
-                                    </Box>
-
-                                )}
+                                <Select 
+                                    getOptionLabel={option =>
+                                        `${option.name}`
+                                        } 
+                                        value={selectedcategory}
+                                        onChange={handleCategorySelect}
+                                        getOptionValue={(option) => option._id} 
+                                        options={notificationcategorieName}
+                                        isSearchable={true}
+                                        // filterOption={this.customFilter}
+                                        noOptionsMessage={() => null}
+                                        placeholder={'Enter category name'}
+                                        autoFocus={true}
+                                        // menuIsOpen={this.state.menuOpen}
+                                        /> 
                             </FormControl>
                         )}
 
@@ -456,23 +430,24 @@ function CreateNewNotificationModal() {
                             </Select>
                         </FormControl> */}
 
-                        {/* {audience === 'custom' && ( */}
+                        {audience === 'custom' && (
                             <FormControl>
                                 <FormLabel>Custom Filter</FormLabel>
-                                <Select
+                                {/* <Select
                                     placeholder='Select Filter'
                                     name='customFilters'
                                     focusBorderColor='brown.500'
                                     value={customFilters}
                                     onChange={udpateNewNotificationDetails}
                                 >
-                                    {/* <option key='1' value='abandoned_cart'>Abandoned cart</option> */}
                                     <option key='2' value='zeroOrders'>New user</option>
                                     <option key='3' value='moreThanOneOrder'>Active user</option>
                                     <option key='4' value='all'>All</option>
-                                </Select>
+                                </Select> */}
+                                 <Select options={customfilter} name="customFilters"  onChange={oncustomfilterSelect} />
+                                
                             </FormControl>
-                        {/* )} */}
+                         )}
 
                         {/* {audience === 'branch' && (
                             <FormControl>

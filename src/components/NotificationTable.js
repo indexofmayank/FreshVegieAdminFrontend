@@ -33,7 +33,7 @@ import { useNotificationContext } from "../context/notification_context";
 // import {admin} from 'firebase-admin';
 // import {google} from 'googleapis';
 
-function NotificationTable({ notifications,allUserToken }) {
+function NotificationTable({ notifications,allUserToken,notificationcategorieName,notificationProductName }) {
     
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { deleteNotification, fetchNotifications } = useNotificationContext();
@@ -42,7 +42,7 @@ function NotificationTable({ notifications,allUserToken }) {
 
 
   useEffect(() => {
-    console.log(assetToDelete)
+    // console.log(assetToDelete)
   }, [assetToDelete]);
 
 
@@ -113,6 +113,9 @@ function NotificationTable({ notifications,allUserToken }) {
               <Th>Message</Th>
               <Th>Heading</Th>
               <Th>Banner</Th>
+              <Th>Redirect to</Th>
+              <Th>Specific product</Th>
+              <Th>Specific category</Th>
               <Th>Status</Th>
               <Th></Th>
             </Tr>
@@ -126,6 +129,9 @@ function NotificationTable({ notifications,allUserToken }) {
                   status,
                   message,
                   heading,
+                  redirect_to,
+                  specific_product,
+                  specific_category,
                   _id,
                 } = notification;
                 return (
@@ -141,6 +147,11 @@ function NotificationTable({ notifications,allUserToken }) {
                         borderRadius="lg"
                       />
                     </Td>
+                    <Td>{redirect_to}</Td>
+                    <Td>{ notificationProductName.find(
+                                        (product) => product._id === specific_product
+                                    )?.name || "-"}</Td>
+                     <Td>{notificationcategorieName.find((cat) => cat._id === specific_category)?.name || "-"}</Td>
                     <Td>
                       <Switch colorScheme="green" isChecked={status} />
                     </Td>

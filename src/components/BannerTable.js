@@ -63,9 +63,9 @@ function BannerTable({ banners,notificationcategorieName,notificationProductName
                             <Th>Image</Th>
                             <Th>Name</Th>
                             <Th>Status</Th>
-                            <Th>redirect_to</Th>
-                            <Th>specific_product</Th>
-                            <Th>specific_category</Th>
+                            <Th>Redirect to</Th>
+                            <Th>Specific product</Th>
+                            <Th>Specific category</Th>
                             <Th></Th>
                         </Tr>
                     </Thead>

@@ -26,7 +26,6 @@ import {
   Image,
   VStack,
   Checkbox,
-  Select,
   Radio,
   RadioGroup,
   Stack,
@@ -38,6 +37,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useNotificationContext } from "../context/notification_context";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import Select from 'react-select';
 
 function UpdateNotificationModal({ id }) {
   const {
@@ -47,7 +47,7 @@ function UpdateNotificationModal({ id }) {
       message = "",
       redirect_to = "",
       specific_product = "",
-      category = "",
+      specific_category = "",
       link = "",
       audience = "",
       branch = "",
@@ -61,14 +61,14 @@ function UpdateNotificationModal({ id }) {
     single_notification_error,
     fetchSingleNotification,
     updateExistingNotificationDetails,
-    // fetchProductNameForNotification,
-    // notificationProductName_loading,
+    fetchProductNameForNotification,
+    notificationProductName_loading,
     // notificationProductName_error,
     notificationProductName,
     // categoryName_loading,
     // categoryName_error,
     notificationcategorieName,
-    // fetchCategoryNameForNotification,
+    fetchCategoryNameForNotification,
     // userName_loading,
     // userName_error,
     // userName,
@@ -76,6 +76,15 @@ function UpdateNotificationModal({ id }) {
     updateNotification,
     fetchNotifications
   } = useNotificationContext();
+
+  const redirectooptions = [
+    { value: 'specific_product', label: 'Specific Product' },
+    { value: 'category', label: 'category' },
+  ]
+  const statusoptions = [
+    { value: "true", label: 'active' },
+    { value: "false", label: 'Inactive' },
+  ]
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -101,10 +110,13 @@ function UpdateNotificationModal({ id }) {
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [isUsernameDropdownOpen, setUsernameDropdownOpen] = useState(false);
   const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [redirect_too, setRedirect_too] = useState('');
+  const [selectedproduct, setSelectedproduct] = useState('');
+  const [selectedcategory, setSelectedcategory] = useState('');
+  const [selectedstatus, setSelectedstatus] = useState(false);
   const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    console.log(banner);
     setImageList(banner);
     // setSelectedCustomers(prevState=>([...prevState, ...customers]));
   }, [single_notification_loading]);
@@ -127,31 +139,83 @@ function UpdateNotificationModal({ id }) {
   //   loadData();
   // }, [customFilters]);
 
+  const onRedirecttoSelect = (event) => {
+    setRedirect_too(event)
+    updateExistingNotificationDetails({
+        target: {
+            name: 'redirect_to',
+            value: event.value
+        }
+    });
+   
+}
+const onStatusSelect = (event) => {
+  setSelectedstatus(event)
+  updateExistingNotificationDetails({
+        target: {
+            name: 'status',
+            value: event.value
+        }
+    });
+}
+
+
   const handleRemoveImage = async () => {
     setImageList(null);
   };
 
-  const handleProductSelect = (product) => {
+  const handleProductSelect = (event) => {
     updateExistingNotificationDetails({
       target: {
         name: "specific_product",
-        value: product._id,
+        value: event._id,
       },
     });
-    
-    setDropdownOpen(false);
+    setSelectedproduct(event);
   };
 
-  const handleCategorySelect = (name, _id) => {
+  const handleCategorySelect = (event) => {
     updateExistingNotificationDetails({
       target: {
-        name: "category",
-        value: _id,
+        name: "specific_category",
+        value: event._id,
       },
     });
-
-    setCategoryDropdownOpen(false);
+    setSelectedcategory(event);
   };
+
+  useEffect(() => {
+    // console.log(status)
+    // console.log(notificationcategorieName.length)
+    if(notificationcategorieName.length >0){
+      const selectedcategory = notificationcategorieName.find(
+        (category) => category._id === specific_category
+    );
+    setSelectedcategory(selectedcategory)
+    }
+    if(notificationProductName.length >0){
+      const selectedproductt = notificationProductName.find(
+        (product) => product._id === specific_product
+       );
+      // console.log(selectedproductt);
+      // console.log(notificationProductName);
+      setSelectedproduct(selectedproductt)
+    }
+    if(redirect_to){
+      const selectedoption = redirectooptions.find(
+        (redirectoption) => redirectoption.value === redirect_to
+       );
+      setRedirect_too(selectedoption)
+    }
+
+    if(status){
+      const selectedstatus = statusoptions.find(
+        (statusoption) => statusoption.value === status
+       );
+       setSelectedstatus(selectedstatus)
+    }
+
+}, [notificationProductName_loading]);
 
   // const handleUserSelect = (name, _id) => {
   //   setSelectedCustomers((prevState) => [...prevState, { _id, name }]);
@@ -171,14 +235,12 @@ function UpdateNotificationModal({ id }) {
 
   const handleSubmit = async () => {
 
-
-
     console.log('name', name);
     console.log('heading', heading);
     console.log('message', message);
     console.log('redirect_to', redirect_to);
     console.log('specific_product', specific_product);
-    console.log('category', category);
+    console.log('category', specific_category);
     console.log('link', link);
     console.log('audience', audience);
     console.log('branch', branch);
@@ -192,7 +254,7 @@ function UpdateNotificationModal({ id }) {
     if(
       !name ||  
       !banner ||
-      !status
+      !redirect_to
     ) {
       return toast({
         position: 'top',
@@ -213,13 +275,15 @@ function UpdateNotificationModal({ id }) {
       });
     }
     setLoading(true);
+    const specificProduct = (redirect_to == 'specific_product'?specific_product:'');
+    const specificCategory = (redirect_to == 'category'?specific_category:'')
     const notification = {
       name,
       heading,
       message,
       redirect_to,
-      specific_product,
-      category,
+      specific_product:specificProduct,
+      specific_category:specificCategory,
       link,
       audience,
       branch,
@@ -259,8 +323,8 @@ function UpdateNotificationModal({ id }) {
         minW="100%"
         onClick={async () => {
           await fetchSingleNotification(id);    
-          // await fetchProductNameForNotification();
-          // await fetchCategoryNameForNotification();
+          await fetchProductNameForNotification();
+          await fetchCategoryNameForNotification();
           // await fetchUserNameForNotification();
           onOpen();
         }}
@@ -286,7 +350,7 @@ function UpdateNotificationModal({ id }) {
             </FormControl>
             <FormControl>
               <FormLabel>Status</FormLabel>
-              <Select
+              {/* <Select
                 placeholder="Select status"
                 name="status"
                 focusBorderColor="brown.500"
@@ -295,7 +359,8 @@ function UpdateNotificationModal({ id }) {
               >
                 <option value={true}>active</option>
                 <option value={false}>inactive</option>
-              </Select>
+              </Select> */}
+               <Select options={statusoptions} value={selectedstatus} name="status"  onChange={onStatusSelect} />
             </FormControl>
             <FormControl>
               <FormLabel>Heading</FormLabel>
@@ -319,7 +384,7 @@ function UpdateNotificationModal({ id }) {
             </FormControl>
             <FormControl>
               <FormLabel>Redirect To</FormLabel>
-              <Select
+              {/* <Select
                 placeholder="Redirect To"
                 name="redirect_to"
                 focusBorderColor="brown.500"
@@ -332,143 +397,51 @@ function UpdateNotificationModal({ id }) {
                 <option key="2" value="category">
                   category
                 </option>
-                {/* <option key="3" value="link">
-                  Link
-                </option> */}
-              </Select>
+              </Select> */}
+               <Select options={redirectooptions}  value={redirect_too} name="redirect_to"  onChange={onRedirecttoSelect} />
             </FormControl>
             {redirect_to === "specific_product" && (
               <FormControl mt={4}>
                 <FormLabel>Specific Product</FormLabel>
-                <InputGroup>
-                  <Input
-                    ref={initialRef}
-                    placeholder="Select specific product"
-                    name="specific_product"
-                    focusBorderColor="brown.500"
-                    value={
-                      notificationProductName.find(
-                        (product) => product._id === specific_product
-                      )?.name || ""
-                    }
-                    readOnly
-                    onClick={() => setDropdownOpen(!isDropdownOpen)}
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label="Open dropdown"
-                      icon={isDropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setDropdownOpen(!isDropdownOpen)}
-                    />
-                  </InputRightElement>
-                </InputGroup>
+                <Select 
+                  getOptionLabel={option =>
+                      `${option.name}`
+                      } 
+                      value={selectedproduct}
+                      onChange={handleProductSelect}
+                      // onChange={this.handleSelect}
+                      // getOptionValue={option => `${option}`}
+                      getOptionValue={(option) => option._id} 
+                      options={notificationProductName}
+                      isSearchable={true}
+                      // filterOption={this.customFilter}
+                      // onInputChange={this.handleInputChange}
+                      noOptionsMessage={() => null}
+                      placeholder={'Enter product name'}
+                      autoFocus={true}
+                      // menuIsOpen={this.state.menuOpen}
+                      />
 
-                {isDropdownOpen && (
-                  <Box
-                    maxHeight="200px"
-                    overflowY="auto"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    mt="2"
-                    zIndex="10"
-                    bg="white"
-                    position="absolute"
-                    width="100%"
-                  >
-                    <List spacing={3}>
-                      {notificationProductName.map((product, index) => (
-                        <ListItem
-                          key={index}
-                          onClick={() => handleProductSelect(product)}
-                          cursor="pointer"
-                          _hover={{ bg: "gray.100" }}
-                          p="2"
-                          borderWidth={
-                            specific_product === product._id ? "1px" : "0"
-                          }
-                          borderColor={
-                            specific_product === product._id
-                              ? "brown.500"
-                              : "transparent"
-                          }
-                          borderRadius="md"
-                        >
-                          {product.name}
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Box>
-                )}
               </FormControl>
             )}
             {redirect_to === "category" && (
               <FormControl mt={4}>
                 <FormLabel>Select category</FormLabel>
-                <InputGroup>
-                  <Input
-                    ref={initialRef}
-                    placeholder="Select specific category"
-                    name="category"
-                    focusBorderColor="brown.500"
-                    value={
-                      notificationcategorieName.find((cat) => cat._id === category)?.name || ""
-                    }
-                    readOnly
-                    onClick={() =>
-                      setCategoryDropdownOpen(!isCategoryDropdownOpen)
-                    }
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      aria-label="Open dropdown"
-                      icon={
-                        isCategoryDropdownOpen ? <FaAngleUp /> : <FaAngleDown />
-                      }
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setCategoryDropdownOpen(!isCategoryDropdownOpen)
-                      }
-                    />
-                  </InputRightElement>
-                </InputGroup>
-                {isCategoryDropdownOpen && (
-                  <Box
-                    maxHeight="200px"
-                    overflowY="auto"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    mt="2"
-                    zIndex="10"
-                    bg="white"
-                    position="absolute"
-                    width="100%"
-                  >
-                    <List spacing={3}>
-                      {notificationcategorieName.map((category, index) => {
-                        const { _id, name } = category;
-                        return (
-                          <ListItem
-                            key={index}
-                            onClick={() => handleCategorySelect(name, _id)}
-                            cursor="pointer"
-                            _hover={{ bg: "gray.100" }}
-                            p="2"
-                            borderWidth={category === _id ? "1px" : "0"}
-                            borderColor={
-                              category === _id ? "brown.500" : "transparent"
-                            }
-                            borderRadius="md"
-                          >
-                            {category.name}
-                          </ListItem>
-                        );
-                      })}
-                    </List>
-                  </Box>
-                )}
+                <Select 
+                  getOptionLabel={option =>
+                      `${option.name}`
+                      } 
+                      value={selectedcategory}
+                      onChange={handleCategorySelect}
+                      getOptionValue={(option) => option._id} 
+                      options={notificationcategorieName}
+                      isSearchable={true}
+                      // filterOption={this.customFilter}
+                      noOptionsMessage={() => null}
+                      placeholder={'Enter category name'}
+                      autoFocus={true}
+                      // menuIsOpen={this.state.menuOpen}
+                      />
               </FormControl>
             )}
             {/* {redirect_to === "link" && (

@@ -23,7 +23,9 @@ function NotificationPage() {
         notificationProductName_loading,
         notificationProductName_error,
         notificationProductName,
-        fetchProductNameForNotification
+        fetchProductNameForNotification,
+        notificationcategorieName,
+        fetchCategoryNameForNotification,
     } = useNotificationContext();
 
     const handleRefresh = async () => {
@@ -40,6 +42,8 @@ function NotificationPage() {
     }, [setAllUserToken]);
 
     useEffect(() => {
+        fetchProductNameForNotification();
+        fetchCategoryNameForNotification();
         fetchNotifications()
     }, []);
 
@@ -109,7 +113,7 @@ function NotificationPage() {
                     Refresh
                 </Button>
             </HStack>
-            <NotificationTable notifications={notificationsData} allUserToken={allUserToken} />
+            <NotificationTable notifications={notificationsData} allUserToken={allUserToken} notificationcategorieName={notificationcategorieName} notificationProductName={notificationProductName} />
         </SidebarWithHeader>
     );
 
