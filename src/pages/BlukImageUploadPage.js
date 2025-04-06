@@ -74,7 +74,7 @@ function BlukImageUploadPage() {
             }
         }
 
-        console.log(assetList)
+        // console.log(assetList)
         return (
             <SidebarWithHeader>
                 <HStack mb={5}>

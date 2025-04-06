@@ -550,18 +550,19 @@ export const OrderProvider = ({ children }) => {
   const fetchOrderIdFromCustomOrderId = async (customOrderId) => {
     dispatch({ type: GET_CUSTOMORDERIDFROM_ID_BEGIN });
     try {
-      console.log(customOrderId);
-      if (customOrderId.length <= 3) {
+      // console.log(customOrderId);
+      if (customOrderId.length == '') {
         const response = await axios.get(getLastTenOrder_url);
         const { data } = response.data;
         dispatch({ type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data });
       }
-      if (customOrderId.length >= 4) {
-        const orderRegex = /^ORD\d+$/;
-        if(!orderRegex.test(customOrderId)) {
-          throw new Error("Invalid custtom order Id format");
-        }
-        const response = await axios.get(`${getOrderIdByCustomOrderId_url}${customOrderId}`);
+      if (customOrderId.length != '') {
+        // const orderRegex = /^ORD\d+$/;
+        // if(!orderRegex.test(customOrderId)) {
+        //   throw new Error("Invalid custtom order Id format");
+        // }
+        let newcustid = 'ord'+customOrderId
+        const response = await axios.get(`${getOrderIdByCustomOrderId_url}${newcustid}`);
         const {data} = response.data;
         dispatch({type: GET_CUSTOMORDERIDFROM_ID_SUCCESS, payload: data});
       }

@@ -201,7 +201,7 @@ const OrderTableWithItem = ({
   };
 
   useEffect(() => {
-    console.log(orderItemsarr);
+    // console.log(orderItemsarr);
   }, [orderItemsarr]);
 
   return (

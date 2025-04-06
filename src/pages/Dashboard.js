@@ -26,7 +26,7 @@ export default function Dashboard() {
 
 
   const resultedOrderes = allOrdersForDashbaordTable?.data || [];
-  console.log(resultedOrderes)
+  // console.log(resultedOrderes)
 
 
   if (loading) {

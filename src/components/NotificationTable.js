@@ -72,8 +72,9 @@ function NotificationTable({ notifications,allUserToken,notificationcategorieNam
         body: raw,
         redirect: "follow"
       };
-
-      fetch("https://fresh-vegis.in/api/notification/sendnotification", requestOptions)
+      // https://fresh-vegis.in/api/notification/sendnotification
+      // REACT_APP_BACKEND_HOST
+      fetch(process.env.REACT_APP_BACKEND_HOST+"/api/notification/sendnotification", requestOptions)
         .then((response) => response.text())
         .then((result) => {
           return toast({

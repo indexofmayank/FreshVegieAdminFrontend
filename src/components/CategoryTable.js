@@ -48,7 +48,7 @@ export const CategoryTable = ({ categories, pagination, setPagination }) => {
     onOpen();
   };
 
-  console.log(assetToDelete);
+  // console.log(assetToDelete);
 
   return (
     <SimpleGrid bg="white" p={5} shadow="lg" borderRadius="lg" overflowX="auto">

@@ -54,7 +54,7 @@ function SearchBoxForOrder() {
   }, [query]);
 
   useEffect(() => {
-    console.log(orderIdBy_customOrderId);
+    // console.log(orderIdBy_customOrderId);
   }, [orderIdBy_customOrderId]);
 
   return (
