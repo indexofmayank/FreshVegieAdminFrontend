@@ -261,11 +261,10 @@ export const ProductProvider = ({ children }) => {
   };
 
   const fetchProductByNameForSearch = async (name='') => {
-    console.log(name);
     try {
       const response = await axios.get(`${getProductDropdownForSearch_url}?name=${name}`);
       const {success, data} = response.data;
-      console.log(data);
+      // console.log(data);
       return {success, data};
     } catch (error) {
       const {success, message} = error.message;

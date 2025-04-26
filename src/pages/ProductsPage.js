@@ -13,7 +13,7 @@ import SearchBox from '../components/SearchBox';
 import { FaAngleDown, FaArrowUp } from 'react-icons/fa';
 import axios from 'axios';
 import { getproductCsvDownload_url } from '../utils/constants';
-import { FaDownload } from 'react-icons/fa';
+import { FaDownload,FaSearch } from 'react-icons/fa';
 
 function ProductsPage() {
   const {
@@ -65,6 +65,8 @@ function ProductsPage() {
     // console.log(suggestionList);
     if(suggestionList.length>0){
       setProductlist(suggestionList);
+    }else{
+      setProductlist([]);
     }
    
   }, [suggestionList]);
@@ -75,6 +77,15 @@ function ProductsPage() {
   const handleRefresh = async () => {
     await fetchProducts(pagination.page, pagination.limit);
   };
+
+  const handleSearch = async () =>{
+    if(searchQuery.length>0){
+      const response = await fetchProductByNameForSearch(searchQuery);
+      const { data } = response;
+      setSuggestionList(data);
+    }
+   
+  }
 
   const handleDownload = async () => {
     // console.log(selectedDate);
@@ -174,9 +185,6 @@ function ProductsPage() {
             value={searchQuery}
             onChange={async (event) => {
               setSearchQuery(event.target.value);
-              const response = await fetchProductByNameForSearch(event.target.value);
-              const { data } = response;
-              setSuggestionList(data);
             }}
           />
           <InputRightElement>
@@ -203,7 +211,19 @@ function ProductsPage() {
 
             </Box>
           )}
+           <Button
+            colorScheme='brown'
+            variant='outline'
+            leftIcon={<FaSearch />}
+            onClick={handleSearch}
+            spacing={4}
+            px={4}
+            style={{padding:'20px 30px'}}
+           >
+            Search Products
+        </Button>
           </InputGroup>
+         
         </FormControl>
       </HStack>
 
