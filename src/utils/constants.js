@@ -20,6 +20,7 @@ export const LinkItems = [
   { name: 'Home', url: '/', icon: <FaHome /> },
   { name: 'Products', url: '/products', icon: <FaProductHunt /> },
   { name: 'Category', url: '/category', icon: <FaTh />},
+  { name: 'Sub-category', url: '/subcategory', icon: <FaTh />},
   { name: 'Orders', url: '/orders', icon: <FaShoppingCart /> },
   { name: 'Admins', url: '/admins', icon: <FaUserTie /> },
   { name: 'Users', url: '/users', icon: <FaUser />},
@@ -106,7 +107,14 @@ export const category_url = `${domain}/api/category/`;
 export const getCategoryForTable_url = `${domain}/api/admin/category/`;
 export const delete_category_url = `${domain}/api/admin/category/delete/`;
 export const create_category_url = `${domain}/api/category/`;
-export const getAllCategoryByName_url = `${domain}/api/category/get/name/`;
+export const getAllCategoryByName_url = `${domain}/api/category/`;
+
+export const subcategory_url = `${domain}/api/subcategory/`;
+export const getsubCategoryForTable_url = `${domain}/api/admin/subcategory/`;
+export const delete_subcategory_url = `${domain}/api/admin/subcategory/delete/`;
+export const create_subcategory_url = `${domain}/api/subcategory/`;
+export const getAllSubCategoryByName_url = `${domain}/api/subcategory/`;
+
 export const create_banner_url = `${domain}/api/banner/`;
 export const get_banner_url = `${domain}/api/banner/`;
 export const udpate_banner_url = `${domain}/api/banner/`;
@@ -134,6 +142,7 @@ export const createNewNotification_url = `${domain}/api/notification/`;
 export const getAllNotification_url = `${domain}/api/notification/`;            
 export const getAllProductName_url = `${domain}/api/notification/products/name`;
 export const getAllCategoryName_url = `${domain}/api/notification/category/name`;
+export const getAllSubCategoryName_url = `${domain}/api/notification/subcategory/name`;
 export const getAllUserName_url = `${domain}/api/notification/user/name`;
 export const getSingleNotification_url = `${domain}/api/notification/`;
 export const getDeliveryPartnerName_url = `${domain}/api/deliveryPartner`;
@@ -141,6 +150,7 @@ export const updateDeliveryPartnerDetails_url = `${domain}/api/orders/deliverypa
 export const getDeliveryPartnerDetailById_url = `${domain}/api/deliveryPartner/`;
 export const getCsvDownload_url = `${domain}/api/csv/`;
 export const getcategoryCsvDownload_url = `${domain}/api/category/exportcategorydata`;
+export const getsubcategoryCsvDownload_url = `${domain}/api/subcategory/exportsubcategorydata`;
 export const getproductCsvDownload_url = `${domain}/api/products/exportproductdata`;
 export const getproductinventoryCsvDownload_url = `${domain}/api/products/exportproductinventorydata`;
 export const getuserCsvDownload_url = `${domain}/api/user/exportusercsv`;

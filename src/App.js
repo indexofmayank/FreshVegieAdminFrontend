@@ -20,7 +20,8 @@ import {
   DealOfTheDayPage,
   DeliveryPage,
   EditOrderPage,
-  BlukImageUploadPage
+  BlukImageUploadPage,
+  SubcategoryPage
 } from './pages';
 
 
@@ -68,6 +69,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute exact path='/category'>
           <CategoryPage />
+        </PrivateRoute>
+        <PrivateRoute exact path='/subcategory'>
+          <SubcategoryPage />
         </PrivateRoute>
         <PrivateRoute exact path='/banners'>
           <BannerPage />

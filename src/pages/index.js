@@ -18,6 +18,7 @@ import DealOfTheDayPage from './DealOfTheDayPage';
 import DeliveryPage from './DeliveryPage';
 import EditOrderPage from './EditOrderPage';
 import BlukImageUploadPage from './BlukImageUploadPage';
+import SubcategoryPage from "./SubcategoryPage";
 export {
   Dashboard,
   LoginPage,
@@ -38,5 +39,6 @@ export {
   DealOfTheDayPage,
   DeliveryPage,
   EditOrderPage,
-  BlukImageUploadPage
+  BlukImageUploadPage,
+  SubcategoryPage
 };

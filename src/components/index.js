@@ -18,6 +18,7 @@ import Stars from './Stars';
 import SingleProductReviews from './SingleProductReviews';
 import PreLoader from './PreLoader';
 import UpdateCategoryModal from './UpdateCategoryModal';
+import UpdateSubCategoryModal from './UpdateSubCategoryModal';
 import CreateNewBannerModal from './CreateNewBannerModal';
 import UpdateBannerModal from './UpdateBannerModal';
 import BannerTable from './BannerTable';
@@ -78,6 +79,7 @@ export {
   SingleProductReviews,
   PreLoader,
   UpdateCategoryModal,
+  UpdateSubCategoryModal,
   CreateNewBannerModal,
   UpdateBannerModal,
   BannerTable ,

@@ -18,6 +18,7 @@ import { OrderStatusProvider } from './context/orderStatus_context';
 import { DealOfTheDayProvider } from './context/dealoftheday_context';
 import { DashboardProvider } from './context/dashboard_context';
 import { DeliveryInstructionProvider } from './context/deliveryInstruction_context';
+import { SubCategoryProvider } from './context/subcategory_context';
 
 ReactDOM.render(
   <UserProvider>
@@ -26,6 +27,7 @@ ReactDOM.render(
         <ProductProvider>
           <CustomerProvider>
             <CategoryProvider>
+             <SubCategoryProvider>
               <BannerProvider>
                 <GeoFancingProvider>
                   <UserDetailProvider>
@@ -47,6 +49,7 @@ ReactDOM.render(
                   </UserDetailProvider>
                 </GeoFancingProvider>
               </BannerProvider>
+              </SubCategoryProvider>
             </CategoryProvider>
           </CustomerProvider>
         </ProductProvider>
