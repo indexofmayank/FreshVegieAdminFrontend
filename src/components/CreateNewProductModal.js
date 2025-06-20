@@ -34,8 +34,7 @@ import {
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import { useProductContext } from '../context/product_context';
-import { useCategoryContext } from '../context/category_context';
-
+import { useSubCategoryContext } from '../context/subcategory_context';
 function CreateNewProductModal() {
   const {
     new_product: {
@@ -71,14 +70,14 @@ function CreateNewProductModal() {
   } = useProductContext();
 
   const {
-    categoriesByName,
-    fetchCategoryByName
-  } = useCategoryContext();
+    subcategoriesByName,
+    fetchallSubCategory
+  } = useSubCategoryContext();
   const [imageList, setImageList] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchCategoryByName();
+    fetchallSubCategory();
     // resetNewProduct();
   }, []);
   const onDrop = useCallback((acceptedFiles) => {
@@ -202,7 +201,7 @@ function CreateNewProductModal() {
       });
     }
   };
-  const { data = [] } = categoriesByName;
+  const { data = [] } = subcategoriesByName;
 
   return (
     <>

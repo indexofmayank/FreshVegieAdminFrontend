@@ -23,6 +23,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import { useSubCategoryContext } from '../context/subcategory_context';
 import Select from 'react-select';
+import { useCategoryContext } from '../context/category_context';
 const UpdateSubCategoryModal = ({ id }) => {
 
   const {
@@ -41,7 +42,7 @@ const UpdateSubCategoryModal = ({ id }) => {
     fetchallCategory,
     updateCategory
   } = useSubCategoryContext();
-
+  const { fetchCategoryByName,categoriesByName } = useCategoryContext();
   const statusoptions = [
     { value: true, label: 'active' },
     { value: false, label: 'Inactive' },
@@ -72,16 +73,16 @@ const UpdateSubCategoryModal = ({ id }) => {
   const toast = useToast();
 
   useEffect(() => {
-    fetchallCategory();
+    fetchCategoryByName();
   },[])
 
  
 
   useEffect(() =>{
 
-    if(subcategoriesByName.data != undefined){
-    if(subcategoriesByName.data.length >0){
-        const newcat = subcategoriesByName.data;
+    if(categoriesByName.data != undefined){
+    if(categoriesByName.data.length >0){
+        const newcat = categoriesByName.data;
         const ncategoryOptions = newcat.map(cat => ({
             value: cat._id,
             label: cat.name
@@ -89,7 +90,7 @@ const UpdateSubCategoryModal = ({ id }) => {
           setCategoryoptions(ncategoryOptions)
     }
   }
-  },[subcategoriesByName.data])
+  },[categoriesByName.data])
 
   useEffect(() => {
    

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Table,
   Thead,
@@ -29,6 +29,7 @@ import {
 import { BiChevronDown } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useSubCategoryContext } from '../context/subcategory_context';
+import { useCategoryContext } from '../context/category_context';
 import { UpdateSubCategoryModal } from '../components';
 import Pagination from "./Pagination";
 
@@ -36,6 +37,7 @@ export const SubCategoryTable = ({ categories, pagination, setPagination }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const { fetchCategory, deleteCategory } = useSubCategoryContext();
+  const { fetchCategoryByName,categoriesByName } = useCategoryContext();
   const [assetToDelete, setAssetToDelete] = useState({ name: "", id: "" });
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +50,9 @@ export const SubCategoryTable = ({ categories, pagination, setPagination }) => {
     onOpen();
   };
 
-  // console.log(assetToDelete);
+  useEffect(() => {
+    fetchCategoryByName();
+  },[])
 
   return (
     <SimpleGrid bg="white" p={5} shadow="lg" borderRadius="lg" overflowX="auto">
@@ -72,6 +76,8 @@ export const SubCategoryTable = ({ categories, pagination, setPagination }) => {
             {categories.length > 0 ? (
               categories.map((categoryy, index) => {
                 const { image, name,category, _id, status, order } = categoryy;
+                const categoryObj = categoriesByName.data.find(cat => cat._id === category);
+                const categoryName = categoryObj ? categoryObj.name : 'Unknown';
                 return (
                   <Tr key={index}>
                     <Td>
@@ -83,7 +89,7 @@ export const SubCategoryTable = ({ categories, pagination, setPagination }) => {
                       />
                     </Td>
                     <Td>{name}</Td>
-                    <Td>{category}</Td>
+                    <Td>{categoryName}</Td>
                     <Td>{order}</Td>
                     <Td>
                       <Switch colorScheme="green" isChecked={status} />

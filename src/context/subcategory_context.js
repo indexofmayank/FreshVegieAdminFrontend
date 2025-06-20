@@ -60,11 +60,11 @@ export const SubCategoryProvider = ({children}) => {
         }
     };
 
-    const fetchallCategory = async () => {
+    const fetchallSubCategory = async () => {
         // console.log('we hit here');
         dispatch({type: GET_ALLSUBCATEGORY_BEGIN});
         try {
-            const response = await axios.get(`${getAllCategoryByName_url}`);
+            const response = await axios.get(`${getAllSubCategoryByName_url}`);
             const data = response.data;
             // console.log(data);
             dispatch({type: GET_ALLSUBCATEGORY_SUCCESS, payload: data});
@@ -147,7 +147,7 @@ export const SubCategoryProvider = ({children}) => {
                 updateNewSubCategoryDetails,
                 updateExistingsubCategoryDetails,
                 updateCategory,
-                fetchallCategory
+                fetchallSubCategory
             }}
         >
             {children}

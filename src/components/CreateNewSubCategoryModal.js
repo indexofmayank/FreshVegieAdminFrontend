@@ -27,6 +27,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import { useSubCategoryContext } from '../context/subcategory_context';
 import Select from 'react-select';
+import { useCategoryContext } from '../context/category_context';
 
 
 
@@ -45,21 +46,21 @@ function CreateNewSubCategoryModal() {
         updateNewSubCategoryDetails,
         fetchallCategory
     } = useSubCategoryContext();
-
+    const { fetchCategoryByName,categoriesByName } = useCategoryContext();
     const [imageList, setImageList] = useState(image);
     const [loading, setLoading] = useState(false);
     const [categoryoptions, setCategoryoptions] = useState([])
 
 
       useEffect(() => {
-        fetchallCategory();
+        fetchCategoryByName();
       },[])
 
       useEffect(() =>{
 
-        if(subcategoriesByName.data != undefined){
-        if(subcategoriesByName.data.length >0){
-            const newcat = subcategoriesByName.data;
+        if(categoriesByName.data != undefined){
+        if(categoriesByName.data.length >0){
+            const newcat = categoriesByName.data;
             const ncategoryOptions = newcat.map(cat => ({
                 value: cat._id,
                 label: cat.name
@@ -67,8 +68,8 @@ function CreateNewSubCategoryModal() {
               setCategoryoptions(ncategoryOptions)
         }
       }
-      },[subcategoriesByName.data])
-      console.log(subcategoriesByName)  
+      },[categoriesByName.data])
+      
       const onStatusSelect = (event) => {
         // console.log(event)
         // console.log(event.value)
